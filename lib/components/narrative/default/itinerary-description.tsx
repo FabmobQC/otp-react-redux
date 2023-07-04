@@ -46,6 +46,7 @@ export function getMainItineraryModes({
     if (rentedVehicle || (isMicromobility(mode) && rentedBike))
       accessModeId = 'micromobility_rent'
     if (mode === 'CAR') accessModeId = 'drive'
+    if (mode === 'TAXI') accessModeId = 'taxi'
   })
 
   return { mainMode: getFormattedMode(accessModeId, intl), transitMode }
@@ -82,6 +83,7 @@ export function ItineraryDescription({ itinerary }: Props): JSX.Element {
     if (isMicromobility(mode)) accessModeId = 'micromobility'
     if (rentedVehicle) accessModeId = 'micromobility_rent'
     if (mode === 'CAR') accessModeId = 'drive'
+    if (mode === 'TAXI') accessModeId = 'taxi'
   })
 
   const mainMode = <FormattedMode mode={accessModeId} />
