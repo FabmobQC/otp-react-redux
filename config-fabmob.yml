@@ -1,4 +1,5 @@
 title: "Planificateur FabmobQC"
+homeTimezone: America/Toronto
 api:
   host: http://localhost
   path: /otp/routers/default
