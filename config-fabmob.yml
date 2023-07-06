@@ -218,10 +218,18 @@ modes:
     - mode: SUBWAY
 
   combinations:
-    # Standard
+    - mode: "BICYCLE"
+      params:
+        numItineraries: 1
+    - mode: "CAR"
+      params:
+        numItineraries: 1
     - mode: "WALK,TRANSIT"
       params:
         numItineraries: 2
+    - mode: "TAXI"
+      params:
+        numItineraries: 1
 
   accessModes:
     - mode: BICYCLE
