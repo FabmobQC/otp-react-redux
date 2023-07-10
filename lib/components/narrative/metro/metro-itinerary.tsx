@@ -184,6 +184,15 @@ const LoadingBlurred = styled.span<{ loading: boolean }>`
   transition: all 0.2s ease-in-out;
 `
 
+const modesWithFares = ['BUS', 'SUBWAY', 'TAXI']
+const modesWithWalkTime = ['BUS', 'SUBWAY', 'WALK']
+const modesWithWaitingTime = ['TAXI']
+
+const getMode = (itinerary: Itinerary) => {
+  const firstMode = itinerary.legs[0].mode
+  return firstMode !== 'WALK' ? firstMode : itinerary.legs[1]?.mode ?? firstMode
+}
+
 type Props = {
   LegIcon: React.ReactNode
   accessibilityScoreGradationMap: { [value: number]: string }
@@ -270,7 +279,6 @@ class MetroItinerary extends NarrativeItinerary {
       showRealtimeAnnotation
     } = this.props
     const { SvgIcon } = this.context
-
     const { isCallAhead, isContinuousDropoff, isFlexItinerary, phone } =
       getFlexAttirbutes(itinerary)
 
@@ -326,6 +334,8 @@ class MetroItinerary extends NarrativeItinerary {
         10
       )
     }
+
+    const mode = getMode(itinerary)
 
     // Use first leg's agency as a fallback
     return (
@@ -396,34 +406,53 @@ class MetroItinerary extends NarrativeItinerary {
                       )
                     )}
                   </SecondaryInfo>
-                  <SecondaryInfo>
-                    {transitFare === null || transitFare < 0 ? (
-                      <FormattedMessage id="otpUi.TripDetails.transitFareUnknown" />
-                    ) : (
-                      // TODO: re-implement TNC fares for metro UI?
-                      <FormattedNumber
-                        currency={fareCurrency}
-                        currencyDisplay="narrowSymbol"
-                        // This isn't a "real" style prop
-                        // eslint-disable-next-line react/style-prop-object
-                        style="currency"
-                        value={transitFare / 100}
+                  {modesWithFares.includes(mode) && (
+                    <SecondaryInfo>
+                      {transitFare === null || transitFare < 0 ? (
+                        <FormattedMessage id="otpUi.TripDetails.transitFareUnknown" />
+                      ) : (
+                        // TODO: re-implement TNC fares for metro UI?
+                        <FormattedNumber
+                          currency={fareCurrency}
+                          currencyDisplay="narrowSymbol"
+                          // This isn't a "real" style prop
+                          // eslint-disable-next-line react/style-prop-object
+                          style="currency"
+                          value={transitFare / 100}
+                        />
+                      )}
+                    </SecondaryInfo>
+                  )}
+                  {modesWithWalkTime.includes(mode) && (
+                    <SecondaryInfo>
+                      <FormattedMessage
+                        id="components.MetroUI.timeWalking"
+                        values={{
+                          time: (
+                            <FormattedDuration
+                              duration={itinerary.walkTime}
+                              includeSeconds={false}
+                            />
+                          )
+                        }}
                       />
-                    )}
-                  </SecondaryInfo>
-                  <SecondaryInfo>
-                    <FormattedMessage
-                      id="components.MetroUI.timeWalking"
-                      values={{
-                        time: (
-                          <FormattedDuration
-                            duration={itinerary.walkTime}
-                            includeSeconds={false}
-                          />
-                        )
-                      }}
-                    />
-                  </SecondaryInfo>
+                    </SecondaryInfo>
+                  )}
+                  {modesWithWaitingTime.includes(mode) && (
+                    <SecondaryInfo>
+                      <FormattedMessage
+                        id="components.MetroUI.timeWaiting"
+                        values={{
+                          time: (
+                            <FormattedDuration
+                              duration={itinerary.waitingTime}
+                              includeSeconds={false}
+                            />
+                          )
+                        }}
+                      />
+                    </SecondaryInfo>
+                  )}
                 </ItineraryDetails>
                 <DepartureTimes>
                   {arrivesAt ? (

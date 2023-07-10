@@ -489,10 +489,16 @@ language:
     common:
       modes:
         taxi: Taxi
+    components:
+      MetroUI:
+        timeWaiting: "{time} waiting"
   fr:
     common:
       modes:
         taxi: Taxi
+    components:
+      MetroUI:
+        timeWaiting: "{time} d'attente"
 
 ### Localization section to provide language/locale settings
 localization:
