@@ -492,6 +492,11 @@ language:
     components:
       MetroUI:
         timeWaiting: "{time} waiting"
+        book:
+          bookTaxi: "Book a Taxi"
+          agencyName: "Agency Name"
+          phoneNumber: "Phone Number"
+          agencyUrl: "Website"
   fr:
     common:
       modes:
@@ -499,6 +504,11 @@ language:
     components:
       MetroUI:
         timeWaiting: "{time} d'attente"
+        book:
+          bookTaxi: "Réserver un taxi"
+          agencyName: "Nom de l'agence"
+          phoneNumber: "Numéro de téléphone"
+          agencyUrl: "Site web"
 
 ### Localization section to provide language/locale settings
 localization:
