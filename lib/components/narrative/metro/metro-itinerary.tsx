@@ -185,7 +185,7 @@ const LoadingBlurred = styled.span<{ loading: boolean }>`
 `
 
 const modesWithFares = ['BUS', 'SUBWAY', 'TAXI']
-const modesWithWalkTime = ['BUS', 'SUBWAY', 'WALK']
+const modesWithWalkTime = ['BUS', 'SUBWAY']
 const modesWithWaitingTime = ['TAXI']
 
 const getMode = (itinerary: Itinerary) => {
