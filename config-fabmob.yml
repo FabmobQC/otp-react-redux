@@ -489,6 +489,10 @@ language:
     common:
       modes:
         taxi: Taxi
+      taxiAssetTypes:
+        standard: Standard
+        minivan: Minivan
+        special: Special needs
     components:
       MetroUI:
         timeWaiting: "{time} waiting"
@@ -501,6 +505,10 @@ language:
     common:
       modes:
         taxi: Taxi
+      taxiAssetTypes:
+        standard: Standard
+        minivan: Minivan
+        special: Véhicule adapté
     components:
       MetroUI:
         timeWaiting: "{time} d'attente"

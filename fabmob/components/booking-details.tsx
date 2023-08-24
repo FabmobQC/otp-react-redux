@@ -2,6 +2,8 @@ import { injectIntl, IntlShape } from 'react-intl'
 import { Itinerary } from '@opentripplanner/types'
 import React from 'react'
 
+import { getFormattedTaxiAssetType } from '../utils/i18n'
+
 interface Props {
   intl: IntlShape
   itinerary: Itinerary
@@ -17,6 +19,9 @@ const BookingDetails = ({ intl, itinerary }: Props) => {
   return (
     <div className="trip-tools-container">
       <h2>{intl.formatMessage({ id: 'components.MetroUI.book.bookTaxi' })}</h2>
+      <p>
+        {getFormattedTaxiAssetType(firstLeg.tncData?.productId ?? '', intl)}
+      </p>
       <p>{firstLeg.agencyName}</p>
       <p>
         <a href={firstLeg.agencyUrl}>{firstLeg.agencyUrl}</a>

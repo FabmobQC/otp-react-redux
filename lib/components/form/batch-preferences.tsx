@@ -9,6 +9,7 @@ import { combinationFilter } from '../../util/combination-filter'
 import { ComponentContext } from '../../util/contexts'
 import { getSupportedModes } from '../../util/i18n'
 import { setQueryParam } from '../../actions/form'
+import TaxiBatchPreferences from '../../../fabmob/components/taxi-batch-preferences'
 
 import { defaultModeOptions, Mode } from './mode-buttons'
 import { StyledBatchPreferences } from './batch-styled'
@@ -72,6 +73,10 @@ class BatchPreferences extends Component<Props> {
             queryParams={query}
             supportedCompanies={config.companies}
             supportedModes={getSupportedModes(config, intl)}
+          />
+          <TaxiBatchPreferences
+            onQueryParamChange={this.onQueryParamChange}
+            queryParams={query}
           />
           {/*
             FIXME: use these instead? They're currently cut off by the short
