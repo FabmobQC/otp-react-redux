@@ -7,6 +7,8 @@ import { ComponentContext } from '../../../util/contexts'
 import { getFormattedMode } from '../../../util/i18n'
 import FormattedMode from '../../util/formatted-mode'
 
+const { isRideshareLeg } = coreUtils.itinerary
+
 const { isBicycle, isMicromobility, isTransit } = coreUtils.itinerary
 
 type Props = {
@@ -47,6 +49,7 @@ export function getMainItineraryModes({
       accessModeId = 'micromobility_rent'
     if (mode === 'CAR') accessModeId = 'drive'
     if (mode === 'TAXI') accessModeId = 'taxi'
+    if (isRideshareLeg(leg)) accessModeId = 'ride'
   })
 
   return { mainMode: getFormattedMode(accessModeId, intl), transitMode }
@@ -84,6 +87,7 @@ export function ItineraryDescription({ itinerary }: Props): JSX.Element {
     if (rentedVehicle) accessModeId = 'micromobility_rent'
     if (mode === 'CAR') accessModeId = 'drive'
     if (mode === 'TAXI') accessModeId = 'taxi'
+    if (isRideshareLeg(leg)) accessModeId = 'ride'
   })
 
   const mainMode = <FormattedMode mode={accessModeId} />

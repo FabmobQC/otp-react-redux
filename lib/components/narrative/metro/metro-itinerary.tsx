@@ -1,17 +1,16 @@
 import { AccessibilityRating } from '@opentripplanner/itinerary-body'
 import { connect } from 'react-redux'
+import { FareProductSelector, Itinerary, Leg } from '@opentripplanner/types'
 import {
   FormattedMessage,
   FormattedNumber,
   injectIntl,
   IntlShape
 } from 'react-intl'
-import { Itinerary, Leg } from '@opentripplanner/types'
 import { Leaf } from '@styled-icons/fa-solid/Leaf'
 import React from 'react'
 import styled, { keyframes } from 'styled-components'
 
-import * as narrativeActions from '../../../actions/narrative'
 import * as uiActions from '../../../actions/ui'
 import { ComponentContext } from '../../../util/contexts'
 import { FlexIndicator } from '../default/flex-indicator'
@@ -22,22 +21,19 @@ import {
 import { getActiveSearch, getFare } from '../../../util/state'
 import { IconWithText } from '../../util/styledIcon'
 import { ItineraryDescription } from '../default/itinerary-description'
+import { ItineraryView } from '../../../util/ui'
 import { localizeGradationMap } from '../utils'
 import FormattedDuration from '../../util/formatted-duration'
 import ItineraryBody from '../line-itin/connected-itinerary-body'
 import NarrativeItinerary from '../narrative-itinerary'
 import SimpleRealtimeAnnotation from '../simple-realtime-annotation'
 
-import { DepartureTimesList } from './departure-times-list'
-import {
-  getFirstTransitLegStop,
-  getFlexAttirbutes,
-  removeInsignifigantWalkLegs
-} from './attribute-utils'
+import { getFirstTransitLegStop, getFlexAttirbutes } from './attribute-utils'
+import DepartureTimesList, {
+  SetActiveItineraryHandler
+} from './departure-times-list'
 import MetroItineraryRoutes from './metro-itinerary-routes'
 import RouteBlock from './route-block'
-
-const { ItineraryView } = uiActions
 
 // Styled components
 const ItineraryWrapper = styled.div.attrs((props) => {
@@ -197,12 +193,13 @@ type Props = {
   LegIcon: React.ReactNode
   accessibilityScoreGradationMap: { [value: number]: string }
   active: boolean
+  defaultFareType: FareProductSelector
   /** This is true when there is only one itinerary being shown and the itinerary-body is visible */
   expanded: boolean
   intl: IntlShape
   itinerary: Itinerary
   mini?: boolean
-  setActiveItinerary: () => void
+  setActiveItinerary: SetActiveItineraryHandler
   setActiveLeg: (leg: Leg) => void
   setItineraryView: (view: string) => void
   showRealtimeAnnotation: () => void
@@ -244,7 +241,8 @@ class MetroItinerary extends NarrativeItinerary {
       <RouteBlock
         aria-hidden
         footer={
-          showLegDurations && <FormattedDuration duration={mainLeg.duration} />
+          showLegDurations &&
+          mainLeg?.duration && <FormattedDuration duration={mainLeg.duration} />
         }
         hideLongName
         leg={mainLeg}
@@ -259,12 +257,9 @@ class MetroItinerary extends NarrativeItinerary {
     const {
       accessibilityScoreGradationMap,
       active,
-      activeItineraryTimeIndex,
       arrivesAt,
       co2Config,
-      currency,
-      defaultFareKey,
-      enableDot,
+      defaultFareType,
       expanded,
       intl,
       itinerary,
@@ -273,7 +268,6 @@ class MetroItinerary extends NarrativeItinerary {
       pending,
       setActiveItinerary,
       setActiveLeg,
-      setItineraryTimeIndex,
       setItineraryView,
       showLegDurations,
       showRealtimeAnnotation
@@ -282,11 +276,7 @@ class MetroItinerary extends NarrativeItinerary {
     const { isCallAhead, isContinuousDropoff, isFlexItinerary, phone } =
       getFlexAttirbutes(itinerary)
 
-    const { fareCurrency, transitFare } = getFare(
-      itinerary,
-      defaultFareKey,
-      currency
-    )
+    const { fareCurrency, transitFare } = getFare(itinerary, defaultFareType)
 
     const roundedCo2VsBaseline = Math.round(itinerary.co2VsBaseline * 100)
     const emissionsNote = !mini &&
@@ -321,7 +311,6 @@ class MetroItinerary extends NarrativeItinerary {
     )
 
     const firstTransitStop = getFirstTransitLegStop(itinerary)
-    const routeLegs = itinerary.legs.filter(removeInsignifigantWalkLegs)
 
     const handleClick = () => {
       setActiveItinerary(itinerary)
@@ -346,13 +335,13 @@ class MetroItinerary extends NarrativeItinerary {
       >
         <div
           className="header"
-          onClick={handleClick}
+          onClick={expanded ? undefined : handleClick}
           // TODO: once this can be tabbed to, this behavior needs to be improved. Maybe it focuses the
           // first time?
           // eslint-disable-next-line @typescript-eslint/no-empty-function
           onKeyDown={() => {}}
-          onMouseEnter={this._onMouseEnter}
-          onMouseLeave={this._onMouseLeave}
+          onMouseEnter={expanded ? undefined : this._onMouseEnter}
+          onMouseLeave={expanded ? undefined : this._onMouseLeave}
           // TODO: use _onHeaderClick for tap only -- this will require disabling
           // this onClick handler after a touchStart
           // TODO: CORRECT THIS ARIA ROLE
@@ -406,10 +395,13 @@ class MetroItinerary extends NarrativeItinerary {
                       )
                     )}
                   </SecondaryInfo>
-                  {modesWithFares.includes(mode) && (
-                    <SecondaryInfo>
-                      {transitFare === null || transitFare < 0 ? (
-                        <FormattedMessage id="otpUi.TripDetails.transitFareUnknown" />
+                  {
+                    // Hide the fare information entirely if the defaultFareType isn't specified.
+                    modesWithFares.includes(mode) && <SecondaryInfo>
+                      {transitFare === null ||
+                      transitFare === undefined ||
+                      transitFare < 0 ? (
+                        <FormattedMessage id="common.itineraryDescriptions.fareUnknown" />
                       ) : (
                         // TODO: re-implement TNC fares for metro UI?
                         <FormattedNumber
@@ -418,41 +410,37 @@ class MetroItinerary extends NarrativeItinerary {
                           // This isn't a "real" style prop
                           // eslint-disable-next-line react/style-prop-object
                           style="currency"
-                          value={transitFare / 100}
+                          value={transitFare}
                         />
                       )}
                     </SecondaryInfo>
-                  )}
-                  {modesWithWalkTime.includes(mode) && (
-                    <SecondaryInfo>
-                      <FormattedMessage
-                        id="components.MetroUI.timeWalking"
-                        values={{
-                          time: (
-                            <FormattedDuration
-                              duration={itinerary.walkTime}
-                              includeSeconds={false}
-                            />
-                          )
-                        }}
-                      />
-                    </SecondaryInfo>
-                  )}
-                  {modesWithWaitingTime.includes(mode) && (
-                    <SecondaryInfo>
-                      <FormattedMessage
-                        id="components.MetroUI.timeWaiting"
-                        values={{
-                          time: (
-                            <FormattedDuration
-                              duration={itinerary.waitingTime}
-                              includeSeconds={false}
-                            />
-                          )
-                        }}
-                      />
-                    </SecondaryInfo>
-                  )}
+                  }
+                  {modesWithWalkTime.includes(mode) && <SecondaryInfo>
+                    <FormattedMessage
+                      id="components.MetroUI.timeWalking"
+                      values={{
+                        time: (
+                          <FormattedDuration
+                            duration={itinerary.walkTime}
+                            includeSeconds={false}
+                          />
+                        )
+                      }}
+                    />
+                  </SecondaryInfo>}
+                  {modesWithWaitingTime.includes(mode) && <SecondaryInfo>
+                    <FormattedMessage
+                      id="components.MetroUI.timeWaiting"
+                      values={{
+                        time: (
+                          <FormattedDuration
+                            duration={itinerary.waitingTime}
+                            includeSeconds={false}
+                          />
+                        )
+                      }}
+                    />
+                  </SecondaryInfo>}
                 </ItineraryDetails>
                 <DepartureTimes>
                   {arrivesAt ? (
@@ -461,9 +449,9 @@ class MetroItinerary extends NarrativeItinerary {
                     <FormattedMessage id="components.MetroUI.leaveAt" />
                   )}{' '}
                   <DepartureTimesList
-                    activeItineraryTimeIndex={activeItineraryTimeIndex}
+                    expanded={expanded}
                     itinerary={itinerary}
-                    setItineraryTimeIndex={setItineraryTimeIndex}
+                    setActiveItinerary={setActiveItinerary}
                     showArrivals={arrivesAt}
                   />
                 </DepartureTimes>
@@ -480,7 +468,7 @@ class MetroItinerary extends NarrativeItinerary {
                 <SecondaryInfo as="span">
                   <ItineraryDescription itinerary={itinerary} />
                 </SecondaryInfo>
-                {this._renderMainRouteBlock(routeLegs)}
+                {this._renderMainRouteBlock(itinerary.legs)}
               </ItineraryGridSmall>
             )}
           </ItineraryWrapper>
@@ -505,22 +493,14 @@ class MetroItinerary extends NarrativeItinerary {
 // TODO: state type
 const mapStateToProps = (state: any, ownProps: Props) => {
   const activeSearch = getActiveSearch(state)
-  const activeItineraryTimeIndex =
-    // @ts-expect-error state is not yet typed
-    activeSearch && activeSearch.activeItineraryTimeIndex
 
   return {
     accessibilityScoreGradationMap:
       state.otp.config.accessibilityScore?.gradationMap,
-    activeItineraryTimeIndex,
-    arrivesAt: state.otp.currentQuery.departArrive === 'ARRIVE',
+    arrivesAt: state.otp.filter.sort.type === 'ARRIVALTIME',
     co2Config: state.otp.config.co2,
     configCosts: state.otp.config.itinerary?.costs,
-    // The configured (ambient) currency is needed for rendering the cost
-    // of itineraries whether they include a fare or not, in which case
-    // we show $0.00 or its equivalent in the configured currency and selected locale.
-    currency: state.otp.config.localization?.currency || 'USD',
-    defaultFareKey: state.otp.config.itinerary?.defaultFareKey,
+    defaultFareType: state.otp.config.itinerary?.defaultFareType,
     enableDot: !state.otp.config.itinerary?.disableMetroSeperatorDot,
     // @ts-expect-error TODO: type activeSearch
     pending: activeSearch ? Boolean(activeSearch.pending) : false,
@@ -529,13 +509,8 @@ const mapStateToProps = (state: any, ownProps: Props) => {
 }
 
 // TS TODO: correct redux types
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    setItineraryTimeIndex: (payload: number) =>
-      dispatch(narrativeActions.setActiveItineraryTime(payload)),
-    setItineraryView: (payload: any) =>
-      dispatch(uiActions.setItineraryView(payload))
-  }
+const mapDispatchToProps = {
+  setItineraryView: uiActions.setItineraryView
 }
 
 export default injectIntl(
