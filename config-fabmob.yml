@@ -4,7 +4,12 @@ api:
   host: http://localhost
   path: /otp/routers/default
   port: 3000
-# v2: false
+  v2: true
+
+# Determines if the header brand should be clickable or not. If set to true, 
+# clicking the header brand will go back to the main trip planner page and wipe out any
+# results.
+# brandClickable: true/false
 
 # Add Bugsnag key for error reporting
 # bugsnag:
@@ -31,6 +36,11 @@ api:
 # autoPlan:
 #   mobile: BOTH_LOCATIONS_CHANGED
 #   default: ONE_LOCATION_CHANGED
+
+### If Terms of Service is hosted at an outside link, provide it here. If translations 
+### are provided, host each translation by including the language code (eg. en-US, fr, es) 
+### in the URL and use {locale} to represent the language in the link below
+# termsOfServiceLink:
 
 ### The default query parameters can be overridden be uncommenting this object.
 ### Note: the override values must be valid values within otp-ui's query-params.js
@@ -65,6 +75,7 @@ persistence:
 #  otp_middleware:
 #    apiBaseUrl: https://otp-middleware.example.com
 #    apiKey: your-middleware-api-key
+#    supportsPushNotifications: true # If not set, push notification settings will not be shown.
 
 ### Adding additional menu items to the main menu items. Use the separator flag
 ### to include a separator line if you have groups of menu items
@@ -150,6 +161,7 @@ map:
 # it is possible to leave out a geocoder config entirely. In that case only
 # GPS coordinates will be used when finding the origin/destination.
 
+# example config for a Pelias geocoder (https://pelias.io/)
 geocoder:
   # apiKey: MAPZEN_KEY
   boundary:
@@ -195,50 +207,67 @@ geocoder:
 
 # Use this mode config for the enhanced Transit+ config
 modes:
-  # This is the default behavior for flex merging.
-  # If set to false, each FLEX mode (FLEX_EGRESS,FLEX_ACCESS,FLEX_DIRECT) will 
-  # be treated separately. If set to true, a single FLEX mode will automatically 
-  # be expanded and reduced to those three modes.
-  mergeFlex: true 
-  modeOptions:
-    - mode: TRANSIT
-    - mode: WALK
-    - mode: CAR
-    - mode: BICYCLE
-    - mode: TAXI
-      # This overrides the label generated from the i18n. Use when defining modes that are not supported by OTP i18n
-      # label: Rental 
-      
+  # Definition for the mode buttons to display in trip form
+  modeButtons:
+    - iconName: bus
+      key: transit
+      # List of modes to add to the query when this button is enabled
+      modes:
+        - mode: TRANSIT
+    - iconName: bicycle
+      key: bicycle
+      modes:
+        # Modes can contain a qualifier
+        # See OTP documentation for details
+        - mode: BICYCLE
+#       - mode: BICYCLE
+#         qualifier: RENT
+    - iconName: taxi
+      key: taxi
+      modes:
+        - mode: TAXI
+    - iconName: car
+      key: car
+      modes:
+        - mode: CAR
+  # Allows initial state to be configured.
+  # Which buttons enabled on load + overriding setting defaults
+  initialState:
+    enabledModeButtons: # Mode button keys enabled by default
+      - transit
+      - bicycle
+      - taxi
+  # Add additional mode settings to show up in mode selector hover panel
+  modeSettingDefinitions:
+    # Corresponding mode; if this mode is found in the button's mode list,
+    # this setting will show up in the hover panel for that button.
+    - applicableMode: TAXI
+      default: true # Initial state value
+      # One of the predefined query parameter names.
+      # See OTP-UI ModeSelector component for a list of supported parameter names.
+      key: taxiStandard
+#     iconName: wheelchair
+      type: CHECKBOX # Possible options: CHECKBOX, SUBMODE, SLIDER, DROPDOWN
+    - applicableMode: TAXI
+      default: false
+      key: taxiMinivan
+      type: CHECKBOX
+    - applicableMode: TAXI
+      key: taxiSpecial
+      type: CHECKBOX
   transitModes:
     - mode: BUS
       label: Bus
       # A mode color can be added, used throughout the application,
       # most notably in the enhanced stop viewer bubble
       color: blue
-    - mode: SUBWAY
+    - mode: Subway
+      label: Metro
 
-  combinations:
-    - mode: "BICYCLE"
-      params:
-        numItineraries: 1
-    - mode: "CAR"
-      params:
-        numItineraries: 1
-    - mode: "WALK,TRANSIT"
-      params:
-        numItineraries: 2
-    - mode: "TAXI"
-      params:
-        numItineraries: 1
-
-  accessModes:
-    - mode: BICYCLE
-      label: Transit + Bike
-
-  bicycleModes:
-    - mode: BICYCLE
-      label: Own Bike
-      iconWidth: 18
+  # Potentially deprecated
+# accessModes:
+#   - mode: BICYCLE
+#     label: Transit + Bike
 
 # # The following modules require the datastoreUrl and trinetReDirect properties
 # # to be set. Note: Most of these components are currently only configured for
@@ -294,6 +323,9 @@ itinerary:
   # Whether the plan first/previous/next/last buttons should be shown along with
   # plan trip itineraries.
   showPlanFirstLastButtons: false
+  # Filters out trips returned by OTP by default, unless specifically requested.
+  # e.g. filters out walk-only itineraries if user has not explicitly asked for them.
+  strictItineraryFiltering: false
   # Whether to render route names and colors in the blocks inside
   # the batch ui rows
   renderRouteNamesInBlocks: true
@@ -305,7 +337,11 @@ itinerary:
   #  electronicRegular: "SmartCard Fare"
   #  student: "Student Fare"
   # One fare will always be shown by default
-  #defaultFareKey: electronicRegular
+  defaultFareType: { mediumId: null, riderCategoryId: null }
+
+  # List of OTP2 errors to not display. Can be a list
+  # mutedErrors:
+  #   - NO_TRANSIT_CONNECTION_IN_SEARCH_WINDOW
 
   # The following settings must be set to these values to use the new
   # "Metro" UI. The settings can be used without the Metro UI, but
@@ -315,6 +351,8 @@ itinerary:
 
   # Whether to show the "# itineraries found" text above the itinerary results
   showHeaderText: false
+  # Whether to show the mode descriptions in the batch UI results. Defaults to true
+  showBatchUiItineraryHeaders: false
   # Whether to hide the gray loading bars that appear while results are loading
   hideSkeletons: true
   # Whether the itinerary listing background should match the header
@@ -331,10 +369,27 @@ itinerary:
   # This flag disables the dot between legs in the metro itnerary summary, replacing it with
   # a gray background
   disableMetroSeperatorDot: false
+  # If enabled, always shows departures as times ("10pm" instead of "3 min") unless realtime data is present
+  onlyShowCountdownForRealtime: true
+  # Show the number of minutes of delay or early beneath a time in the itinerary body
+  showScheduleDeviation: true
   # Shows the duration of a leg below the leg in the metro itinerary summary
   showLegDurations: false
-  # Allows calorie counts to be hidden
-  displayCalories: true
+  # Whether to add a OTP_RR_A11Y_ROUTING_ENABLED error to all itineraries with accessibility scores
+  displayA11yError: false
+  # The sort option to use by default
+  # Available sort options: 'BEST', 'DURATION', 'ARRIVALTIME', 'WALKTIME', 'COST', 'DEPARTURETIME'
+  # defaultSort: "BEST" # Default
+  # The sort options to display in the sort options list
+  # If unset, will display all.
+  # Available sort options: 'BEST', 'DURATION', 'ARRIVALTIME', 'WALKTIME', 'COST', 'DEPARTURETIME'
+  # sortModes: 
+  #   - 'BEST'
+  #   - 'DURATION'
+  #   - 'ARRIVALTIME'
+  #   - 'WALKTIME'
+  #   - 'COST'
+  #   - 'DEPARTURETIME'
 
 # The transitOperators key is a list of transit operators that can be used to
 # order transit agencies when sorting by route. Also, this can optionally
@@ -384,6 +439,7 @@ transitOperators:
 #       BUS: # Any OTP mode
 #         color: 00FF00 # HEX color without the # (like GTFS)
 #         textColor: FFFFFF # HEX color without the # (like GTFS)
+#     routeIcons: false # If set to false, no mode icons in the route viewer
 #   - feedId: TriMet
 #     agencyId: TRIMET
 #     name: TriMet
@@ -501,6 +557,14 @@ language:
           agencyName: "Agency Name"
           phoneNumber: "Phone Number"
           agencyUrl: "Website"
+    otpUi:
+      ModeSelector:
+        labels:
+          taxi: Taxi
+        settings:
+          taxiStandard-label: Standard
+          taxiMinivan-label: Minivan
+          taxiSpecial-label: Special needs
   fr:
     common:
       modes:
@@ -517,6 +581,14 @@ language:
           agencyName: "Nom de l'agence"
           phoneNumber: "Numéro de téléphone"
           agencyUrl: "Site web"
+    otpUi:
+      ModeSelector:
+        labels:
+          taxi: Taxi
+        settings:
+          taxiStandard-label: Standard
+          taxiMinivan-label: Minivan
+          taxiSpecial-label: Véhicule adapté
 
 ### Localization section to provide language/locale settings
 localization:
