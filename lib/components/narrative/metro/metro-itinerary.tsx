@@ -180,7 +180,7 @@ const LoadingBlurred = styled.span<{ loading: boolean }>`
   transition: all 0.2s ease-in-out;
 `
 
-const modesWithFares = ['BUS', 'SUBWAY', 'TAXI']
+const modesWithFares = ['BUS', 'SUBWAY', 'TAXI', 'CAR']
 const modesWithWalkTime = ['BUS', 'SUBWAY']
 const modesWithWaitingTime = ['TAXI']
 

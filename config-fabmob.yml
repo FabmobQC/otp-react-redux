@@ -255,6 +255,22 @@ modes:
     - applicableMode: TAXI
       key: taxiSpecial
       type: CHECKBOX
+    - applicableMode: CAR
+      key: vehiculeType
+      type: DROPDOWN
+      options:
+        - value: small
+        - value: medium
+        - value: large
+        - value: vus
+        - value: sport
+      default: medium
+    - applicableMode: CAR
+      key: nbKmPerYear
+      type: SLIDER
+      low: 10000
+      high: 50000
+      default: 10000
   transitModes:
     - mode: BUS
       label: Bus
@@ -565,6 +581,14 @@ language:
           taxiStandard-label: Standard
           taxiMinivan-label: Minivan
           taxiSpecial-label: Special needs
+          nbKmPerYear-labelLow: Kilometers per year (10 000)
+          nbKmPerYear-labelHigh: Kilometers per year (50 000)
+          vehiculeType-label: Vehicle type
+          vehiculeType-options-small: Small
+          vehiculeType-options-medium: Medium
+          vehiculeType-options-large: Large
+          vehiculeType-options-vus: SUV
+          vehiculeType-options-sport: Sport
   fr:
     common:
       modes:
@@ -589,6 +613,14 @@ language:
           taxiStandard-label: Standard
           taxiMinivan-label: Minivan
           taxiSpecial-label: Véhicule adapté
+          nbKmPerYear-labelLow: Kilomètres par année (10 000)
+          nbKmPerYear-labelHigh: Kilomètres par année (50 000)
+          vehiculeType-label: Type de véhicule
+          vehiculeType-options-small: Petit
+          vehiculeType-options-medium: Moyen
+          vehiculeType-options-large: Grand
+          vehiculeType-options-vus: VUS
+          vehiculeType-options-sport: Sport
 
 ### Localization section to provide language/locale settings
 localization:
