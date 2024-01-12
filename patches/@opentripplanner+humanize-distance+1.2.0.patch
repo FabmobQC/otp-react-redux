@@ -1,0 +1,12 @@
+diff --git a/node_modules/@opentripplanner/humanize-distance/esm/index.js b/node_modules/@opentripplanner/humanize-distance/esm/index.js
+index 1c5807e..82d890e 100644
+--- a/node_modules/@opentripplanner/humanize-distance/esm/index.js
++++ b/node_modules/@opentripplanner/humanize-distance/esm/index.js
+@@ -42,6 +42,7 @@ export function humanizeDistanceStringMetric(meters, intl) {
+ }
+ export function humanizeDistanceString(meters) {
+   var outputMetricUnits = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
++  outputMetricUnits = true // force metric units. Unfortunately, there is currently no configuration option for this.
+   var intl = arguments.length > 2 ? arguments[2] : undefined;
+   return outputMetricUnits ? humanizeDistanceStringMetric(meters, intl) : humanizeDistanceStringImperial(meters, null, intl);
+ }
