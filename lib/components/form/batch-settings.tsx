@@ -12,7 +12,6 @@ import {
 import { Search } from '@styled-icons/fa-solid/Search'
 import { SyncAlt } from '@styled-icons/fa-solid/SyncAlt'
 
-import coreUtils from '../../../fabmob/opentripplanner/core-utils'
 import { useIntl } from 'react-intl'
 import React, { useCallback, useContext, useState } from 'react'
 import type {
