@@ -10,21 +10,20 @@ interface Props {
 }
 
 const BookingDetails = ({ intl, itinerary }: Props) => {
-  const firstLeg = itinerary.legs[0]
-  if (firstLeg.mode !== 'TAXI') {
+  const taxiPricing = (itinerary as any).taxiPricing
+  if (taxiPricing === undefined) {
     return <></>
   }
-
-  const phoneNumber = firstLeg.pickupBookingInfo?.contactInfo?.phoneNumber
+  const phoneNumber = taxiPricing.booking.phoneNumber ?? ''
   return (
     <div className="trip-tools-container">
       <h2>{intl.formatMessage({ id: 'components.MetroUI.book.bookTaxi' })}</h2>
       <p>
-        {getFormattedTaxiAssetType(firstLeg.tncData?.productId ?? '', intl)}
+        {getFormattedTaxiAssetType(taxiPricing.mainAssetType.id ?? '', intl)}
       </p>
-      <p>{firstLeg.agencyName}</p>
+      <p>{taxiPricing.booking.agency.name}</p>
       <p>
-        <a href={firstLeg.agencyUrl}>{firstLeg.agencyUrl}</a>
+        <a href={taxiPricing.booking.webUrl}>{taxiPricing.booking.webUrl}</a>
       </p>
       <p>
         <a href={`tel:${phoneNumber}`}>{phoneNumber}</a>
