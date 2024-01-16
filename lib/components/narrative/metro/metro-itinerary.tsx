@@ -265,6 +265,7 @@ class MetroItinerary extends NarrativeItinerary {
       showRealtimeAnnotation
     } = this.props
     const { SvgIcon } = this.context
+
     const { isCallAhead, isContinuousDropoff, isFlexItinerary, phone } =
       getFlexAttributes(itinerary)
 

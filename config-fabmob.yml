@@ -1,12 +1,12 @@
 title: "Planificateur FabmobQC"
 homeTimezone: America/Toronto
 api:
-  host: http://localhost
+  host: https://www.api-otp.fabmobqc.ca
   path: /otp/routers/default
-  port: 3000
+#  port: 3000
   v2: true
 
-# Determines if the header brand should be clickable or not. If set to true, 
+# Determines if the header brand should be clickable or not. If set to true,
 # clicking the header brand will go back to the main trip planner page and wipe out any
 # results.
 # brandClickable: true/false
@@ -394,6 +394,8 @@ itinerary:
   showScheduleDeviation: true
   # Shows the duration of a leg below the leg in the metro itinerary summary
   showLegDurations: false
+  # Whether to show (experimental) itinerary preview overlay on itinerary results on map
+  previewOverlay: false
   # Whether to add a OTP_RR_A11Y_ROUTING_ENABLED error to all itineraries with accessibility scores
   displayA11yError: false
   # The sort option to use by default

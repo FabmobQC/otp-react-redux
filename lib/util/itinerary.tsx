@@ -311,7 +311,6 @@ function getDriveTime(itinerary: Itinerary): number {
 /**
  * Parses OTP itinerary fare object and returns fares along with overridden currency
  */
-
 export function getFare(
   itinerary: Itinerary,
   defaultFareType?: RelaxedFareProductSelector
