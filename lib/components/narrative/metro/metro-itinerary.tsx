@@ -12,15 +12,14 @@ import React from 'react'
 import styled, { keyframes } from 'styled-components'
 
 import * as uiActions from '../../../actions/ui'
+import { AppReduxState } from '../../../util/state-types'
 import { ComponentContext } from '../../../util/contexts'
 import { FlexIndicator } from '../default/flex-indicator'
-import {
-  getAccessibilityScoreForItinerary,
-  itineraryHasAccessibilityScores
-} from '../../../util/accessibility-routing'
-import { getActiveSearch, getFare } from '../../../util/state'
+import { getActiveSearch } from '../../../util/state'
+import { getFare } from '../../../util/itinerary'
 import { IconWithText } from '../../util/styledIcon'
 import { ItineraryDescription } from '../default/itinerary-description'
+import { itineraryHasAccessibilityScore } from '../../../util/accessibility-routing'
 import { ItineraryView } from '../../../util/ui'
 import { localizeGradationMap } from '../utils'
 import FormattedDuration from '../../util/formatted-duration'
@@ -28,7 +27,7 @@ import ItineraryBody from '../line-itin/connected-itinerary-body'
 import NarrativeItinerary from '../narrative-itinerary'
 import SimpleRealtimeAnnotation from '../simple-realtime-annotation'
 
-import { getFirstTransitLegStop, getFlexAttirbutes } from './attribute-utils'
+import { getFlexAttributes } from './attribute-utils'
 import DepartureTimesList, {
   SetActiveItineraryHandler
 } from './departure-times-list'
@@ -75,7 +74,6 @@ const ItineraryDetails = styled.ul`
   margin: 0;
   overflow: hidden;
   padding: 0;
-  width: 90%;
 `
 const PrimaryInfo = styled.li`
   color: #000000cc;
@@ -211,23 +209,17 @@ class MetroItinerary extends NarrativeItinerary {
   static ModesAndRoutes = MetroItineraryRoutes
 
   _onMouseEnter = () => {
-    const { active, index, setVisibleItinerary, visibleItinerary } = this.props
+    const { active, index, setVisibleItinerary, visible } = this.props
     // Set this itinerary as visible if not already visible.
-    const visibleNotSet =
-      visibleItinerary === null || visibleItinerary === undefined
-    const isVisible =
-      visibleItinerary === index || (active === index && visibleNotSet)
+    const isVisible = visible || active
     if (typeof setVisibleItinerary === 'function' && !isVisible) {
       setVisibleItinerary({ index })
     }
   }
 
   _onMouseLeave = () => {
-    const { index, setVisibleItinerary, visibleItinerary } = this.props
-    if (
-      typeof setVisibleItinerary === 'function' &&
-      visibleItinerary === index
-    ) {
+    const { setVisibleItinerary, visible } = this.props
+    if (typeof setVisibleItinerary === 'function' && visible) {
       setVisibleItinerary({ index: null })
     }
   }
@@ -274,7 +266,7 @@ class MetroItinerary extends NarrativeItinerary {
     } = this.props
     const { SvgIcon } = this.context
     const { isCallAhead, isContinuousDropoff, isFlexItinerary, phone } =
-      getFlexAttirbutes(itinerary)
+      getFlexAttributes(itinerary)
 
     const { fareCurrency, transitFare } = getFare(itinerary, defaultFareType)
 
@@ -309,8 +301,6 @@ class MetroItinerary extends NarrativeItinerary {
       SvgIcon,
       accessibilityScoreGradationMap
     )
-
-    const firstTransitStop = getFirstTransitLegStop(itinerary)
 
     const handleClick = () => {
       setActiveItinerary(itinerary)
@@ -351,10 +341,10 @@ class MetroItinerary extends NarrativeItinerary {
         >
           <ItineraryWrapper className={`itin-wrapper${mini ? '-small' : ''}`}>
             {emissionsNote && <ItineraryNote>{emissionsNote}</ItineraryNote>}
-            {itineraryHasAccessibilityScores(itinerary) && (
+            {itineraryHasAccessibilityScore(itinerary) && (
               <AccessibilityRating
                 gradationMap={localizedGradationMapWithIcons}
-                score={getAccessibilityScoreForItinerary(itinerary)}
+                score={itinerary.accessibilityScore}
               />
             )}
             {!mini && (
@@ -378,7 +368,7 @@ class MetroItinerary extends NarrativeItinerary {
                     />
                   </PrimaryInfo>
                   <SecondaryInfo className={isFlexItinerary ? 'flex' : ''}>
-                    {isFlexItinerary ? (
+                    {isFlexItinerary && (
                       <FlexIndicator
                         isCallAhead={isCallAhead}
                         isContinuousDropoff={isContinuousDropoff}
@@ -386,13 +376,6 @@ class MetroItinerary extends NarrativeItinerary {
                         shrink={false}
                         textOnly
                       />
-                    ) : (
-                      firstTransitStop && (
-                        <FormattedMessage
-                          id="components.MetroUI.fromStop"
-                          values={{ stop: firstTransitStop }}
-                        />
-                      )
                     )}
                   </SecondaryInfo>
                   {
@@ -490,8 +473,7 @@ class MetroItinerary extends NarrativeItinerary {
   }
 }
 
-// TODO: state type
-const mapStateToProps = (state: any, ownProps: Props) => {
+const mapStateToProps = (state: AppReduxState, ownProps: Props) => {
   const activeSearch = getActiveSearch(state)
 
   return {

@@ -34,7 +34,6 @@ common:
     cancel: Avbryt
     close: Lukk
     defaultValue: "{value} (forvalg)"
-    delete: Slett
     edit: Rediger
     finish: Fullfør
     next: Neste
@@ -74,9 +73,6 @@ components:
     now: Nå
   DeleteUser:
     deleteMyAccount: Slett kontoen min
-  EnhancedStopMarker:
-    stopID: "Stopp-ID:"
-    stopViewer: Stopp-viser
   ErrorMessage:
     header: Kunne ikke planlegge tur
     warning: Advarsel

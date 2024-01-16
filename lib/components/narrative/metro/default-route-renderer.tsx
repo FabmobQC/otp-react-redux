@@ -7,8 +7,9 @@ const Block = styled.span<{ color: string; isOnColoredBackground?: boolean }>`
   border-radius: 5px;
   border-top: 5px solid #${(props) => props.color};
   display: inline-block;
-  margin-top: -2px;
   padding: 3px 7px;
+  padding-left: 7px !important; /* TODO: this does not scale well to alternate zoom levels/text sizes */
+  padding-right: 7px !important;
   /* Below is for route names that are too long: cut-off and show ellipsis. */
   max-width: 150px;
   overflow: hidden;
@@ -34,7 +35,7 @@ const DefaultRouteRenderer = ({
   leg,
   style
 }: RouteRendererProps): JSX.Element => {
-  const routeTitle = leg.routeShortName || leg.route || leg.routeLongName
+  const routeTitle = leg.routeShortName || leg.routeLongName
   return (
     <Block
       color={leg.routeColor || '333333'}

@@ -23,6 +23,8 @@ import { updateOverlayVisibility } from '../../actions/config'
 
 import ElevationPointMarker from './elevation-point-marker'
 import EndpointsOverlay from './connected-endpoints-overlay'
+import GeoJsonLayer from './connected-geojson-layer'
+import ItinSummaryOverlay from './itinerary-summary-overlay'
 import ParkAndRideOverlay from './connected-park-and-ride-overlay'
 import PointPopup from './point-popup'
 import RoutePreviewOverlay from './route-preview-overlay'
@@ -46,6 +48,12 @@ const MapContainer = styled.div`
 
   * {
     box-sizing: unset;
+  }
+
+  .maplibregl-popup-content,
+  .mapboxgl-popup-content {
+    border-radius: 10px;
+    box-shadow: 0 3px 14px 4px rgb(0 0 0 / 20%);
   }
 `
 /**
@@ -297,6 +305,7 @@ class DefaultMap extends Component {
           zoom={zoom}
         >
           <PointPopup />
+          <ItinSummaryOverlay />
           <RoutePreviewOverlay />
           {/* The default overlays */}
           <EndpointsOverlay />
@@ -318,6 +327,10 @@ class DefaultMap extends Component {
               name: getLayerName(overlayConfig, config, intl)
             }
             switch (overlayConfig.type) {
+              case 'geojson':
+                return (
+                  <GeoJsonLayer {...namedLayerProps} url={overlayConfig.url} />
+                )
               case 'bike-rental':
                 return (
                   <VehicleRentalOverlay
