@@ -237,6 +237,7 @@ modes:
       - transit
       - bicycle
       - taxi
+      - car
   # Add additional mode settings to show up in mode selector hover panel
   modeSettingDefinitions:
     # Corresponding mode; if this mode is found in the button's mode list,
