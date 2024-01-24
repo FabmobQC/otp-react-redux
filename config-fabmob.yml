@@ -1,9 +1,9 @@
 title: "Planificateur FabmobQC"
 homeTimezone: America/Toronto
 api:
-  host: https://www.api-otp.fabmobqc.ca
+  host: http://localhost
   path: /otp/routers/default
-#  port: 3000
+  port: 3000
   v2: true
 
 # Determines if the header brand should be clickable or not. If set to true,
@@ -280,7 +280,7 @@ modes:
       # A mode color can be added, used throughout the application,
       # most notably in the enhanced stop viewer bubble
       color: blue
-    - mode: Subway
+    - mode: SUBWAY
       label: Metro
 
   # Potentially deprecated
@@ -445,8 +445,8 @@ transitOperators:
     logo: https://www.stm.info/sites/all/themes/stm/img/header-logo.png
     order: 1
   - feedId: Exo
-    agencyId: Exo
-    name: Exo
+    agencyId: MRCLASSO
+    name: exo-L'Assomption
     logo: https://www.droit-inc.com/img/trackers/731a8faccb56947b6ade4d85d7cebc6d
     order: 2
 #   - feedId: TriMet
