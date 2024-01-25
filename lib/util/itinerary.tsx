@@ -324,6 +324,9 @@ export function getFare(
   const carCost = (itinerary as any).drivingCosts
   const carCurrency = carCost && 'CAD'
 
+  const transitFare = (itinerary as any).transitFare
+  const transitCurrency = transitFare && 'CAD'
+
   const itineraryCost = coreUtils.itinerary.getItineraryCost(
     itinerary?.legs,
     defaultFareType?.mediumId || null,
@@ -331,10 +334,10 @@ export function getFare(
   )
 
   return {
-    fareCurrency: taxiCurrency || carCurrency || itineraryCost?.currency.code,
+    fareCurrency: taxiCurrency || carCurrency || transitCurrency || itineraryCost?.currency.code,
     maxTNCFare,
     minTNCFare,
-    transitFare: taxiCost || carCost?.toFixed(2) || itineraryCost?.amount
+    transitFare: taxiCost || carCost?.toFixed(2) || transitFare || itineraryCost?.amount
   }
 }
 
