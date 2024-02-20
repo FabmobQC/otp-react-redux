@@ -5,6 +5,7 @@ import {
   injectIntl,
   IntlShape
 } from 'react-intl'
+import { getCurrentDate } from '@opentripplanner/core-utils/lib/time'
 import { Redo } from '@styled-icons/fa-solid/Redo'
 import { TransitOperator } from '@opentripplanner/types'
 import coreUtils from '@opentripplanner/core-utils'
@@ -30,7 +31,13 @@ const defaultState = {
 
 type Props = {
   autoRefreshStopTimes: boolean
-  findStopTimesForStop: ({ stopId }: { stopId: string }) => void
+  findStopTimesForStop: ({
+    date,
+    stopId
+  }: {
+    date: string
+    stopId: string
+  }) => void
   homeTimezone: string
   intl: IntlShape
   nearbyStops: string[]
@@ -43,7 +50,7 @@ type Props = {
   stopViewerConfig: any
   toggleAutoRefresh: (enable: boolean) => void
   transitOperators: TransitOperator[]
-  viewedStop: { stopId: string }
+  viewedStop?: { stopId: string }
 }
 
 type State = {
@@ -59,8 +66,13 @@ class LiveStopTimes extends Component<Props, State> {
   state = defaultState
 
   _refreshStopTimes = (): void => {
-    const { findStopTimesForStop, viewedStop } = this.props
-    findStopTimesForStop({ stopId: viewedStop.stopId })
+    const { findStopTimesForStop, homeTimezone, viewedStop } = this.props
+    if (!viewedStop) return
+
+    findStopTimesForStop({
+      date: getCurrentDate(homeTimezone),
+      stopId: viewedStop?.stopId
+    })
     // FIXME: We need to refresh child stop arrivals, but this could be a ton of
     // requests!!! Is there a better way?
     // Also, we probably need to refresh vehicle locations.

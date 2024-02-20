@@ -368,8 +368,8 @@ class MetroItinerary extends NarrativeItinerary {
                       includeSeconds={false}
                     />
                   </PrimaryInfo>
-                  <SecondaryInfo className={isFlexItinerary ? 'flex' : ''}>
-                    {isFlexItinerary && (
+                  {isFlexItinerary && (
+                    <SecondaryInfo className={isFlexItinerary ? 'flex' : ''}>
                       <FlexIndicator
                         isCallAhead={isCallAhead}
                         isContinuousDropoff={isContinuousDropoff}
@@ -377,8 +377,8 @@ class MetroItinerary extends NarrativeItinerary {
                         shrink={false}
                         textOnly
                       />
-                    )}
-                  </SecondaryInfo>
+                    </SecondaryInfo>
+                  )}
                   {
                     // Hide the fare information entirely if the defaultFareType isn't specified.
                     modesWithFares.includes(mode) && <SecondaryInfo>

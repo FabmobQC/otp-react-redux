@@ -1,13 +1,10 @@
-import {
-  Auth0ContextInterface,
-  withAuthenticationRequired
-} from '@auth0/auth0-react'
 import { connect } from 'react-redux'
 import { Form, Formik, FormikProps } from 'formik'
 import { injectIntl, IntlShape } from 'react-intl'
 import { RouteComponentProps } from 'react-router'
+import { withAuthenticationRequired } from '@auth0/auth0-react'
 import clone from 'clone'
-import React, { ChangeEvent, Component, FormEvent } from 'react'
+import React, { ChangeEvent, Component } from 'react'
 import styled, { css } from 'styled-components'
 import toast from 'react-hot-toast'
 
@@ -27,20 +24,12 @@ import VerifyEmailPane from './verify-email-pane'
 import withLoggedInUserSupport from './with-logged-in-user-support'
 
 interface Props {
-  auth0: Auth0ContextInterface
   basePath?: string
   createOrUpdateUser: (user: User, intl: IntlShape) => Promise<number>
-  deleteUser: (
-    user: User,
-    auth0: Auth0ContextInterface,
-    intl: IntlShape
-  ) => void
   intl: IntlShape
   isWizard: boolean
   itemId: string
   loggedInUser: User
-  requestPhoneVerificationSms: (phoneNum: string, intl: IntlShape) => void
-  verifyPhoneNumber: (code: string, intl: IntlShape) => void
 }
 
 const pendingCss = css`
@@ -96,25 +85,6 @@ class UserAccountScreen extends Component<Props> {
    */
   _handleCreateNewUser = (userData: EditedUser) => {
     this._updateUserPrefs(userData, true)
-  }
-
-  _handleDeleteUser = (evt: FormEvent) => {
-    const { auth0, deleteUser, intl, loggedInUser } = this.props
-    // Avoid triggering onsubmit with formik (which would result in a save user
-    // call).
-    evt.preventDefault()
-    if (
-      window.confirm(
-        intl.formatMessage({ id: 'components.UserAccountScreen.confirmDelete' })
-      )
-    ) {
-      deleteUser(loggedInUser, auth0, intl)
-    }
-  }
-
-  _handleRequestPhoneVerificationCode = (newPhoneNumber: string) => {
-    const { intl, requestPhoneVerificationSms } = this.props
-    requestPhoneVerificationSms(newPhoneNumber, intl)
   }
 
   _submitForm = async (
@@ -196,17 +166,8 @@ class UserAccountScreen extends Component<Props> {
     }
   }
 
-  _handleSendPhoneVerificationCode = async ({
-    validationCode: code
-  }: {
-    validationCode: string
-  }) => {
-    const { intl, verifyPhoneNumber } = this.props
-    await verifyPhoneNumber(code, intl)
-  }
-
   render() {
-    const { auth0, basePath, intl, isWizard, itemId, loggedInUser } = this.props
+    const { basePath, intl, isWizard, itemId, loggedInUser } = this.props
     const loggedInUserWithNotificationArray = {
       ...loggedInUser,
       notificationChannel: loggedInUser.notificationChannel?.split(',') || []
@@ -235,9 +196,7 @@ class UserAccountScreen extends Component<Props> {
                     <Form id="user-settings-form" noValidate>
                       <PageTitle title={verifyEmail} />
                       <h1>{verifyEmail}</h1>
-                      <VerifyEmailPane
-                        emailVerified={auth0.user?.email_verified}
-                      />
+                      <VerifyEmailPane />
                     </Form>
                   )
                 }
@@ -267,18 +226,7 @@ class UserAccountScreen extends Component<Props> {
                   )
                 }
 
-                return (
-                  <ExistingAccountDisplay
-                    {...newFormikProps}
-                    onDelete={this._handleDeleteUser}
-                    onRequestPhoneVerificationCode={
-                      this._handleRequestPhoneVerificationCode
-                    }
-                    onSendPhoneVerificationCode={
-                      this._handleSendPhoneVerificationCode
-                    }
-                  />
-                )
+                return <ExistingAccountDisplay {...newFormikProps} />
               }
             }
           </Formik>
@@ -309,10 +257,7 @@ const mapStateToProps = (
 }
 
 const mapDispatchToProps = {
-  createOrUpdateUser: userActions.createOrUpdateUser,
-  deleteUser: userActions.deleteUser,
-  requestPhoneVerificationSms: userActions.requestPhoneVerificationSms,
-  verifyPhoneNumber: userActions.verifyPhoneNumber
+  createOrUpdateUser: userActions.createOrUpdateUser
 }
 
 export default withLoggedInUserSupport(
