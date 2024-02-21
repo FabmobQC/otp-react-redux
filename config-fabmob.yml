@@ -3,6 +3,7 @@ homeTimezone: America/Toronto
 api:
   host: http://localhost
   path: /otp/routers/default
+  basePath: /otp/routers/default
   port: 3000
   v2: true
 
