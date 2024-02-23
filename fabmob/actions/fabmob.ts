@@ -11,13 +11,17 @@ export const fetchTouristicPlaces = (): unknown => {
 
     const url = `${assembleBasePath(config)}/touristic-places`
 
-    const response = await fetch(url, {
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      method: 'GET'
-    })
-    const data = await response.json()
-    dispatch(setTouristicPlaces(data.touristicPlaces))
+    try {
+      const response = await fetch(url, {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: 'GET'
+      })
+      const data = await response.json()
+      dispatch(setTouristicPlaces(data.touristicPlaces))
+    } catch (error) {
+      console.error('Error fetching touristic places', error)
+    }
   }
 }
