@@ -116,8 +116,9 @@ persistence:
 #        href: ''
 
 map:
-  initLat: 45.542956
-  initLon: -73.603219
+  initLat: 46.4
+  initLon: -72.5
+  initZoom: 7
   baseLayers:
     - name: Streets
       # These tiles are free to use, but not in production
@@ -183,9 +184,9 @@ geocoder:
   boundary:
     rect:
       minLon: -76.148987
-      maxLon: -71.078796
-      minLat: 44.600246
-      maxLat: 46.485156
+      maxLon: -70.841501
+      minLat: 45.0009
+      maxLat: 47.144541
   focusPoint:
     lat: 45.542956
     lon: -73.603219
