@@ -230,11 +230,13 @@ modes:
   modeButtons:
     - iconName: bus
       key: transit
+      label: Transit
       # List of modes to add to the query when this button is enabled
       modes:
         - mode: TRANSIT
     - iconName: bicycle
       key: bicycle
+      label: Bicycle
       modes:
         # Modes can contain a qualifier
         # See OTP documentation for details
@@ -243,10 +245,12 @@ modes:
 #         qualifier: RENT
     - iconName: taxi
       key: taxi
+      label: Taxi
       modes:
         - mode: TAXI
     - iconName: car
       key: car
+      label: Car
       modes:
         - mode: CAR
   # Allows initial state to be configured.
