@@ -21,6 +21,7 @@ import { MainPanelContent } from '../../actions/ui-constants'
 import { setLocation, setMapPopupLocationAndGeocode } from '../../actions/map'
 import { setViewedStop } from '../../actions/ui'
 import { updateOverlayVisibility } from '../../actions/config'
+import TouristicPlacesOverlay from '../../../fabmob/components/map/touristic-places-overlay'
 
 import ElevationPointMarker from './elevation-point-marker'
 import EndpointsOverlay from './connected-endpoints-overlay'
@@ -323,6 +324,7 @@ class DefaultMap extends Component {
           />
           <TripViewerOverlay />
           <ElevationPointMarker />
+          <TouristicPlacesOverlay />
 
           {/* The configurable overlays */}
           {overlays?.map((overlayConfig, k) => {
