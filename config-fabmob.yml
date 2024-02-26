@@ -294,7 +294,7 @@ modes:
       type: DROPDOWN
       options:
         - value: 10000
-        - value: 15000
+      #  - value: 15000
         - value: 20000
         - value: 30000
       default: 10000
