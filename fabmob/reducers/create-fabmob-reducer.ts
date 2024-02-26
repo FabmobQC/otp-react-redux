@@ -1,11 +1,15 @@
 import update from 'immutability-helper'
 
 export interface TouristicPlace {
+  categories: string[]
+  city: string
+  housenumber?: string
   lat: number
   lon: number
   name: string
   // eslint-disable-next-line camelcase
   place_id: string
+  street?: string
 }
 
 interface FabmobState {
