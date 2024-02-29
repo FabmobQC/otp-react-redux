@@ -298,6 +298,19 @@ modes:
         - value: 20000
         - value: 30000
       default: 10000
+    - applicableMode: CAR
+      key: paidParkingTime
+      type: DROPDOWN
+      options:
+        - value: 0
+        - value: 0.25
+        - value: 0.5
+        - value: 0.75
+        - value: 1
+        - value: 2
+        - value: 3
+        - value: 4
+      default: 0.25
   transitModes:
     - mode: BUS
       label: Bus
@@ -627,6 +640,15 @@ language:
           vehiculeType-options-large: Large
           vehiculeType-options-vus: SUV
           vehiculeType-options-sport: Sport
+          paidParkingTime-label: Estimated parking time
+          paidParkingTime-options-0: No paid parking
+          paidParkingTime-options-0.25: 15 minutes
+          paidParkingTime-options-0.5: 30 minutes
+          paidParkingTime-options-0.75: 45 minutes
+          paidParkingTime-options-1: 1 hour
+          paidParkingTime-options-2: 2 hours
+          paidParkingTime-options-3: 3 hours
+          paidParkingTime-options-4: 4 hours
   fr:
     common:
       modes:
@@ -662,6 +684,15 @@ language:
           vehiculeType-options-large: Grand
           vehiculeType-options-vus: VUS
           vehiculeType-options-sport: Sport
+          paidParkingTime-label: Temps estimé de stationnement payant
+          paidParkingTime-options-0: Aucun
+          paidParkingTime-options-0.25: 15 minutes
+          paidParkingTime-options-0.5: 30 minutes
+          paidParkingTime-options-0.75: 45 minutes
+          paidParkingTime-options-1: 1 heure
+          paidParkingTime-options-2: 2 heures
+          paidParkingTime-options-3: 3 heures
+          paidParkingTime-options-4: 4 heures
 
 ### Localization section to provide language/locale settings
 localization:
