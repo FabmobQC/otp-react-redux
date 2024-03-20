@@ -2,8 +2,10 @@ import { connect } from 'react-redux'
 import { FormattedMessage, injectIntl, IntlShape } from 'react-intl'
 import React, { Component, FormEvent } from 'react'
 
+import * as mapActions from '../../../lib/actions/map'
 import { getActiveSearch, getShowUserSettings } from '../../../lib/util/state'
 import { getPersistenceMode } from '../../../lib/util/user'
+import AddPlaceButton from '../../../lib/components/form/add-place-button'
 import BatchSettings from '../../../lib/components/form/batch-settings'
 import InvisibleA11yLabel from '../../../lib/components/util/invisible-a11y-label'
 import LocationField from '../../../lib/components/form/connected-location-field'
@@ -14,8 +16,10 @@ import ViewerContainer from '../../../lib/components/viewers/viewer-container'
 
 interface Props {
   activeSearch: any
+  currentQuery: any
   intl: IntlShape
   mobile?: boolean
+  setLocation: (params: any) => void
   showUserSettings: boolean
 }
 
@@ -33,8 +37,18 @@ class BatchRoutingPanel extends Component<Props> {
     this.setState({ planTripClicked: true })
   }
 
+  _addPlace = () => {
+    const index = this.props.currentQuery.additionalPlaces.length
+    this.props.setLocation({
+      location: undefined,
+      locationType: `additional-${index}`
+    })
+  }
+
   render() {
-    const { activeSearch, intl, mobile, showUserSettings } = this.props
+    const { activeSearch, currentQuery, intl, mobile, showUserSettings } =
+      this.props
+    const { additionalPlaces } = currentQuery
     const { planTripClicked } = this.state
     const mapAction = mobile
       ? intl.formatMessage({
@@ -87,7 +101,27 @@ class BatchRoutingPanel extends Component<Props> {
             <div className="switch-button-container">
               <SwitchButton />
             </div>
+            {additionalPlaces.map((place: unknown, i: number) => {
+              return (
+                <LocationField
+                  inputPlaceholder={intl.formatMessage({
+                    id: 'common.searchForms.enterAdditionalPlace'
+                  })}
+                  key={i}
+                  location={place}
+                  locationType={`additional-${i}`}
+                  selfValidate={planTripClicked}
+                  showClearButton={!mobile}
+                />
+              )
+            })}
           </span>
+          <AddPlaceButton
+            from="dummy"
+            intermediatePlaces={additionalPlaces}
+            onClick={this._addPlace}
+            to="dummy"
+          />
           <BatchSettings onPlanTripClick={this.handlePlanTripClick} />
         </form>
         {!activeSearch && showUserSettings && (
@@ -117,8 +151,16 @@ const mapStateToProps = (state: any) => {
       getPersistenceMode(state.otp.config.persistence).isLocalStorage)
   return {
     activeSearch: getActiveSearch(state),
+    currentQuery: state.otp.currentQuery,
     showUserSettings
   }
 }
 
-export default connect(mapStateToProps)(injectIntl(BatchRoutingPanel))
+const mapDispatchToProps = {
+  setLocation: mapActions.setLocation
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(injectIntl(BatchRoutingPanel))

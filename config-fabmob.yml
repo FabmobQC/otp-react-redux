@@ -198,7 +198,7 @@ geocoder:
   type: PHOTON
   # This base URL is required as the libraries will default to using now-defunct
   # mapzen urls
-  baseUrl: photon.komoot.io/api/
+  baseUrl: https://photon.komoot.io/
   # This allows the location field dropdown headers to be colored based on Pelias layer
   #resultsColors:
   #  stops: "#007fae"
@@ -642,11 +642,16 @@ language:
     common:
       modes:
         taxi: Taxi
+      searchForms:
+        enterAdditionalPlace: Enter destination...
       taxiAssetTypes:
         standard: Standard
         minivan: Minivan
         special: Special needs
     components:
+      AddPlaceButton:
+        tooManyPlaces: Maximum destinations reached
+        addPlace: Add destination
       MetroUI:
         timeWaiting: "{time} waiting"
         book:
@@ -686,11 +691,16 @@ language:
     common:
       modes:
         taxi: Taxi
+      searchForms:
+        enterAdditionalPlace: Entrez votre destination supplémentaire...
       taxiAssetTypes:
         standard: Standard
         minivan: Minivan
         special: Véhicule adapté
     components:
+      AddPlaceButton:
+        tooManyPlaces: Nombre max. de destinations atteint
+        addPlace: Ajouter une destination
       MetroUI:
         timeWaiting: "{time} d'attente"
         book:
