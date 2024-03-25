@@ -55,5 +55,5 @@ export function combineQueryParams(
     ...getUrlParams(),
     ...addedParams
   }
-  return qs.stringify(search, { arrayFormat: 'repeat' })
+  return qs.stringify(search, { arrayFormat: 'indices' }) // Fabmob: 'indices' make it easier to parse than 'repeat' when the array has only one element
 }
