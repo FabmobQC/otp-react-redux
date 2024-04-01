@@ -2,6 +2,7 @@ import { connect } from 'react-redux'
 import { FormattedMessage, injectIntl, IntlShape } from 'react-intl'
 import React, { Component, FormEvent } from 'react'
 
+import * as fabmobActions from '../../actions/fabmob'
 import * as mapActions from '../../../lib/actions/map'
 import { getActiveSearch, getShowUserSettings } from '../../../lib/util/state'
 import { getPersistenceMode } from '../../../lib/util/user'
@@ -13,12 +14,14 @@ import NarrativeItineraries from '../../../lib/components/narrative/narrative-it
 import SwitchButton from '../../../lib/components/form/switch-button'
 import UserSettings from '../../../lib/components/form/user-settings'
 import ViewerContainer from '../../../lib/components/viewers/viewer-container'
+import WaitingTimeSelector from '../../components/form/waiting-time-selector'
 
 interface Props {
   activeSearch: any
   currentQuery: any
   intl: IntlShape
   mobile?: boolean
+  setAdditionalPlaceWaitingTime: (index: number, waitingTime: number) => void
   setLocation: (params: any) => void
   showUserSettings: boolean
 }
@@ -43,12 +46,20 @@ class BatchRoutingPanel extends Component<Props> {
       location: undefined,
       locationType: `additional-${index}`
     })
+    this.props.setAdditionalPlaceWaitingTime(index, 1)
+  }
+
+  _updateAdditionalTime = (params: any) => {
+    // The key is the "name" property of DropdownSelector
+    const [key, value] = Object.entries(params)[0]
+    const index = parseInt(key.split('-')[1])
+    this.props.setAdditionalPlaceWaitingTime(index, value as number)
   }
 
   render() {
     const { activeSearch, currentQuery, intl, mobile, showUserSettings } =
       this.props
-    const { additionalPlaces } = currentQuery
+    const { additionalPlaces, additionalPlacesWaitingTimes } = currentQuery
     const { planTripClicked } = this.state
     const mapAction = mobile
       ? intl.formatMessage({
@@ -103,16 +114,22 @@ class BatchRoutingPanel extends Component<Props> {
             </div>
             {additionalPlaces.map((place: unknown, i: number) => {
               return (
-                <LocationField
-                  inputPlaceholder={intl.formatMessage({
-                    id: 'common.searchForms.enterAdditionalPlace'
-                  })}
-                  key={i}
-                  location={place}
-                  locationType={`additional-${i}`}
-                  selfValidate={planTripClicked}
-                  showClearButton={!mobile}
-                />
+                <div key={i}>
+                  <WaitingTimeSelector
+                    additionalPlacesWaitingTimes={additionalPlacesWaitingTimes}
+                    index={i}
+                    onChange={this._updateAdditionalTime}
+                  />
+                  <LocationField
+                    inputPlaceholder={intl.formatMessage({
+                      id: 'common.searchForms.enterAdditionalPlace'
+                    })}
+                    location={place}
+                    locationType={`additional-${i}`}
+                    selfValidate={planTripClicked}
+                    showClearButton={!mobile}
+                  />
+                </div>
               )
             })}
           </span>
@@ -157,6 +174,7 @@ const mapStateToProps = (state: any) => {
 }
 
 const mapDispatchToProps = {
+  setAdditionalPlaceWaitingTime: fabmobActions.setAdditionalPlaceWaitingTime,
   setLocation: mapActions.setLocation
 }
 

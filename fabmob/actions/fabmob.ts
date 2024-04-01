@@ -25,3 +25,26 @@ export const fetchTouristicPlaces = (): unknown => {
     }
   }
 }
+
+export const settingAdditionalPlaceWaitingTime = createAction(
+  'SET_ADDITIONAL_PLACE_WAITING_TIME'
+)
+
+export const setAdditionalPlaceWaitingTime = (
+  index: number,
+  waitingTime: number
+): unknown => {
+  return (dispatch: any): void => {
+    dispatch(settingAdditionalPlaceWaitingTime({ index, waitingTime }))
+  }
+}
+
+export const clearingAdditionalPlaceWaitingTime = createAction(
+  'CLEAR_ADDITIONAL_PLACE_WAITING_TIME'
+)
+
+export const clearAdditionalPlaceWaitingTime = (index: number): unknown => {
+  return (dispatch: any): void => {
+    dispatch(clearingAdditionalPlaceWaitingTime({ index }))
+  }
+}

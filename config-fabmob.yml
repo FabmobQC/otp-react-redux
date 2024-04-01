@@ -644,6 +644,9 @@ language:
         taxi: Taxi
       searchForms:
         enterAdditionalPlace: Enter destination...
+        additionalPlacesWaitingTimes-label: Stop time
+        additionalPlacesWaitingTimes-options-minutes: "{time} minutes"
+        additionalPlacesWaitingTimes-options-hours: "{time} hours"
       taxiAssetTypes:
         standard: Standard
         minivan: Minivan
@@ -693,10 +696,14 @@ language:
         taxi: Taxi
       searchForms:
         enterAdditionalPlace: Entrez votre destination supplémentaire...
+        additionalPlacesWaitingTimes-label: Temps d'arrêt
+        additionalPlacesWaitingTimes-options-minutes: "{time} minutes"
+        additionalPlacesWaitingTimes-options-hours: "{time} heures"
       taxiAssetTypes:
         standard: Standard
         minivan: Minivan
         special: Véhicule adapté
+      
     components:
       AddPlaceButton:
         tooManyPlaces: Nombre max. de destinations atteint
