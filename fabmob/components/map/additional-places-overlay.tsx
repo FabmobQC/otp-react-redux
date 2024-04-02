@@ -5,15 +5,15 @@ import {
 } from '@opentripplanner/types'
 import { connect } from 'react-redux'
 import { IntlShape, useIntl } from 'react-intl'
-import Endpoint from '@opentripplanner/endpoints-overlay/lib/endpoint'
-import EndpointsOverlay from '@opentripplanner/endpoints-overlay'
-import React, { ComponentProps, ReactElement, useCallback } from 'react'
-
 import {
   StackedIconContainer,
   StackedToIcon,
   ToIcon
 } from '@opentripplanner/endpoints-overlay/lib/styled'
+import Endpoint from '@opentripplanner/endpoints-overlay/lib/endpoint'
+import EndpointsOverlay from '@opentripplanner/endpoints-overlay'
+import React, { ComponentProps, ReactElement, useCallback } from 'react'
+import styled from 'styled-components'
 
 import { clearLocation } from '../../../lib/actions/form'
 import { convertToPlace, getUserLocations } from '../../../lib/util/user'
@@ -26,14 +26,36 @@ import { getShowUserSettings } from '../../../lib/util/state'
 import { setLocation } from '../../../lib/actions/map'
 import { toastOnPlaceSaved } from '../../../lib/components/util/toasts'
 
-const Icon = ({ location, type }: UserLocationAndType): ReactElement => {
+export const Indice = styled.div`
+  background-color: black;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  height: 20px;
+  width: 20px;
+  text-align: center;
+  border-radius: 50%;
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  box-shadow: 0px 0px 6px rgba(0,0,0,0.3);
+`
+interface IconProps extends UserLocationAndType {
+  index: number
+}
+
+const Icon = ({ index, location }: IconProps): ReactElement => {
   const PIXELS = 20
   const toPixels = PIXELS * 1.3
+
   return (
-    <StackedIconContainer title={location.name}>
-      <StackedToIcon size={toPixels} type="to" />
-      <ToIcon size={toPixels - 6} type="to" />
-    </StackedIconContainer>
+    <div>
+      <StackedIconContainer title={location.name}>
+        <StackedToIcon size={toPixels} type="to" />
+        <ToIcon size={toPixels - 6} type="to" />
+      </StackedIconContainer>
+      <Indice>{index + 2}</Indice>
+    </div>
   )
 }
 
@@ -79,7 +101,7 @@ const AdditionalPlacesOverlay = ({
           key={index}
           location={place}
           locations={otherProps.locations}
-          MapMarkerIcon={Icon}
+          MapMarkerIcon={(props) => <Icon index={index} {...props} />}
           rememberPlace={_rememberPlace}
           setLocation={otherProps.setLocation}
           showUserSettings={otherProps.showUserSettings}
