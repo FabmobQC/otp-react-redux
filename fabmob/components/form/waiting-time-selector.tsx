@@ -23,7 +23,7 @@ export const WaitingTimeSelector = ({
       name={`additionalPlacesWaitingTimes-${index}`}
       onChange={onChange}
       options={getOptions([0, 0.25, 0.5, 0.75, 1, 2, 3, 4, 5], intl)}
-      value={additionalPlacesWaitingTimes[index]}
+      value={additionalPlacesWaitingTimes[index] ?? 1}
     />
   )
 }
