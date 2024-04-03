@@ -15,5 +15,7 @@ export const planParamsToQueryAsync = async (
       })
     )
   }
+  result.additionalPlacesWaitingTimes =
+    params.additionalPlacesWaitingTimes?.map(parseFloat) ?? []
   return result
 }
