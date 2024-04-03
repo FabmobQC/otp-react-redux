@@ -36,9 +36,15 @@ const ViewSwitcher = ({
     setMainPanelContent(null)
   }
 
+  const _showTouristicPlaces = () => {
+    setMainPanelContent(MainPanelContent.TOURISTIC_PLACES)
+  }
+
   const tripPlannerActive = activePanel === null && !accountsActive
   const routeViewerActive = activePanel === MainPanelContent.ROUTE_VIEWER
   const nearbyActive = activePanel === MainPanelContent.NEARBY_VIEW
+  const touristicPlacesPanelViewer =
+    activePanel === MainPanelContent.TOURISTIC_PLACES
 
   return (
     <div
@@ -82,6 +88,14 @@ const ViewSwitcher = ({
         onClick={_showNearby}
       >
         <FormattedMessage id="components.ViewSwitcher.nearby" />
+      </Button>
+      <Button
+        aria-controls="view-switcher"
+        bsStyle="link"
+        className={`${touristicPlacesPanelViewer ? 'active' : ''}`}
+        onClick={_showTouristicPlaces}
+      >
+        <FormattedMessage id="components.TouristicPlacesViewer.shortTitle" />
       </Button>
     </div>
   )

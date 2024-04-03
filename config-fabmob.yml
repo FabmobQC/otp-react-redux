@@ -662,6 +662,12 @@ language:
           agencyName: "Agency Name"
           phoneNumber: "Phone Number"
           agencyUrl: "Website"
+      TouristicPlacesViewer:
+        shortTitle: Touristic Places
+        legendArt: Art & Monuments
+        legendDefault: Default
+        legendNatural: Natural Places & Parcs
+        legendReligious: Religious Places
     otpUi:
       ModeSelector:
         labels:
@@ -715,6 +721,12 @@ language:
           agencyName: "Nom de l'agence"
           phoneNumber: "Numéro de téléphone"
           agencyUrl: "Site web"
+      TouristicPlacesViewer:
+        shortTitle: Lieux touristisques
+        legendArt: Art et monuments
+        legendDefault: Autres
+        legendNatural: Lieux naturels et parcs
+        legendReligious: Lieux religieux
     otpUi:
       ModeSelector:
         labels:

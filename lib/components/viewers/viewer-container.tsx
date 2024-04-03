@@ -3,6 +3,7 @@ import React, { HTMLAttributes } from 'react'
 
 import { AppReduxState } from '../../util/state-types'
 import { MainPanelContent } from '../../actions/ui-constants'
+import TouristicPlacesView from '../../../fabmob/components/viewers/touristic-places-view'
 
 import NearbyView from './nearby/nearby-view'
 import PatternViewer from './pattern-viewer'
@@ -32,6 +33,8 @@ const ViewerContainer = ({
       return <TripViewer hideBackButton />
     case MainPanelContent.NEARBY_VIEW:
       return <NearbyView hideBackButton />
+    case MainPanelContent.TOURISTIC_PLACES:
+      return <TouristicPlacesView />
     default:
       // check for stop viewer
       if (isViewingStop) {

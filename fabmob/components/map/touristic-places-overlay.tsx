@@ -6,10 +6,11 @@ import { connect } from 'react-redux'
 import FromToLocationPicker from '@opentripplanner/from-to-location-picker'
 import React, { ReactElement, useState } from 'react'
 
+import * as mapActions from '../../../lib/actions/map'
 import { fetchTouristicPlaces } from '../../actions/fabmob'
 import { TouristicPlace } from '../../reducers/create-fabmob-reducer'
-
-import * as mapActions from '../../../lib/actions/map'
+import { TouristicPlaceIndicator } from '../../icons/touristic-places-indicator'
+import { touristicPlacesColors } from '../../actions/ui-constants'
 
 type TouristicPlacesOverlayProps = {
   fetchTouristicPlaces: () => void
@@ -81,14 +82,9 @@ const TouristicPlaceMarker = ({
       popupProps={{ offset: 10 }}
       position={[touristicPlace.lat, touristicPlace.lon]}
     >
-      <div
-        style={{
-          backgroundColor: getTouristicPlaceColor(touristicPlace),
-          border: '2px solid black',
-          borderRadius: '50%',
-          height: size,
-          width: size
-        }}
+      <TouristicPlaceIndicator
+        color={getTouristicPlaceColor(touristicPlace)}
+        size={size}
       />
     </MarkerWithPopup>
   )
@@ -96,21 +92,21 @@ const TouristicPlaceMarker = ({
 
 const getTouristicPlaceColor = (touristicPlace: TouristicPlace): string => {
   if (touristicPlace.categories.includes('religion')) {
-    return '#87CEEB'
+    return touristicPlacesColors.religious
   } else if (
     touristicPlace.categories.includes('leisure.park') ||
     touristicPlace.categories.includes('natural') ||
     touristicPlace.categories.includes('tourism.attraction.viewpoint')
   ) {
-    return '#ADFF2F'
+    return touristicPlacesColors.natural
   } else if (
     touristicPlace.categories.includes('tourism.attraction.artwork') ||
     touristicPlace.categories.includes('tourism.sights.memorial')
   ) {
-    return '#2F4F4F'
+    return touristicPlacesColors.art
   }
 
-  return '#FFA500'
+  return touristicPlacesColors.default
 }
 
 const mapStateToProps = (state: any) => {
