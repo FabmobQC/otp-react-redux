@@ -115,11 +115,24 @@ class BatchRoutingPanel extends Component<Props> {
             {additionalPlaces.map((place: unknown, i: number) => {
               return (
                 <div key={i}>
-                  <WaitingTimeSelector
-                    additionalPlacesWaitingTimes={additionalPlacesWaitingTimes}
-                    index={i}
-                    onChange={this._updateAdditionalTime}
-                  />
+                  <div
+                    style={{
+                      alignItems: 'center',
+                      display: 'flex',
+                      justifyContent: 'flex-end'
+                    }}
+                  >
+                    <WaitingTimeSelector
+                      additionalPlacesWaitingTimes={
+                        additionalPlacesWaitingTimes
+                      }
+                      index={i}
+                      onChange={this._updateAdditionalTime}
+                    />
+                    <div style={{ paddingLeft: '15px', paddingRight: '32px' }}>
+                      <SwitchButton index={i} />
+                    </div>
+                  </div>
                   <LocationField
                     inputPlaceholder={intl.formatMessage({
                       id: 'common.searchForms.enterAdditionalPlace'

@@ -8,15 +8,16 @@ import * as formActions from '../../actions/form'
 import { StyledIconWrapper } from '../util/styledIcon'
 
 interface Props {
-  switchLocations: () => void
+  index?: number
+  switchLocations: (index?: number) => void
 }
 
-function SwitchButton({ switchLocations }: Props) {
+function SwitchButton({ index, switchLocations }: Props) {
   const intl = useIntl()
   return (
     <Button
       className="switch-button"
-      onClick={switchLocations}
+      onClick={() => switchLocations(index)}
       title={intl.formatMessage({
         id: 'components.SwitchButton.switchLocations'
       })}
