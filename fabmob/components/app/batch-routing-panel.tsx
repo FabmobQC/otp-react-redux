@@ -124,7 +124,7 @@ class BatchRoutingPanel extends Component<Props> {
                     inputPlaceholder={intl.formatMessage({
                       id: 'common.searchForms.enterAdditionalPlace'
                     })}
-                    location={place}
+                    location={place ?? {}} // dummy object to force the clear button to appear
                     locationType={`additional-${i}`}
                     selfValidate={planTripClicked}
                     showClearButton={!mobile}
