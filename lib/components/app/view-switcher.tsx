@@ -1,51 +1,20 @@
-import { Button } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { FormattedMessage, useIntl } from 'react-intl'
 import React from 'react'
 
-import * as uiActions from '../../actions/ui'
-import { MainPanelContent } from '../../actions/ui-constants'
+import { AppReduxState } from '../../util/state-types'
+import Link from '../util/link'
 
 type Props = {
-  accountsActive: boolean
-  activePanel: number | null
-  setMainPanelContent: (payload: number | null) => void
+  mainPath: string
   sticky?: boolean
 }
 /**
  * This component is a switcher between
  * the main views of the application.
  */
-const ViewSwitcher = ({
-  accountsActive,
-  activePanel,
-  setMainPanelContent,
-  sticky
-}: Props) => {
+const ViewSwitcher = ({ mainPath, sticky }: Props) => {
   const intl = useIntl()
-
-  const _showRouteViewer = () => {
-    setMainPanelContent(MainPanelContent.ROUTE_VIEWER)
-  }
-  const _showNearby = () => {
-    setMainPanelContent(MainPanelContent.NEARBY_VIEW)
-  }
-
-  const _showTripPlanner = () => {
-    // setMainPanelContent(null) already includes navigation to '/'.
-    setMainPanelContent(null)
-  }
-
-  const _showTouristicPlaces = () => {
-    setMainPanelContent(MainPanelContent.TOURISTIC_PLACES)
-  }
-
-  const tripPlannerActive = activePanel === null && !accountsActive
-  const routeViewerActive = activePanel === MainPanelContent.ROUTE_VIEWER
-  const nearbyActive = activePanel === MainPanelContent.NEARBY_VIEW
-  const touristicPlacesPanelViewer =
-    activePanel === MainPanelContent.TOURISTIC_PLACES
-
   return (
     <div
       aria-label={intl.formatMessage({
@@ -65,54 +34,29 @@ const ViewSwitcher = ({
           : {}
       }
     >
-      <Button
-        aria-controls="view-switcher"
-        bsStyle="link"
-        className={`${tripPlannerActive ? 'active' : ''}`}
-        onClick={_showTripPlanner}
-      >
+      <Link isActive={mainPath === '/'} to="/">
         <FormattedMessage id="components.BatchRoutingPanel.shortTitle" />
-      </Button>
-      <Button
-        aria-controls="view-switcher"
-        bsStyle="link"
-        className={`${routeViewerActive ? 'active' : ''}`}
-        onClick={_showRouteViewer}
-      >
+      </Link>
+      <Link isActive={mainPath === '/route'} to="/route">
         <FormattedMessage id="components.RouteViewer.shortTitle" />
-      </Button>
-      <Button
-        aria-controls="view-switcher"
-        bsStyle="link"
-        className={`${nearbyActive ? 'active' : ''}`}
-        onClick={_showNearby}
-      >
+      </Link>
+      <Link isActive={mainPath === '/nearby'} to="/nearby">
         <FormattedMessage id="components.ViewSwitcher.nearby" />
-      </Button>
-      <Button
-        aria-controls="view-switcher"
-        bsStyle="link"
-        className={`${touristicPlacesPanelViewer ? 'active' : ''}`}
-        onClick={_showTouristicPlaces}
-      >
+      </Link>
+      <Link isActive={mainPath === '/touristic-places'} to="/touristic-places">
         <FormattedMessage id="components.TouristicPlacesViewer.shortTitle" />
-      </Button>
+      </Link>
     </div>
   )
 }
 
 // connect to the redux store
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: AppReduxState) => {
+  const pathParts = state.router.location.pathname.split('/')
   return {
-    // TODO: more reliable way of detecting these things, such as terms of storage page
-    accountsActive: state.router.location.pathname.includes('/account'),
-    activePanel: state.otp.ui.mainPanelContent
+    mainPath: `/${pathParts[1]}`
   }
 }
 
-const mapDispatchToProps = {
-  setMainPanelContent: uiActions.setMainPanelContent
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(ViewSwitcher)
+export default connect(mapStateToProps)(ViewSwitcher)
