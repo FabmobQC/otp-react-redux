@@ -3,7 +3,7 @@ import {
   MarkerWithPopup
 } from '@opentripplanner/base-map'
 import { connect } from 'react-redux'
-import FromToLocationPicker from '@opentripplanner/from-to-location-picker'
+import FromToLocationPicker from '../../../fabmob/@opentripplanner/from-to-location-picker'
 import React, { useEffect, useState } from 'react'
 
 import * as mapActions from '../../actions/map'

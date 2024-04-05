@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { Place } from '@opentripplanner/types'
-import FromToLocationPicker from '@opentripplanner/from-to-location-picker'
+import FromToLocationPicker from '../../../../fabmob/@opentripplanner/from-to-location-picker'
 import React, { useCallback, useMemo } from 'react'
 
 import * as mapActions from '../../../actions/map'
