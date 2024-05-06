@@ -44,7 +44,7 @@ class BatchRoutingPanel extends Component<Props> {
     const index = this.props.currentQuery.additionalPlaces.length
     this.props.setLocation({
       location: undefined,
-      locationType: `additional-${index}`
+      locationType: `additional-place-${index}`
     })
     this.props.setAdditionalPlaceWaitingTime(index, 1)
   }
@@ -138,7 +138,7 @@ class BatchRoutingPanel extends Component<Props> {
                       id: 'common.searchForms.enterAdditionalPlace'
                     })}
                     location={place ?? {}} // dummy object to force the clear button to appear
-                    locationType={`additional-${i}`}
+                    locationType={`additional-place-${i}`}
                     selfValidate={planTripClicked}
                     showClearButton={!mobile}
                   />

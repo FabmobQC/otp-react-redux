@@ -28,7 +28,7 @@ export const FromToLocationPicker = ({
           emptyAdditionalPlaceIndex !== -1
             ? emptyAdditionalPlaceIndex // we priorise the empty slot
             : additionalPlaces.length - 1 // There's no empty slot. We take the last index.
-        params.locationType = `additional-${index}`
+        params.locationType = `additional-place-${index}`
       }
       setLocation?.(params)
     },
