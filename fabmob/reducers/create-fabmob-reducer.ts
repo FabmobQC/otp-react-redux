@@ -1,15 +1,29 @@
 import update from 'immutability-helper'
 
+export type TouristicPlaceCategorie =
+  | 'Patrimoine religieux'
+  | 'Hébergement'
+  | 'Restaurant / bar'
+  | 'Magasinage'
+  | 'Nature'
+  | 'Spectacle / festival'
+  | 'Tour organisé'
+  | 'Patrimoine historique'
+  | 'Musée'
+  | 'Spa / détente'
+  | 'Culture'
+  | 'Attraction'
+
 export interface TouristicPlace {
-  categories: string[]
-  city: string
-  housenumber?: string
-  lat: number
-  lon: number
-  name: string
+  'Adresse OSM'?: string
+  Catégorie: TouristicPlaceCategorie
+  Latitude: number
+  Longitude: number
+  'Nom activité': string
+  Ville: string
+  adresse?: string
   // eslint-disable-next-line camelcase
-  place_id: string
-  street?: string
+  adresse_for_Nominatim: string
 }
 
 interface FabmobState {

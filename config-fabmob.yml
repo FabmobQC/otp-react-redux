@@ -664,10 +664,19 @@ language:
           agencyUrl: "Website"
       TouristicPlacesViewer:
         shortTitle: Touristic Places
-        legendArt: Art & Monuments
-        legendDefault: Default
-        legendNatural: Natural Places & Parcs
-        legendReligious: Religious Places
+        legendAttraction: Attraction
+        legendCulture: Culture
+        legendAccommodation: Accommodation
+        legendHistorical: Historical Heritage
+        legendMuseum: Museum
+        legendNature: Nature
+        legendOrganizedTour: Organized Tour
+        legendRelaxation: Spa / Relaxation
+        legendReligious: Religious Heritage
+        legendRestaurant: Restaurant / Bar
+        legendShopping: Shopping
+        legendShowFestival: Show / Festival
+        legendDefault: Others
     otpUi:
       ModeSelector:
         labels:
@@ -722,11 +731,20 @@ language:
           phoneNumber: "Numéro de téléphone"
           agencyUrl: "Site web"
       TouristicPlacesViewer:
-        shortTitle: Lieux touristisques
-        legendArt: Art et monuments
+        shortTitle: Lieux touristiques
+        legendAttraction: Attraction
+        legendCulture: Culture
+        legendAccommodation: Hébergement
+        legendHistorical: Patrimoine historique
+        legendMuseum: Musée
+        legendNature: Nature
+        legendOrganizedTour: Tour organisé
+        legendRelaxation: Spa / détente
+        legendReligious: Patrimoine religieux
+        legendRestaurant: Restaurant / bar
+        legendShopping: Magasinage
+        legendShowFestival: Spectacle / festival
         legendDefault: Autres
-        legendNatural: Lieux naturels et parcs
-        legendReligious: Lieux religieux
     otpUi:
       ModeSelector:
         labels:

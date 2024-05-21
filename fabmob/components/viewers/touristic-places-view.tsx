@@ -8,16 +8,52 @@ import { touristicPlacesColors } from '../../actions/ui-constants'
 
 const legendItems = [
   {
-    color: touristicPlacesColors.art,
-    label: 'components.TouristicPlacesViewer.legendArt'
+    color: touristicPlacesColors.attraction,
+    label: 'components.TouristicPlacesViewer.legendAttraction'
   },
   {
-    color: touristicPlacesColors.natural,
-    label: 'components.TouristicPlacesViewer.legendNatural'
+    color: touristicPlacesColors.culture,
+    label: 'components.TouristicPlacesViewer.legendCulture'
+  },
+  {
+    color: touristicPlacesColors.accommodation,
+    label: 'components.TouristicPlacesViewer.legendAccommodation'
+  },
+  {
+    color: touristicPlacesColors.historical,
+    label: 'components.TouristicPlacesViewer.legendHistorical'
+  },
+  {
+    color: touristicPlacesColors.museum,
+    label: 'components.TouristicPlacesViewer.legendMuseum'
+  },
+  {
+    color: touristicPlacesColors.nature,
+    label: 'components.TouristicPlacesViewer.legendNature'
+  },
+  {
+    color: touristicPlacesColors.organizedTour,
+    label: 'components.TouristicPlacesViewer.legendOrganizedTour'
+  },
+  {
+    color: touristicPlacesColors.relaxation,
+    label: 'components.TouristicPlacesViewer.legendRelaxation'
   },
   {
     color: touristicPlacesColors.religious,
     label: 'components.TouristicPlacesViewer.legendReligious'
+  },
+  {
+    color: touristicPlacesColors.restaurant,
+    label: 'components.TouristicPlacesViewer.legendRestaurant'
+  },
+  {
+    color: touristicPlacesColors.shopping,
+    label: 'components.TouristicPlacesViewer.legendShopping'
+  },
+  {
+    color: touristicPlacesColors.showFestival,
+    label: 'components.TouristicPlacesViewer.legendShowFestival'
   },
   {
     color: touristicPlacesColors.default,

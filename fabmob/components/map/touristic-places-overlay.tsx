@@ -32,7 +32,7 @@ const TouristicPlacesOverlay = ({
     <>
       {touristicPlaces.map((place) => (
         <TouristicPlaceMarker
-          key={place.place_id}
+          key={place['Nom activité']}
           setLocation={setLocation}
           touristicPlace={place}
         />
@@ -55,23 +55,23 @@ const TouristicPlaceMarker = ({
     <MarkerWithPopup
       popupContents={
         <BaseMapStyled.MapOverlayPopup>
-          {touristicPlace.name && (
+          {touristicPlace['Nom activité'] && (
             <BaseMapStyled.PopupTitle>
-              {touristicPlace.name}
+              {touristicPlace['Nom activité']}
             </BaseMapStyled.PopupTitle>
           )}
           <BaseMapStyled.PopupRow>
             <div>
-              {touristicPlace.housenumber && `${touristicPlace.housenumber}, `}{' '}
-              {touristicPlace.street && `${touristicPlace.street}, `}{' '}
-              {touristicPlace.city}
+              {touristicPlace['Adresse OSM'] ??
+                touristicPlace.adresse ??
+                touristicPlace.adresse_for_Nominatim}
             </div>
             <FromToLocationPicker
               label
               location={{
-                lat: touristicPlace.lat,
-                lon: touristicPlace.lon,
-                name: touristicPlace.name
+                lat: touristicPlace.Latitude,
+                lon: touristicPlace.Longitude,
+                name: touristicPlace['Nom activité']
               }}
               setLocation={setLocation}
             />
@@ -80,7 +80,7 @@ const TouristicPlaceMarker = ({
       }
       // @ts-expect-error popup props are incorrect
       popupProps={{ offset: 10 }}
-      position={[touristicPlace.lat, touristicPlace.lon]}
+      position={[touristicPlace.Latitude, touristicPlace.Longitude]}
     >
       <TouristicPlaceIndicator
         color={getTouristicPlaceColor(touristicPlace)}
@@ -90,23 +90,36 @@ const TouristicPlaceMarker = ({
   )
 }
 
+// eslint-disable-next-line complexity
 const getTouristicPlaceColor = (touristicPlace: TouristicPlace): string => {
-  if (touristicPlace.categories.includes('religion')) {
-    return touristicPlacesColors.religious
-  } else if (
-    touristicPlace.categories.includes('leisure.park') ||
-    touristicPlace.categories.includes('natural') ||
-    touristicPlace.categories.includes('tourism.attraction.viewpoint')
-  ) {
-    return touristicPlacesColors.natural
-  } else if (
-    touristicPlace.categories.includes('tourism.attraction.artwork') ||
-    touristicPlace.categories.includes('tourism.sights.memorial')
-  ) {
-    return touristicPlacesColors.art
+  switch (touristicPlace.Catégorie) {
+    case 'Attraction':
+      return touristicPlacesColors.attraction
+    case 'Culture':
+      return touristicPlacesColors.culture
+    case 'Hébergement':
+      return touristicPlacesColors.accommodation
+    case 'Magasinage':
+      return touristicPlacesColors.shopping
+    case 'Musée':
+      return touristicPlacesColors.museum
+    case 'Nature':
+      return touristicPlacesColors.nature
+    case 'Patrimoine historique':
+      return touristicPlacesColors.historical
+    case 'Patrimoine religieux':
+      return touristicPlacesColors.religious
+    case 'Restaurant / bar':
+      return touristicPlacesColors.restaurant
+    case 'Spa / détente':
+      return touristicPlacesColors.relaxation
+    case 'Spectacle / festival':
+      return touristicPlacesColors.showFestival
+    case 'Tour organisé':
+      return touristicPlacesColors.organizedTour
+    default:
+      return touristicPlacesColors.default
   }
-
-  return touristicPlacesColors.default
 }
 
 const mapStateToProps = (state: any) => {
