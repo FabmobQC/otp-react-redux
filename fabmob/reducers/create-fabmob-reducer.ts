@@ -1,5 +1,15 @@
 import update from 'immutability-helper'
 
+export interface CommunautoStation {
+  id: string
+  latitude: number
+  longitude: number
+  name: string
+  no: string
+  sector: string
+  zone: string
+}
+
 export type TouristicPlaceCategorie =
   | 'Patrimoine religieux'
   | 'Hébergement'
@@ -27,11 +37,13 @@ export interface TouristicPlace {
 }
 
 interface FabmobState {
+  communautoStations: CommunautoStation[]
   touristicPlaces: TouristicPlace[]
 }
 
 export function getFabmobInitialState(config: unknown): FabmobState {
   return {
+    communautoStations: [],
     touristicPlaces: []
   }
 }
@@ -41,6 +53,12 @@ function createFabmobReducer(config: unknown): unknown {
 
   return (state = initialState, action: any) => {
     switch (action.type) {
+      case 'SET_COMMUNAUTO_STATIONS': {
+        return update(state, {
+          communautoStations: { $set: action.payload }
+        })
+      }
+
       case 'SET_TOURISTIC_PLACES': {
         return update(state, {
           touristicPlaces: { $set: action.payload }
