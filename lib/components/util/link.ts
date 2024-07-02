@@ -1,14 +1,20 @@
-import { ComponentType, HTMLAttributes } from 'react'
+import { AnchorHTMLAttributes, ComponentType } from 'react'
 import { connect } from 'react-redux'
 
 import { AppReduxState } from '../../util/state-types'
 import { combineQueryParams } from '../../util/api'
 import { isBlank } from '../../util/ui'
 
-interface OwnProps extends HTMLAttributes<HTMLAnchorElement> {
-  isActive?: boolean
+interface OwnProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
   to?: string
   toParams?: Record<string, unknown>
+  /** If true, an 'active' CSS class will be applied if the URL starts the same as the `to` prop. */
+  tracking?: boolean
+}
+
+/** Determines whether the given path is a subpath of the 'to' prop. */
+export function isSubpath(path: string, to: string): boolean {
+  return !isBlank(to) && (path === to || path.startsWith(`${to}/`))
 }
 
 /**
@@ -20,9 +26,11 @@ const Link: ComponentType = 'a' as unknown as ComponentType
 // connect to the redux store so that the search params get updated in timely fashion.
 
 const mapStateToProps = (state: AppReduxState, ownProps: OwnProps) => {
-  const { className, isActive, to = '', toParams } = ownProps
+  const { className, to = '', toParams, tracking } = ownProps
   const queryParams = combineQueryParams(toParams)
   const href = `#${to}${isBlank(queryParams) ? '' : `?${queryParams}`}`
+
+  const isActive = tracking && isSubpath(state.router.location.pathname, to)
   return {
     className:
       className && isActive
@@ -31,10 +39,10 @@ const mapStateToProps = (state: AppReduxState, ownProps: OwnProps) => {
         ? 'active'
         : className,
     href,
-    // Remove the passed isActive, to and toParams props from the rendered HTML.
-    isActive: undefined,
+    // Remove the passed to, toParams, and tracking props from the rendered HTML.
     to: undefined,
-    toParams: undefined
+    toParams: undefined,
+    tracking: undefined
   }
 }
 

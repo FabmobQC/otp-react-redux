@@ -22,3 +22,5 @@ dist
 !har-mock-config.yml
 
 cache
+# vscode extensions
+.vscode

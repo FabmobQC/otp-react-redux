@@ -57,3 +57,17 @@ export function combineQueryParams(
   }
   return qs.stringify(search, { arrayFormat: 'indices' }) // Fabmob: 'indices' make it easier to parse than 'repeat' when the array has only one element
 }
+
+/**
+ * Drops unused params so they don't show up in URL.
+ * TODO: Remove dependency on getDefaultQuery from core-utils.
+ */
+export function removeUnusedQueryParams(params: Record<string, any>): void {
+  delete params.showIntermediateStops
+  delete params.otherThanPreferredRoutesPenalty
+  delete params.ignoreRealtimeUpdates
+  delete params.optimize
+  delete params.optimizeBike
+  delete params.maxWalkDistance
+  delete params.maxBikeDistance
+}

@@ -17,6 +17,7 @@ import {
 } from '../../actions/api'
 import { ComponentContext } from '../../util/contexts'
 import { getActiveItinerary, getActiveSearch } from '../../util/state'
+import { getCurrentPosition } from '../../actions/location'
 import { MainPanelContent } from '../../actions/ui-constants'
 import { setLocation, setMapPopupLocationAndGeocode } from '../../actions/map'
 import { setViewedStop } from '../../actions/ui'
@@ -258,6 +259,7 @@ class DefaultMap extends Component {
       carRentalQuery,
       carRentalStations,
       config,
+      getCurrentPosition,
       intl,
       itinerary,
       mapConfig,
@@ -320,7 +322,12 @@ class DefaultMap extends Component {
           <EndpointsOverlay />
           <RouteViewerOverlay />
           <TransitVehicleOverlay ModeIcon={ModeIcon} />
-          <GeolocateControl position="top-left" />
+          <GeolocateControl
+            onGeolocate={() => {
+              getCurrentPosition(intl)
+            }}
+            position="top-left"
+          />
           <TransitiveOverlay
             getTransitiveRouteLabel={getTransitiveRouteLabel}
           />
@@ -439,6 +446,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = {
   bikeRentalQuery,
   carRentalQuery,
+  getCurrentPosition,
   setLocation,
   setMapPopupLocationAndGeocode,
   setViewedStop,
