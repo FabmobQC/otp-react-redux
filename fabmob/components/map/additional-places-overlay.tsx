@@ -94,7 +94,7 @@ const AdditionalPlacesOverlay = ({
   )
   return (
     <>
-      {otherProps.additionalPlaces.map((place: any, index: number) => (
+      {otherProps.additionalPlaces?.map((place: any, index: number) => (
         <Endpoint
           clearLocation={otherProps.clearLocation}
           forgetPlace={_forgetPlace}
