@@ -502,12 +502,16 @@ transitOperators:
     name: exo-Réseau de transport métropolitain
   - agencyId: CITVR
     name: exo-Vallée du Richelieu
+  - agencyId: navette-nature
+    name: Navette Nature
   - agencyId: RTC
     name: Réseau de transport de la capitale (RTC)
   - agencyId: RTL
     name: Réseau de transport de Longueuil
   - agencyId: STL
     name: Societe de transport de Laval # Fabmob tip: Make sure the name matches "agency_name" in the GTFS before fixing the diacritics (Société)
+  - agencyId: 0
+    name: Société de transport de Lévis
   - agencyId: STM
     name: "Société de transport de Montréal"
     logo: https://www.stm.info/sites/all/themes/stm/img/header-logo.png
