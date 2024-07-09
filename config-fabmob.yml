@@ -502,6 +502,8 @@ transitOperators:
     name: exo-Réseau de transport métropolitain
   - agencyId: CITVR
     name: exo-Vallée du Richelieu
+  - agencyId: tacl-laurentides
+    name: L'Inter des Laurentides - Mont-Tremblant / Saint-Jérôme
   - agencyId: navette-nature
     name: Navette Nature
   - agencyId: RTC
