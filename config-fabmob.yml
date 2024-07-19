@@ -504,6 +504,8 @@ transitOperators:
     name: exo-Vallée du Richelieu
   - agencyId: tacl-laurentides
     name: L'Inter des Laurentides - Mont-Tremblant / Saint-Jérôme
+  - agencyId: mobilite-charlevoix
+    name: Mobilité Collective - Charlevoix
   - agencyId: navette-nature
     name: Navette Nature
   - agencyId: RTC
