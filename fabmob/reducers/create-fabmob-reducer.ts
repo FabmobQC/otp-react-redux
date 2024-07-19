@@ -30,7 +30,7 @@ export interface TouristicPlace {
   Latitude: number
   Longitude: number
   'Nom activité': string
-  Ville: string
+  Ville?: string
   adresse?: string
   // eslint-disable-next-line camelcase
   adresse_for_Nominatim: string
