@@ -506,6 +506,8 @@ transitOperators:
     name: L'Inter des Laurentides - Mont-Tremblant / Saint-Jérôme
   - agencyId: mobilite-charlevoix
     name: Mobilité Collective - Charlevoix
+  - agencyId: mrcjacques-cartier
+    name: MRC de La Jacques-Cartier
   - agencyId: navette-nature
     name: Navette Nature
   - agencyId: RTC
