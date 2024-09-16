@@ -2506,6 +2506,17 @@
     isomorphic-mapzen-search "^1.6.1"
     lodash.memoize "^4.1.2"
 
+"@opentripplanner/geocoder@^3.0.2":
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/@opentripplanner/geocoder/-/geocoder-3.0.2.tgz#2c7618947d1d9b082bd39d037327c9cf23282782"
+  integrity sha512-pl7tCiodex0hXWKLH3WE+I+HzoSgOOWp9kR3xMcuRiE5g6k2JXNneoD/ZfSS1n6Oorxcjv3U2DbMSXT2j/39dQ==
+  dependencies:
+    "@conveyal/geocoder-arcgis-geojson" "^0.0.3"
+    "@conveyal/lonlat" "^1.4.1"
+    "@leeoniya/ufuzzy" "^1.0.14"
+    isomorphic-mapzen-search "^1.6.1"
+    lodash.memoize "^4.1.2"
+
 "@opentripplanner/humanize-distance@^1.2.0":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@opentripplanner/humanize-distance/-/humanize-distance-1.2.0.tgz#71cf5d5d1b756adef15300edbba0995ccd4b35ee"
