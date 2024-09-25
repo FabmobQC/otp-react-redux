@@ -319,7 +319,7 @@ const mapStateToProps = (state: AppReduxState) => {
   const currentServiceWeek =
     routeViewer?.onlyShowCurrentServiceWeek === true
       ? getCurrentServiceWeek()
-      : undefined
+      : null
 
   return {
     currentPosition,
