@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { Feature, lineString, LineString, Position } from '@turf/helpers'
-import { Itinerary, Location } from '@opentripplanner/types'
+import { Itinerary, Leg, Location } from '@opentripplanner/types'
 import { Marker } from 'react-map-gl'
 import centroid from '@turf/centroid'
 import distance from '@turf/distance'
@@ -103,6 +103,8 @@ function addTrueIndex(array: ItinWithGeometry[]): ItinWithGeometry[] {
   return array
 }
 
+const getLegRoute = (leg: Leg) => leg.routeId
+
 type ItinUniquePoint = {
   itin: ItinWithGeometry
   uniquePoint: Position
@@ -151,10 +153,9 @@ const ItinerarySummaryOverlay = ({
   const indexedItins: ItinWithGeometry[] = addTrueIndex(
     itins.map(addItinLineString)
   )
-  const mergedItins: ItinWithGeometry[] =
-    doMergeItineraries(indexedItins).mergedItineraries
+  const mergedItins = doMergeItineraries(indexedItins).mergedItineraries
 
-  const midPoints = mergedItins.reduce<ItinUniquePoint[]>(
+  const midPoints = mergedItins.reduce(
     (prev: ItinUniquePoint[], curItin: ItinWithGeometry) => {
       prev.push(getUniquePoint(curItin, prev))
       return prev
