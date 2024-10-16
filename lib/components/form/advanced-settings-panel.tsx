@@ -33,7 +33,8 @@ import {
   onSettingsUpdate,
   pipe,
   populateSettingWithIcon,
-  setModeButton
+  setModeButton,
+  tripPlannerValidationErrors
 } from './util'
 import { setModeButtonEnabled } from './batch-settings'
 import { styledCheckboxCss } from './styled'
@@ -130,6 +131,7 @@ const MobilityProfileDropdown = styled(DropdownSelector)`
 const AdvancedSettingsPanel = ({
   autoPlan,
   closeAdvancedSettings,
+  currentQuery,
   enabledModeButtons,
   handlePlanTrip,
   innerRef,
@@ -144,6 +146,7 @@ const AdvancedSettingsPanel = ({
 }: {
   autoPlan: boolean
   closeAdvancedSettings: () => void
+  currentQuery: any
   enabledModeButtons: string[]
   handlePlanTrip: () => void
   innerRef: RefObject<HTMLDivElement>
@@ -207,10 +210,13 @@ const AdvancedSettingsPanel = ({
     )
   )
 
+  const tripFormErrors = tripPlannerValidationErrors(currentQuery, intl)
+
   const closePanel = useCallback(() => {
-    autoPlan && handlePlanTrip()
+    // Only autoplan if there are no validation errors
+    tripFormErrors.length === 0 && autoPlan && handlePlanTrip()
     closeAdvancedSettings()
-  }, [autoPlan, closeAdvancedSettings, handlePlanTrip])
+  }, [autoPlan, closeAdvancedSettings, handlePlanTrip, tripFormErrors.length])
 
   const handleModeButtonToggle = setModeButton(
     enabledModeButtons,
