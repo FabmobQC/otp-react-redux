@@ -128,8 +128,10 @@ const MobilityProfileDropdown = styled(DropdownSelector)`
 `
 
 const AdvancedSettingsPanel = ({
+  autoPlan,
   closeAdvancedSettings,
   enabledModeButtons,
+  handlePlanTrip,
   innerRef,
   loggedInUser,
   mobilityProfile,
@@ -140,8 +142,10 @@ const AdvancedSettingsPanel = ({
   setCloseAdvancedSettingsWithDelay,
   setQueryParam
 }: {
+  autoPlan: boolean
   closeAdvancedSettings: () => void
   enabledModeButtons: string[]
+  handlePlanTrip: () => void
   innerRef: RefObject<HTMLDivElement>
   loggedInUser: User | null
   mobilityProfile: boolean
@@ -203,6 +207,11 @@ const AdvancedSettingsPanel = ({
     )
   )
 
+  const closePanel = useCallback(() => {
+    autoPlan && handlePlanTrip()
+    closeAdvancedSettings()
+  }, [autoPlan, closeAdvancedSettings, handlePlanTrip])
+
   const handleModeButtonToggle = setModeButton(
     enabledModeButtons,
     onSettingsUpdate(setQueryParam)
@@ -215,8 +224,8 @@ const AdvancedSettingsPanel = ({
   const onSaveAndReturnClick = useCallback(async () => {
     await setCloseAdvancedSettingsWithDelay()
     setClosingBySave(true)
-    closeAdvancedSettings()
-  }, [closeAdvancedSettings, setCloseAdvancedSettingsWithDelay])
+    closePanel()
+  }, [closePanel, setCloseAdvancedSettingsWithDelay])
 
   return (
     <PanelOverlay className="advanced-settings" ref={innerRef}>
@@ -225,7 +234,7 @@ const AdvancedSettingsPanel = ({
           aria-label={closeButtonText}
           id="close-advanced-settings-button"
           onClick={() => {
-            closeAdvancedSettings()
+            closePanel()
           }}
           title={closeButtonText}
         >
@@ -321,10 +330,13 @@ const mapStateToProps = (state: AppReduxState) => {
     state.otp.modeSettingDefinitions || [],
     modes?.initialState?.modeSettingValues || {}
   )
+
+  const { autoPlan } = state.otp.config
   const saveAndReturnButton =
     state.otp.config?.advancedSettingsPanel?.saveAndReturnButton
   console.log('state:::', state)
   return {
+    autoPlan: autoPlan !== false,
     currentQuery: state.otp.currentQuery,
     // TODO: Duplicated in apiv2.js
     enabledModeButtons:
