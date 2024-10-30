@@ -1,0 +1,19 @@
+<html>
+<body>
+  <p>An error occurred:</p>
+  <p>
+    <noscript>An error message is embedded in the URL for this page, but could not be parsed.</noscript>
+    <span id="error-contents"></span>
+  </p>
+</body>
+<script>
+  var search = window.location.search.split("?")[1];
+  if (search) {
+    var urlParams = search.split(";");
+    var errorParam = urlParams.find(p => p.startsWith("error="));
+    if (errorParam) {
+      document.getElementById("error-contents").innerHTML = errorParam.split("=")[1];
+    }
+  }
+</script>
+</html>
