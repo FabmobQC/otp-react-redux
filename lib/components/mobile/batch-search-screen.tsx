@@ -189,7 +189,7 @@ class BatchSearchScreen extends Component<Props> {
 // connect to the redux store
 
 const mapStateToProps = (state: any) => {
-  const { currentQuery } = state.otp.currentQuery
+  const currentQuery = state.otp.currentQuery
   return {
     currentQuery
   }
