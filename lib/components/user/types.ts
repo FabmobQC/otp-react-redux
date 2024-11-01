@@ -30,7 +30,9 @@ export interface MobilityProfile {
 }
 
 export interface CompanionInfo {
+  acceptKey?: string
   email: string
+  nickname?: string
   status?: string
 }
 

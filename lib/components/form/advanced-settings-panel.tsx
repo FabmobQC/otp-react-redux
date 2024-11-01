@@ -255,10 +255,14 @@ const AdvancedSettingsPanel = ({
           />
           <MobilityProfileDropdown
             label="User mobility profile"
+            onChange={() => {
+              return null
+            }}
             options={[
               { text: 'Myself', value: 'test' },
               { text: 'someone else', value: 'test2' }
             ]}
+            value="test"
           />
         </MobilityProfileContainer>
       )}
