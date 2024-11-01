@@ -173,7 +173,10 @@ const ItinerarySummaryOverlay = ({
     return (
       <>
         {midPoints.map(
-          (mp) =>
+          (mp: {
+            itin: Itinerary & { index: number }
+            uniquePoint: [number, number]
+          }) =>
             // If no itinerary is hovered, show all of them. If one is selected, show only that one
             // TODO: clean up conditionals, move these to a more appropriate place without breaking indexing
             (isDefined(visibleItinerary)
