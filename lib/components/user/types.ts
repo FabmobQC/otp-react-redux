@@ -31,7 +31,7 @@ export interface MobilityProfile {
 
 export interface CompanionInfo {
   email: string
-  status?: string
+  status?: 'PENDING' | 'CONFIRMED' | 'INVALID'
 }
 
 /**
