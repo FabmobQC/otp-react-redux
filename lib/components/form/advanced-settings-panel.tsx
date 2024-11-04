@@ -24,6 +24,7 @@ import { AppReduxState } from '../../util/state-types'
 import { blue, getBaseColor } from '../util/colors'
 import { ComponentContext } from '../../util/contexts'
 import { generateModeSettingValues } from '../../util/api'
+import { User } from '../user/types'
 import Link from '../util/link'
 
 import {
@@ -130,6 +131,7 @@ const AdvancedSettingsPanel = ({
   closeAdvancedSettings,
   enabledModeButtons,
   innerRef,
+  loggedInUser,
   mobilityProfile,
   modeButtonOptions,
   modeSettingDefinitions,
@@ -141,6 +143,7 @@ const AdvancedSettingsPanel = ({
   closeAdvancedSettings: () => void
   enabledModeButtons: string[]
   innerRef: RefObject<HTMLDivElement>
+  loggedInUser: User | null
   mobilityProfile: boolean
   modeButtonOptions: ModeButtonDefinition[]
   modeSettingDefinitions: ModeSetting[]
@@ -150,6 +153,11 @@ const AdvancedSettingsPanel = ({
   setQueryParam: (evt: any) => void
 }): JSX.Element => {
   const [closingBySave, setClosingBySave] = useState(false)
+  // TODO: this is an email for now
+  const [selectedMobilityProfile, setSelectedMobilityProfile] =
+    useState<string>(loggedInUser?.email || '')
+  const relatedUsers = loggedInUser?.relatedUsers || []
+
   const baseColor = getBaseColor()
   const accentColor = baseColor || blue[900]
 
@@ -238,7 +246,7 @@ const AdvancedSettingsPanel = ({
           </GlobalSettingsContainer>
         </>
       )}
-      {mobilityProfile && (
+      {loggedInUser && relatedUsers.length > 0 && (
         <MobilityProfileContainer>
           <Subheader invisible={false}>
             <FormattedMessage id="components.MobilityProfile.MobilityPane.header" />
@@ -255,14 +263,18 @@ const AdvancedSettingsPanel = ({
           />
           <MobilityProfileDropdown
             label="User mobility profile"
-            onChange={() => {
-              return null
+            name="mobilityProfile"
+            onChange={(e) => {
+              setSelectedMobilityProfile(e.mobilityProfile as string)
             }}
             options={[
-              { text: 'Myself', value: 'test' },
-              { text: 'someone else', value: 'test2' }
+              { text: 'Myself', value: loggedInUser.email },
+              ...relatedUsers.map((user) => ({
+                text: user.nickname || user.email,
+                value: user.email // TODO: this needs to be mobilityMode
+              }))
             ]}
-            value="test"
+            value={selectedMobilityProfile}
           />
         </MobilityProfileContainer>
       )}
@@ -309,6 +321,7 @@ const mapStateToProps = (state: AppReduxState) => {
   )
   const saveAndReturnButton =
     state.otp.config?.advancedSettingsPanel?.saveAndReturnButton
+  console.log('state:::', state)
   return {
     currentQuery: state.otp.currentQuery,
     // TODO: Duplicated in apiv2.js
@@ -318,6 +331,7 @@ const mapStateToProps = (state: AppReduxState) => {
       })?.modeButtons?.filter((mb): mb is string => mb !== null) ||
       modes?.initialState?.enabledModeButtons ||
       [],
+    loggedInUser: state.user.loggedInUser || null,
     mobilityProfile: state.otp.config?.mobilityProfile || false,
     modeButtonOptions: modes?.modeButtons || [],
     modeSettingDefinitions: state.otp?.modeSettingDefinitions || [],
