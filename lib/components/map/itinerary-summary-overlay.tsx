@@ -151,9 +151,10 @@ const ItinerarySummaryOverlay = ({
   const indexedItins: ItinWithGeometry[] = addTrueIndex(
     itins.map(addItinLineString)
   )
-  const mergedItins = doMergeItineraries(indexedItins).mergedItineraries
+  const mergedItins: ItinWithGeometry[] =
+    doMergeItineraries(indexedItins).mergedItineraries
 
-  const midPoints = mergedItins.reduce(
+  const midPoints = mergedItins.reduce<ItinUniquePoint[]>(
     (prev: ItinUniquePoint[], curItin: ItinWithGeometry) => {
       prev.push(getUniquePoint(curItin, prev))
       return prev
@@ -169,10 +170,7 @@ const ItinerarySummaryOverlay = ({
     return (
       <>
         {midPoints.map(
-          (mp: {
-            itin: Itinerary & { index: number }
-            uniquePoint: [number, number]
-          }) =>
+          (mp) =>
             // If no itinerary is hovered, show all of them. If one is selected, show only that one
             // TODO: clean up conditionals, move these to a more appropriate place without breaking indexing
             (isDefined(visibleItinerary)
