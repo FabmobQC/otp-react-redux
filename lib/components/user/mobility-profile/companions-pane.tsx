@@ -132,8 +132,7 @@ const CompanionsPane = ({
           ...companions,
           {
             email: newEmail,
-            status: 'PENDING',
-            userId: ''
+            status: 'PENDING'
           }
         ])
         resetForm()
