@@ -33,7 +33,7 @@ export interface CompanionInfo {
   acceptKey?: string
   email: string
   nickname?: string
-  status?: string
+  status?: 'PENDING' | 'CONFIRMED' | 'INVALID'
 }
 
 /**
