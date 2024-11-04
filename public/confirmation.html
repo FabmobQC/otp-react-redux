@@ -8,13 +8,15 @@
     <noscript>If an error occurred, a message is embedded in the URL for this page, but could not be parsed.</noscript>
   </p>
 </body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.4/purify.min.js"></script>
 <script>
   var search = window.location.search.split("?")[1];
   if (search) {
     var urlParams = search.split(";");
     var errorParam = urlParams.find(p => p.startsWith("error="));
     if (errorParam) {
-      document.getElementById("contents").innerHTML = `An error occurred: ${decodeURIComponent(errorParam.split("=")[1])}`;
+      var sanitizedError = DOMPurify.sanitize(decodeURIComponent(errorParam.split("=")[1]));
+      document.getElementById("contents").innerHTML = `An error occurred: ${sanitizedError}`;
     }
   }
 </script>
