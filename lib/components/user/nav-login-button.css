@@ -13,11 +13,6 @@
   min-width: 0px;
 }
 
-.otp.mobile .navbar .container-fluid .locale-selector-and-login {
-  position: fixed;
-  right: 0;
-  top: 0;
-}
 .otp.mobile .navbar .container-fluid .locale-selector-and-login > li {
   display: inline-block;
 }

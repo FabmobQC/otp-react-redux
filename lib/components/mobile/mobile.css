@@ -20,12 +20,9 @@
 .otp .navbar .mobile-header {
   align-items: center;
   display: flex;
-  height: 50px;
+  height: 100%;
   justify-content: center;
-  left: 50px;
   max-width: 90%;
-  position: fixed;
-  right: 50px;
   text-align: center;
 }
 
@@ -66,10 +63,6 @@
   right: 6px;
   color: white;
   font-size: 18px;
-}
-
-.otp .navbar-brand {
-  padding: 7px 10px;
 }
 
 /* Welcome screen */

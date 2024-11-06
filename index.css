@@ -31,7 +31,6 @@ input[type="text"]::-ms-clear {
   height: 15px;
   justify-content: space-between;
   padding: 0;
-  position: absolute;
   top: 16px;
   transition: all 1s ease;
   width: 21px;

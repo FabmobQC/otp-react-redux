@@ -47,6 +47,74 @@
   }
 }
 
+/* Navbar settings */
+
+.navbar .navbar-header {
+  display: grid;
+  grid-template-columns: 300px auto 150px;
+}
+
+.navbar .navbar-nav {
+  margin: 0;
+  grid-column: 3;
+}
+
+.navbar .navbar-brand {
+  display: flex;
+  gap: 35px;
+  align-items: center;
+  grid-column: 1 / span 1;
+  width: 100%;
+}
+
+@media (min-width: 992px) {
+  #view-switcher {
+    height: 100%;
+    left: 0;
+    position: absolute;
+    width: 100%
+  }
+}
+
+
+@media (max-width: 768px) {
+  .navbar .navbar-header {
+    grid-template-columns: 50px auto 50px;
+    width: auto !important;
+  }
+
+  .navbar .navbar-brand {
+    grid-column: 1 / span 2;
+    gap: 15px;
+    padding: 10px;
+  }
+
+  #view-switcher {
+    position: relative;
+  }
+
+}
+
+/* Mobile navbar */
+.mobile-navbar-container .navbar-header {
+  display: block;
+  grid-column: 1;
+  justify-self: center;
+  width: 25px;
+}
+
+.mobile-navbar-container .mobile-header {
+  height: 100%;
+  justify-self: center;
+}
+
+.mobile-navbar-container .container-fluid {
+  display: grid;
+  grid-template-columns: 50px auto 50px;
+  align-items: center;
+  height: 100%;
+}
+
 /* PrintLayout styles */
 
 .otp.print-layout {
