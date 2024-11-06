@@ -50,7 +50,7 @@ export const PatternContainer = styled.div`
   & > span {
     width: 85%;
 
-    button {
+    button#headsign-selector-label {
       align-items: center;
       display: flex;
       justify-content: space-between;
