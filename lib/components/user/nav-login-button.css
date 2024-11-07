@@ -45,5 +45,8 @@
   }
   #user-selector-label {
     background-color: transparent;
+    border: 0;
+    height: 50px;
+    color: white;
   }
 }

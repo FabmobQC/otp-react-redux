@@ -35,7 +35,6 @@
 
 @media (max-width: 768px) {
   .otp .navbar .mobile-header-text {
-    margin-top: 2px;
     word-break: break-all;
   }
 }
@@ -53,8 +52,6 @@
   border: none;
   color: white;
   font-size: 18px;
-  left: 7px;
-  position: fixed;
 }
 
 .otp .navbar .mobile-close {
