@@ -67,7 +67,7 @@ module.exports = {
       }
       addBeforeLoader(webpackConfig, loaderByName('file-loader'), yamlLoader)
 
-      // Support YAML
+      // Support import of raw GraphQL files
       const graphqlLoader = {
         loader: ['raw-loader'],
         test: /\.graphql$/
