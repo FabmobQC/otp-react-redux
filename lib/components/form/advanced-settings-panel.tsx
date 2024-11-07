@@ -262,7 +262,9 @@ const AdvancedSettingsPanel = ({
             }}
           />
           <MobilityProfileDropdown
-            label="User mobility profile"
+            label={intl.formatMessage({
+              id: 'components.MobilityProfile.dropdownLabel'
+            })}
             name="mobilityProfile"
             onChange={(e) => {
               setSelectedMobilityProfile(e.mobilityProfile as string)
