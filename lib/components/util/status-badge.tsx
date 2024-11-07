@@ -39,15 +39,13 @@ function getStatusLabel(status?: string) {
 }
 
 /** Renders a badge to convey status such as 'verified', 'pending'. */
-const StatusBadge = ({ status }: Props): JSX.Element => {
-  return (
-    <>
-      {/* Surround badge with invisible parentheses for no-CSS and screen readers */}
-      <InvisibleA11yLabel> (</InvisibleA11yLabel>
-      {getStatusLabel(status)}
-      <InvisibleA11yLabel>) </InvisibleA11yLabel>
-    </>
-  )
-}
+const StatusBadge = ({ status }: Props): JSX.Element => (
+  <>
+    {/* Surround badge with invisible parentheses for no-CSS and screen readers */}
+    <InvisibleA11yLabel> (</InvisibleA11yLabel>
+    {getStatusLabel(status)}
+    <InvisibleA11yLabel>) </InvisibleA11yLabel>
+  </>
+)
 
 export default StatusBadge
