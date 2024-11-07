@@ -21,10 +21,10 @@
 }
 
 .navBarItem p {
-  padding: 5px 15px;
-  margin: 0;
-  font-weight: 600;
   font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+  padding: 5px 15px;
 }
 
 .navBarItem ul {
@@ -46,7 +46,7 @@
   #user-selector-label {
     background-color: transparent;
     border: 0;
-    height: 50px;
     color: white;
+    height: 50px;
   }
 }

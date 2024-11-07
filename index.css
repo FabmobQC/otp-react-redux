@@ -26,12 +26,12 @@ button.header,
 button.step,
 .clear-button-formatting {
   background: transparent;
-  color: inherit;
   border: 0;
+  color: inherit;
+  margin: 0;
+  padding: 0;
   text-align: inherit;
   text-decoration: none;
-  padding: 0;
-  margin: 0;
 }
 
 .clear-button-formatting:active {
@@ -53,9 +53,9 @@ button.step {
 }
 
 .overflow-ellipsis {
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .map-container .leaflet-top {
