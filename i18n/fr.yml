@@ -232,6 +232,20 @@ components:
     advancedOptions: Options avancées
     groupSize: "Taille du groupe :"
     intermediateDestination: Entrez la destination intermédiaire
+  CompanionsPane:
+    addNewCompanion: Ajouter un accompagnateur
+    companionAlreadyAdded: Vous avez déjà un accompagnateur utilisant {email}.
+    companionExplanation: >
+      Invitez un utilisateur G-MAP existant à être votre accompagnateur en
+      entrant leur adresse email. Leur statut passera à "vérifié" dès leur
+      acceptation, et vous pourrez alors partager vos trajets et planifier des
+      trajets qui conviennent à leur profil de mobilité.
+    confirmDeleteCompanion: Voulez-vous supprimer l'accompagnateur {email} ?
+    currentCompanionsLabel: "Mes accompagnateurs :"
+    deleteCompanion: Supprimer {email}
+    noCompanions: Vous n'avez aucun accompagnateur.
+    submitNewCompanion: Envoyer l'invitation
+    title: Accompagnateurs
   DateTimeOptions:
     arriveBy: Arriver à
     departAt: Partir à
@@ -534,6 +548,7 @@ components:
     deleteSavedTrip: Supprimer ce trajet
     editSavedTrip: Modifier un trajet enregistré
     saveNewTrip: Enregistrer un nouveau trajet
+    travelCompanion: Accompagnateurs
     tripInformation: Informations sur le trajet
     tripNotFound: Trajet introuvable
     tripNotFoundDescription: Le trajet recherché est introuvable.
