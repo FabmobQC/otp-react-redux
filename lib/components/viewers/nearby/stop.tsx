@@ -37,7 +37,8 @@ const Stop = ({
 }: Props): JSX.Element => {
   const patternRows = (stopData.stoptimesForPatterns || [])
     ?.reduce<PatternStopTime[]>((acc, cur) => {
-      const currentHeadsign = extractHeadsignFromPattern(cur.pattern)
+      const currentHeadsign =
+        cur.stoptimes?.[0]?.headsign || extractHeadsignFromPattern(cur.pattern)
       const dupe = acc.findIndex((p) => {
         // TODO: use OTP_generated ids
         let sameRoute = false
