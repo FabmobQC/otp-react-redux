@@ -51,7 +51,7 @@
 
 .navbar .navbar-header {
   display: grid;
-  grid-template-columns: 300px auto 150px;
+  grid-template-columns: 300px auto 170px;
 }
 
 .navbar .navbar-nav {

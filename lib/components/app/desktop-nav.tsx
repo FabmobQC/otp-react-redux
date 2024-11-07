@@ -19,6 +19,8 @@ import NavbarItem from './nav-item'
 import ViewSwitcher from './view-switcher'
 
 const StyledNav = styled(Nav)`
+  display: flex;
+  justify-content: end;
   /* Target only the svgs in the Navbar */
   & > li > button > svg,
   & > li > span > button > span > svg {
