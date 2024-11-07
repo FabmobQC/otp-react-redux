@@ -113,6 +113,7 @@ const PatternRow = ({
               id="components.NearbyView.headsign"
               values={{
                 destination:
+                  stopTimes?.[0]?.headsign ||
                   extractHeadsignFromPattern(pattern) ||
                   (pattern.route.longName !== routeName &&
                     pattern.route.longName)
