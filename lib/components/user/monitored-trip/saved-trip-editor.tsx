@@ -53,10 +53,10 @@ const SavedTripEditor = (props: Props): JSX.Element => {
     if (props.hasMobilityProfile) {
       paneSequence.push({
         collapsible: true,
-        pane: panes.travelCompanion,
+        pane: panes.travelCompanions,
         props,
         title: (
-          <FormattedMessage id="components.SavedTripEditor.travelCompanion" />
+          <FormattedMessage id="components.SavedTripEditor.travelCompanions" />
         )
       })
     }
