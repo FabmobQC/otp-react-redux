@@ -547,7 +547,7 @@ components:
     deleteSavedTrip: Supprimer ce trajet
     editSavedTrip: Modifier un trajet enregistré
     saveNewTrip: Enregistrer un nouveau trajet
-    travelCompanion: Accompagnateurs
+    travelCompanions: Accompagnateurs
     tripInformation: Informations sur le trajet
     tripNotFound: Trajet introuvable
     tripNotFoundDescription: Le trajet recherché est introuvable.
