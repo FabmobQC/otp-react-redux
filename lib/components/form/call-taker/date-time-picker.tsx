@@ -8,8 +8,8 @@ import coreUtils from '@opentripplanner/core-utils'
 import React, { useEffect, useRef, useState } from 'react'
 
 import * as narriativeActions from '../../../actions/narrative'
+import { AppReduxState, FilterType, SortType } from '../../../util/state-types'
 import { DepartArriveTypeMap, DepartArriveValue } from '../date-time-modal'
-import { FilterType, SortType } from '../../../util/state-types'
 
 const { getCurrentDate, OTP_API_DATE_FORMAT, OTP_API_TIME_FORMAT } =
   coreUtils.time
@@ -304,8 +304,9 @@ const DateTimeOptions = ({
 }
 
 // connect to the redux store
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: AppReduxState) => {
   const { dateTime, homeTimezone, itinerary } = state.otp.config
+  // @ts-expect-error TS doesn't understand it's fine if this value is undefined
   const { syncSortWithDepartArrive } = itinerary
   const { sort } = state.otp.filter
   return {
