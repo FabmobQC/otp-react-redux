@@ -323,7 +323,7 @@ export interface GeocoderConfig extends GeocoderConfigOtpUI {
 export interface TransitModeConfig {
   color?: string
   label?: string
-  mode: string
+  mode: string | string[]
   showWheelchairSetting?: boolean
 }
 
@@ -360,6 +360,8 @@ export interface RouteViewerConfig {
   hideRouteShapesWithinFlexZones?: boolean
   /** Remove vehicles from the map if they haven't sent an update in a number of seconds */
   maxRealtimeVehicleAge?: number
+  /** Use OTP date limiting to only show current service week in list */
+  onlyShowCurrentServiceWeek?: boolean
   /** Disable vehicle highlight if necessary (e.g. custom or inverted icons) */
   vehicleIconHighlight?: boolean
   /** Customize vehicle icon padding (the default iconPadding is 2px in otp-ui) */
