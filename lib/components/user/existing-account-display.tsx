@@ -50,7 +50,6 @@ const ExistingAccountDisplay = (props: Props) => {
       )
     },
     {
-      collapsible: true,
       hidden: !mobilityProfileEnabled,
       pane: CompanionsPane,
       props,
