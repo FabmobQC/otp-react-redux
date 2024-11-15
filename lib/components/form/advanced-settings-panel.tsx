@@ -179,7 +179,9 @@ const AdvancedSettingsPanel = ({
   )
 
   useEffect(() => {
+    console.log('mobilityProfile', mobilityProfile)
     if (mobilityProfile && dependents.length > 0) {
+      console.log('test')
       getDependentUserInfo(dependents, intl)
     }
   }, [dependents, getDependentUserInfo, intl, mobilityProfile])
@@ -251,16 +253,6 @@ const AdvancedSettingsPanel = ({
     closePanel()
   }, [closePanel, setCloseAdvancedSettingsWithDelay])
 
-  const showMobilityProfileDropdown = () => {
-    return (
-      loggedInUser &&
-      loggedInUser.mobilityProfile &&
-      loggedInUser.mobilityProfile.mobilityMode &&
-      loggedInUser.dependents &&
-      loggedInUser.dependents.length > 0
-    )
-  }
-
   return (
     <PanelOverlay className="advanced-settings" ref={innerRef}>
       <HeaderContainer>
@@ -289,43 +281,45 @@ const AdvancedSettingsPanel = ({
           </GlobalSettingsContainer>
         </>
       )}
-      {showMobilityProfileDropdown() && loggedInUser && (
-        <MobilityProfileContainer>
-          <Subheader invisible={false}>
-            <FormattedMessage id="components.MobilityProfile.MobilityPane.header" />
-          </Subheader>
-          <FormattedMessage
-            id="components.MobilityProfile.MobilityPane.planTripDescription"
-            values={{
-              manageLink: (linkText: string) => (
-                <UnderlinedLink to="/account/settings">
-                  {linkText}
-                </UnderlinedLink>
-              )
-            }}
-          />
-          <MobilityProfileDropdown
-            label={intl.formatMessage({
-              id: 'components.MobilityProfile.dropdownLabel'
-            })}
-            name="mobilityProfile"
-            onChange={(e) => {
-              setSelectedMobilityProfile(e.mobilityProfile as string)
-            }}
-            options={[
-              {
-                text: 'Myself',
-                value: loggedInUser.mobilityProfile?.mobilityMode || ''
-              },
-              ...(loggedInUser.dependentsInfo?.map((user) => ({
-                text: user.name || user.email,
-                value: user.mobilityMode || ''
-              })) || [])
-            ]}
-            value={selectedMobilityProfile}
-          />
-        </MobilityProfileContainer>
-      )}
+      {loggedInUser &&
+        loggedInUser.dependentsInfo &&
+        loggedInUser.dependentsInfo.length > 0 && (
+          <MobilityProfileContainer>
+            <Subheader invisible={false}>
+              <FormattedMessage id="components.MobilityProfile.MobilityPane.header" />
+            </Subheader>
+            <FormattedMessage
+              id="components.MobilityProfile.MobilityPane.planTripDescription"
+              values={{
+                manageLink: (linkText: string) => (
+                  <UnderlinedLink to="/account/settings">
+                    {linkText}
+                  </UnderlinedLink>
+                )
+              }}
+            />
+            <MobilityProfileDropdown
+              label={intl.formatMessage({
+                id: 'components.MobilityProfile.dropdownLabel'
+              })}
+              name="mobilityProfile"
+              onChange={(e) => {
+                setSelectedMobilityProfile(e.mobilityProfile as string)
+              }}
+              options={[
+                {
+                  text: 'Myself',
+                  value: loggedInUser.mobilityProfile?.mobilityMode || ''
+                },
+                ...(loggedInUser.dependentsInfo?.map((user) => ({
+                  text: user.name || user.email,
+                  value: user.mobilityMode || ''
+                })) || [])
+              ]}
+              value={selectedMobilityProfile}
+            />
+          </MobilityProfileContainer>
+        )}
 
       <AdvancedModeSubsettingsContainer
         accentColor={accentColor}
@@ -356,6 +350,7 @@ const AdvancedSettingsPanel = ({
     </PanelOverlay>
   )
 }
+
 const queryParamConfig = { modeButtons: DelimitedArrayParam }
 
 const mapStateToProps = (state: AppReduxState) => {
