@@ -171,7 +171,6 @@ const AdvancedSettingsPanel = ({
 }): JSX.Element => {
   const intl = useIntl()
   const [closingBySave, setClosingBySave] = useState(false)
-  // TODO: this is an email for now
   const [selectedMobilityProfile, setSelectedMobilityProfile] =
     useState<string>(loggedInUser?.mobilityProfile?.mobilityMode || '')
   const dependents = useMemo(
