@@ -36,11 +36,20 @@ export interface CompanionInfo {
   status?: 'PENDING' | 'CONFIRMED' | 'INVALID'
 }
 
+export interface DependentInfo {
+  email: string
+  mobilityMode: string
+  name?: string
+  userId: string
+}
+
 /**
  * Type definition for an OTP-middleware (OTP-personas) user.
  */
 export interface User {
   accessibilityRoutingByDefault?: boolean
+  dependents?: string[]
+  dependentsInfo?: DependentInfo[]
   // email always exists per Auth0.
   email: string
   hasConsentedToTerms?: boolean

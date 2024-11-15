@@ -9,17 +9,25 @@ import { ArrowLeft } from '@styled-icons/fa-solid/ArrowLeft'
 import { Check } from '@styled-icons/boxicons-regular'
 import { connect } from 'react-redux'
 import { decodeQueryParams, DelimitedArrayParam } from 'serialize-query-params'
-import { FormattedMessage, useIntl } from 'react-intl'
+import { FormattedMessage, IntlShape, useIntl } from 'react-intl'
 import { invisibleCss } from '@opentripplanner/trip-form/lib/MetroModeSelector'
 import {
   ModeButtonDefinition,
   ModeSetting,
   ModeSettingValues
 } from '@opentripplanner/types'
-import React, { RefObject, useCallback, useContext, useState } from 'react'
+import React, {
+  RefObject,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState
+} from 'react'
 import styled from 'styled-components'
 
 import * as formActions from '../../actions/form'
+import * as userActions from '../../actions/user'
 import { AppReduxState } from '../../util/state-types'
 import { blue, getBaseColor } from '../util/colors'
 import { ComponentContext } from '../../util/contexts'
@@ -133,6 +141,7 @@ const AdvancedSettingsPanel = ({
   closeAdvancedSettings,
   currentQuery,
   enabledModeButtons,
+  getDependentUserInfo,
   handlePlanTrip,
   innerRef,
   loggedInUser,
@@ -148,6 +157,7 @@ const AdvancedSettingsPanel = ({
   closeAdvancedSettings: () => void
   currentQuery: any
   enabledModeButtons: string[]
+  getDependentUserInfo: (userIds: string[], intl: IntlShape) => void
   handlePlanTrip: () => void
   innerRef: RefObject<HTMLDivElement>
   loggedInUser: User | null
@@ -159,16 +169,25 @@ const AdvancedSettingsPanel = ({
   setCloseAdvancedSettingsWithDelay: () => void
   setQueryParam: (evt: any) => void
 }): JSX.Element => {
+  const intl = useIntl()
   const [closingBySave, setClosingBySave] = useState(false)
   // TODO: this is an email for now
   const [selectedMobilityProfile, setSelectedMobilityProfile] =
-    useState<string>(loggedInUser?.email || '')
-  const relatedUsers = loggedInUser?.relatedUsers || []
+    useState<string>(loggedInUser?.mobilityProfile?.mobilityMode || '')
+  const dependents = useMemo(
+    () => loggedInUser?.dependents || [],
+    [loggedInUser]
+  )
+
+  useEffect(() => {
+    if (mobilityProfile && dependents.length > 0) {
+      getDependentUserInfo(dependents, intl)
+    }
+  }, [dependents, getDependentUserInfo, intl, mobilityProfile])
 
   const baseColor = getBaseColor()
   const accentColor = baseColor || blue[900]
 
-  const intl = useIntl()
   const closeButtonText = intl.formatMessage({
     id: 'components.BatchSearchScreen.saveAndReturn'
   })
@@ -233,6 +252,16 @@ const AdvancedSettingsPanel = ({
     closePanel()
   }, [closePanel, setCloseAdvancedSettingsWithDelay])
 
+  const showMobilityProfileDropdown = () => {
+    return (
+      loggedInUser &&
+      loggedInUser.mobilityProfile &&
+      loggedInUser.mobilityProfile.mobilityMode &&
+      loggedInUser.dependents &&
+      loggedInUser.dependents.length > 0
+    )
+  }
+
   return (
     <PanelOverlay className="advanced-settings" ref={innerRef}>
       <HeaderContainer>
@@ -261,7 +290,7 @@ const AdvancedSettingsPanel = ({
           </GlobalSettingsContainer>
         </>
       )}
-      {loggedInUser && relatedUsers.length > 0 && (
+      {showMobilityProfileDropdown() && loggedInUser && (
         <MobilityProfileContainer>
           <Subheader invisible={false}>
             <FormattedMessage id="components.MobilityProfile.MobilityPane.header" />
@@ -285,11 +314,14 @@ const AdvancedSettingsPanel = ({
               setSelectedMobilityProfile(e.mobilityProfile as string)
             }}
             options={[
-              { text: 'Myself', value: loggedInUser.email },
-              ...relatedUsers.map((user) => ({
-                text: user.nickname || user.email,
-                value: user.email // TODO: this needs to be mobilityMode
-              }))
+              {
+                text: 'Myself',
+                value: loggedInUser.mobilityProfile?.mobilityMode || ''
+              },
+              ...(loggedInUser.dependentsInfo?.map((user) => ({
+                text: user.name || user.email,
+                value: user.mobilityMode || ''
+              })) || [])
             ]}
             value={selectedMobilityProfile}
           />
@@ -325,7 +357,6 @@ const AdvancedSettingsPanel = ({
     </PanelOverlay>
   )
 }
-
 const queryParamConfig = { modeButtons: DelimitedArrayParam }
 
 const mapStateToProps = (state: AppReduxState) => {
@@ -361,6 +392,7 @@ const mapStateToProps = (state: AppReduxState) => {
 }
 
 const mapDispatchToProps = {
+  getDependentUserInfo: userActions.getDependentUserInfo,
   setQueryParam: formActions.setQueryParam,
   updateQueryTimeIfLeavingNow: formActions.updateQueryTimeIfLeavingNow
 }
