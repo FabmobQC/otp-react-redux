@@ -172,16 +172,18 @@ const AdvancedSettingsPanel = ({
   const intl = useIntl()
   const [closingBySave, setClosingBySave] = useState(false)
   const [selectedMobilityProfile, setSelectedMobilityProfile] =
-    useState<string>(loggedInUser?.mobilityProfile?.mobilityMode || '')
+    useState<string>(
+      currentQuery.mobilityProfile ||
+        loggedInUser?.mobilityProfile?.mobilityMode ||
+        ''
+    )
   const dependents = useMemo(
     () => loggedInUser?.dependents || [],
     [loggedInUser]
   )
 
   useEffect(() => {
-    console.log('mobilityProfile', mobilityProfile)
     if (mobilityProfile && dependents.length > 0) {
-      console.log('test')
       getDependentUserInfo(dependents, intl)
     }
   }, [dependents, getDependentUserInfo, intl, mobilityProfile])
@@ -305,6 +307,7 @@ const AdvancedSettingsPanel = ({
               name="mobilityProfile"
               onChange={(e) => {
                 setSelectedMobilityProfile(e.mobilityProfile as string)
+                setQueryParam(e)
               }}
               options={[
                 {
