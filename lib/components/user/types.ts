@@ -89,8 +89,11 @@ export type MonitoredTrip = Record<DaysOfWeek, boolean> & {
   itineraryExistence?: ItineraryExistence
   journeyState?: JourneyState
   leadTimeInMinutes: number
+  observers?: CompanionInfo[]
   otp2QueryParams: Record<string, unknown>
+  primary?: CompanionInfo[]
   queryParams: Record<string, unknown>
+  secondary?: CompanionInfo
   tripName: string
   userId: string
 }
