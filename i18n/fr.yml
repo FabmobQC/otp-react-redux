@@ -206,7 +206,6 @@ components:
   BatchSearchScreen:
     advancedHeader: Préférences avancées
     header: Votre trajet
-    modeOptions: Choix du mode
     modeSelectorLabel: Sélectionnez un mode de déplacement
     moreOptions: Plus d'options
     saveAndReturn: Enregistrer et fermer
