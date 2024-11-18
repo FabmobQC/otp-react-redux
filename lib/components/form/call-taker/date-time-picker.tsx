@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { format, toDate } from 'date-fns-tz'
+import { format, OptionsWithTZ, toDate } from 'date-fns-tz'
 import { getCurrentTime } from '@opentripplanner/core-utils/lib/time'
 import { IntlShape, useIntl } from 'react-intl'
 import { isMatch, parse } from 'date-fns'
@@ -60,7 +60,7 @@ const SUPPORTED_TIME_FORMATS = [
   'HH:mm'
 ]
 
-const safeFormat = (date: Date | '', time: string, options: any) => {
+const safeFormat = (date: Date | '', time: string, options?: OptionsWithTZ) => {
   if (date === '') return ''
   try {
     return format(date, time, options)
@@ -72,7 +72,7 @@ const safeFormat = (date: Date | '', time: string, options: any) => {
 
 type Props = {
   date?: string
-  departArrive?: string
+  departArrive?: DepartArriveValue
   homeTimezone: string
   onKeyDown: () => void
   setQueryParam: ({
@@ -116,7 +116,7 @@ const DateTimeOptions = ({
   timeFormat,
   updateItineraryFilter
 }: Props) => {
-  const [departArrive, setDepartArrive] = useState(
+  const [departArrive, setDepartArrive] = useState<DepartArriveValue>(
     initialDate || initialTime ? 'DEPART' : 'NOW'
   )
   const [date, setDate] = useState<string | undefined>(initialDate)
@@ -200,12 +200,12 @@ const DateTimeOptions = ({
 
     if (
       syncSortWithDepartArrive &&
-      DepartArriveTypeMap[departArrive as DepartArriveValue] !== sort.type
+      DepartArriveTypeMap[departArrive] !== sort.type
     ) {
       updateItineraryFilter({
         sort: {
           ...sort,
-          type: DepartArriveTypeMap[departArrive as DepartArriveValue]
+          type: DepartArriveTypeMap[departArrive]
         }
       })
     }
@@ -231,8 +231,8 @@ const DateTimeOptions = ({
   return (
     <>
       <select
-        onBlur={(e) => setDepartArrive(e.target.value)}
-        onChange={(e) => setDepartArrive(e.target.value)}
+        onBlur={(e) => setDepartArrive(e.target.value as DepartArriveValue)}
+        onChange={(e) => setDepartArrive(e.target.value as DepartArriveValue)}
         onKeyDown={onKeyDown}
         value={departArrive}
       >
