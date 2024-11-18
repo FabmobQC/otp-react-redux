@@ -42,6 +42,12 @@ async function loadPath(otpPath) {
   return page
 }
 
+const openEditIfNeeded = async (page, isMobile) => {
+  if (isMobile) {
+    await page.click('button.edit-search-button')
+  }
+}
+
 beforeAll(async () => {
   try {
     // Launch OTP-RR web server
@@ -114,9 +120,7 @@ async function executeTest(page, isMobile, isCallTaker) {
 
   if (!isCallTaker) {
     // Edit trip params [mobile-specific]
-    if (isMobile) {
-      await page.click('button.edit-search-button')
-    }
+    await openEditIfNeeded(page, isMobile)
 
     // Change the modes: Activate Transit and remove Bike.
     await page.click('label[title="Transit"]')
@@ -147,6 +151,8 @@ async function executeTest(page, isMobile, isCallTaker) {
     await page.click('#close-advanced-settings-button')
     await page.waitForTimeout(500)
     // Delete both origin and destination
+
+    await openEditIfNeeded(page, isMobile)
 
     await page.click('.from-form-control')
     await page.waitForTimeout(300)
