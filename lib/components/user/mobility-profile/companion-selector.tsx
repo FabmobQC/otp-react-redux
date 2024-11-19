@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { QueryParamChangeEvent } from '@opentripplanner/trip-form/lib/types'
-import React, { lazy, Suspense } from 'react'
+import React, { lazy, Suspense, useCallback } from 'react'
 
 import { AppReduxState } from '../../util/state-types'
 import { CompanionInfo, User } from '../types'
@@ -36,11 +36,9 @@ const CompanionSelector = ({
   onChange: (e: QueryParamChangeEvent) => void
   selectedCompanions?: CompanionInfo | CompanionInfo[]
 }): JSX.Element => {
-  const excludedEmails = excludedUsers.filter(notNull).map(({ email }) => email)
   const companionOptions = (loggedInUser?.relatedUsers || [])
     .filter(notNull)
     .filter(({ status = '' }) => status === 'CONFIRMED')
-    .filter(({ email }) => !excludedEmails.includes(email))
     .map(makeOption)
   const companionValues = multi
     ? selectedCompanions?.filter(notNull).map(makeOption)
@@ -48,11 +46,17 @@ const CompanionSelector = ({
     ? makeOption(selectedCompanions)
     : null
 
+  const isOptionDisabled = useCallback(
+    (option: Option) => excludedUsers.includes(option?.value),
+    [excludedUsers]
+  )
+
   return (
     <Suspense fallback={<span>...</span>}>
       <Select
         isClearable
         isMulti={multi}
+        isOptionDisabled={isOptionDisabled}
         onChange={onChange}
         options={companionOptions}
         value={companionValues}

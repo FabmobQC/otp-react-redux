@@ -9,6 +9,7 @@ import CompanionSelector, { Option } from './companion-selector'
 type Props = WrappedComponentProps & FormikProps<MonitoredTrip>
 
 function optionValue(option: Option) {
+  if (!option) return null
   return option?.value
 }
 
