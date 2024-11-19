@@ -69,10 +69,10 @@ export const StopContainer = styled.ol<RenderProps>`
   color: ${(props) => props?.textColor || DARK_TEXT_GREY};
   background-color: ${(props) => props?.backgroundColor || '#fff'};
   overflow-y: scroll;
-  height: 100%;
-  /* 100px bottom padding is needed to ensure all stops 
-  are shown when browsers don't calculate 100% sensibly */
-  padding: 15px 0 100px;
+  /* Calculate the height of the container a little short to ensure all stops 
+  are shown when browsers don't calculate 100% sensibly. */
+  height: calc(100% - 140px);
+  padding: 15px 0 0px;
 `
 export const StopLink = styled.button<RenderProps>`
   color: ${(props) => props?.textColor + 'da' || DARK_TEXT_GREY};
