@@ -232,6 +232,20 @@ components:
     advancedOptions: Options avancées
     groupSize: "Taille du groupe :"
     intermediateDestination: Entrez la destination intermédiaire
+  CompanionsPane:
+    addNewCompanion: Ajouter un accompagnateur
+    companionAlreadyAdded: Vous avez déjà un accompagnateur utilisant {email}.
+    companionExplanation: >
+      Invitez un utilisateur G-MAP existant à être votre accompagnateur en
+      entrant leur adresse email. Leur statut passera à "vérifié" dès leur
+      acceptation, et vous pourrez alors partager vos trajets et planifier des
+      trajets qui conviennent à leur profil de mobilité.
+    confirmDeleteCompanion: Voulez-vous supprimer l'accompagnateur {email} ?
+    currentCompanionsLabel: "Mes accompagnateurs :"
+    deleteCompanion: Supprimer {email}
+    noCompanions: Vous n'avez aucun accompagnateur.
+    submitNewCompanion: Envoyer l'invitation
+    title: Accompagnateurs
   DateTimeOptions:
     arriveBy: Arriver à
     departAt: Partir à
@@ -442,7 +456,6 @@ components:
     changeNumber: Changer de numéro
     invalidCode: Le code de vérification doit comporter 6 chiffres.
     invalidPhone: Veuillez entrer un numéro de téléphone valable.
-    pending: Non vérifié
     phoneNumberSubmitted: Le numéro {phoneNumber} a bien été envoyé.
     phoneNumberVerified: Le numéro {phoneNumber} a bien été vérifié.
     placeholder: Entrez votre numéro
@@ -457,7 +470,6 @@ components:
     verificationInstructions: >
       Un SMS vous a été envoyé avec un code de vérification. Veuillez taper ce
       code ci-dessous (le code expire après 10 minutes).
-    verified: Vérifié
     verify: Vérifier
     verifySms: >-
       Veuillez effectuer la vérification de votre numéro de téléphone afin de
@@ -536,6 +548,7 @@ components:
     deleteSavedTrip: Supprimer ce trajet
     editSavedTrip: Modifier un trajet enregistré
     saveNewTrip: Enregistrer un nouveau trajet
+    travelCompanions: Accompagnateurs
     tripInformation: Informations sur le trajet
     tripNotFound: Trajet introuvable
     tripNotFoundDescription: Le trajet recherché est introuvable.
@@ -576,6 +589,10 @@ components:
       retards
   StackedPaneDisplay:
     savePreferences: Enregistrer mes préférences
+  StatusBadge:
+    invalid: Non valable
+    pending: Non vérifié
+    verified: Vérifié
   StopScheduleTable:
     block: Bloc
     departure: Départ
