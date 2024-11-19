@@ -8,52 +8,53 @@ import CompanionSelector, { Option } from './companion-selector'
 
 type Props = WrappedComponentProps & FormikProps<MonitoredTrip>
 
+function optionValue(option: Option) {
+  return option?.value
+}
+
 /**
  * Pane for showing/setting trip companions and observers.
  */
-const TripCompanions = (props: Props): JSX.Element => {
-  console.log(props)
-
+const TripCompanions = ({
+  setFieldValue,
+  values: trip
+}: Props): JSX.Element => {
   const handleCompanionChange = useCallback(
     (option: Option) => {
-      props.setFieldValue('companion', option ? option.value : null)
+      setFieldValue('companion', optionValue(option))
     },
-    [props]
+    [setFieldValue]
   )
 
   const handleObserversChange = useCallback(
     (options: Option[]) => {
-      props.setFieldValue(
-        'observers',
-        (options || []).map((option) => option.value)
-      )
+      setFieldValue('observers', (options || []).map(optionValue))
     },
-    [props]
+    [setFieldValue]
   )
+
+  const { companion, observers, primary } = trip
 
   return (
     <div>
       <p>
-        Primary traveler:{' '}
-        <strong>
-          {props.values.primary ? props.values.primary.email : 'Myself'}
-        </strong>
+        Primary traveler: <strong>{primary ? primary.email : 'Myself'}</strong>
       </p>
       <p>
         Companion on this trip:
         <CompanionSelector
-          excludedUsers={props.values.observers}
+          excludedUsers={observers}
           onChange={handleCompanionChange}
-          selectedCompanions={props.values.companion}
+          selectedCompanions={companion}
         />
       </p>
       <p>
         Observers:
         <CompanionSelector
-          excludedUsers={[props.values.companion]}
+          excludedUsers={[companion]}
           multi
           onChange={handleObserversChange}
-          selectedCompanions={props.values.observers}
+          selectedCompanions={observers}
         />
       </p>
     </div>
