@@ -24,12 +24,14 @@ function makeOption(companion: CompanionInfo) {
 }
 
 const CompanionSelector = ({
+  disabled,
   excludedUsers = [],
   loggedInUser,
   multi = false,
   onChange,
   selectedCompanions
 }: {
+  disabled?: boolean
   excludedUsers?: CompanionInfo[]
   loggedInUser?: User
   multi?: boolean
@@ -55,6 +57,7 @@ const CompanionSelector = ({
     <Suspense fallback={<span>...</span>}>
       <Select
         isClearable
+        isDisabled={disabled}
         isMulti={multi}
         isOptionDisabled={isOptionDisabled}
         onChange={onChange}

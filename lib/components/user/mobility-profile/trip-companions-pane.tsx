@@ -36,14 +36,18 @@ const TripCompanions = ({
 
   const { companion, observers, primary } = trip
 
+  const didIPlanThisTrip = !primary
+
   return (
     <div>
       <p>
-        Primary traveler: <strong>{primary ? primary.email : 'Myself'}</strong>
+        Primary traveler:{' '}
+        <strong>{didIPlanThisTrip ? 'Myself' : primary.email}</strong>
       </p>
       <p>
         Companion on this trip:
         <CompanionSelector
+          disabled={!didIPlanThisTrip}
           excludedUsers={observers}
           onChange={handleCompanionChange}
           selectedCompanions={companion}
@@ -52,6 +56,7 @@ const TripCompanions = ({
       <p>
         Observers:
         <CompanionSelector
+          disabled={!didIPlanThisTrip}
           excludedUsers={[companion]}
           multi
           onChange={handleObserversChange}
