@@ -172,11 +172,7 @@ const AdvancedSettingsPanel = ({
   const intl = useIntl()
   const [closingBySave, setClosingBySave] = useState(false)
   const [selectedMobilityProfile, setSelectedMobilityProfile] =
-    useState<string>(
-      currentQuery.mobilityProfile ||
-        loggedInUser?.mobilityProfile?.mobilityMode ||
-        ''
-    )
+    useState<string>(currentQuery.forEmail || loggedInUser?.email)
   const dependents = useMemo(
     () => loggedInUser?.dependents || [],
     [loggedInUser]
@@ -304,19 +300,19 @@ const AdvancedSettingsPanel = ({
               label={intl.formatMessage({
                 id: 'components.MobilityProfile.dropdownLabel'
               })}
-              name="mobilityProfile"
+              name="forEmail"
               onChange={(e) => {
-                setSelectedMobilityProfile(e.mobilityProfile as string)
+                setSelectedMobilityProfile(e.forEmail as string)
                 setQueryParam(e)
               }}
               options={[
                 {
                   text: 'Myself',
-                  value: loggedInUser.mobilityProfile?.mobilityMode || ''
+                  value: loggedInUser?.email
                 },
-                ...(loggedInUser.dependentsInfo?.map((user) => ({
+                ...(loggedInUser?.dependentsInfo?.map((user) => ({
                   text: user.name || user.email,
-                  value: user.mobilityMode || ''
+                  value: user.email
                 })) || [])
               ]}
               value={selectedMobilityProfile}
