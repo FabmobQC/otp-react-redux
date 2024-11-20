@@ -2578,13 +2578,13 @@
     react-resize-detector "^4.2.1"
     string-similarity "^4.0.4"
 
-"@opentripplanner/location-field@3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@opentripplanner/location-field/-/location-field-3.0.0.tgz#a6f8743290cf088bcd589cf8e6b0d07a651b704a"
-  integrity sha512-wPb9l5pvSeocZ45K1E3Zeb4hDjJtP9tw/S0MQ3HXYEQSf+700n4CWXVXYReYJXJYriOzge5/2whjUPGTlJckWw==
+"@opentripplanner/location-field@3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@opentripplanner/location-field/-/location-field-3.1.0.tgz#2339d7214084ccece494969eafd7af8a2a9cc355"
+  integrity sha512-UDKEwNOlPyWhbcPgycOMTv8Mcto2CuhPVQw6b1r85qjLgzm4urHb00hcvTW0eqNfuCett0h/lM2Y1KFKuBC+iQ==
   dependencies:
     "@conveyal/geocoder-arcgis-geojson" "^0.0.3"
-    "@opentripplanner/core-utils" "^11.4.4"
+    "@opentripplanner/core-utils" "^12.0.0"
     "@opentripplanner/geocoder" "^3.0.2"
     "@opentripplanner/humanize-distance" "^1.2.0"
     "@opentripplanner/location-icon" "^1.4.1"
@@ -2599,10 +2599,10 @@
     "@styled-icons/fa-regular" "^10.34.0"
     "@styled-icons/fa-solid" "^10.34.0"
 
-"@opentripplanner/map-popup@5.1.0", "@opentripplanner/map-popup@^v5.1.0":
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/@opentripplanner/map-popup/-/map-popup-5.1.0.tgz#cf6374bf7b69af69c026ec414a84719078c56e9e"
-  integrity sha512-EShoMyFZa7Zb2ZZrJhEsJfuCAvs2jfQe5QstU+AEk5Jm1zc8LzU6PsXmizQ/RMVi6zIYLhlBoZ3u458tTA3VQA==
+"@opentripplanner/map-popup@5.1.1":
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/@opentripplanner/map-popup/-/map-popup-5.1.1.tgz#f4699b63a2ba0fae6263f2417c5b85f5ffc204cb"
+  integrity sha512-HifqZFmrBy3FmARVKZwUnad8U/L8ftBm2PcSck4oGQ768E7TKhqyzXz+GzkO39TyKNU5yiNgmQEbss8elZuJ/g==
   dependencies:
     "@opentripplanner/base-map" "^4.0.0"
     "@opentripplanner/building-blocks" "^2.0.0"
@@ -2619,6 +2619,17 @@
     "@opentripplanner/building-blocks" "^1.2.2"
     "@opentripplanner/core-utils" "^11.4.4"
     "@opentripplanner/from-to-location-picker" "^2.1.14"
+    flat "^5.0.2"
+
+"@opentripplanner/map-popup@^v5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@opentripplanner/map-popup/-/map-popup-5.1.0.tgz#cf6374bf7b69af69c026ec414a84719078c56e9e"
+  integrity sha512-EShoMyFZa7Zb2ZZrJhEsJfuCAvs2jfQe5QstU+AEk5Jm1zc8LzU6PsXmizQ/RMVi6zIYLhlBoZ3u458tTA3VQA==
+  dependencies:
+    "@opentripplanner/base-map" "^4.0.0"
+    "@opentripplanner/building-blocks" "^2.0.0"
+    "@opentripplanner/core-utils" "^12.0.0"
+    "@opentripplanner/from-to-location-picker" "^3.0.0"
     flat "^5.0.2"
 
 "@opentripplanner/otp2-tile-overlay@2.1.1":
