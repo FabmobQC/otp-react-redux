@@ -179,9 +179,9 @@ map:
 # geocoder test account can be obtained from the Pelias maintainers at geocode.earth.
 geocoder:
   apiKey: PELIAS_API_KEY
-  # When set to true, geocoder results will be displayed with the "Other" section first,
-  # above transit stops and stations
-  renderOtherFirst: false
+  # Pass an array of geocoder result types to control the order in which they are displayed.
+  # The default order is ['STATIONS', 'STOPS', 'OTHER'].
+  geocoderResultsOrder: ['STATIONS', 'STOPS', 'OTHER']
   boundary:
     rect:
       minLon: -123.2034

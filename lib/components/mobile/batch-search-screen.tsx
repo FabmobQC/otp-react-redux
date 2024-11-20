@@ -15,9 +15,9 @@ import MobileNavigationBar from './navigation-bar'
 const { SET_FROM_LOCATION, SET_TO_LOCATION } = MobileScreens
 
 interface Props {
+  geocoderResultsOrder: Array<string>
   intl: IntlShape
   map: React.ReactElement
-  renderOtherFirst: boolean
   setMobileScreen: (screen: number) => void
 }
 
@@ -35,7 +35,7 @@ class BatchSearchScreen extends Component<Props> {
   }
 
   render() {
-    const { intl, renderOtherFirst } = this.props
+    const { geocoderResultsOrder, intl } = this.props
     const { planTripClicked } = this.state
     return (
       <MobileContainer>
@@ -47,24 +47,24 @@ class BatchSearchScreen extends Component<Props> {
         <main tabIndex={-1}>
           <div className="batch-search-settings mobile-padding">
             <LocationField
+              geocoderResultsOrder={geocoderResultsOrder}
               inputPlaceholder={intl.formatMessage({
                 id: 'components.LocationSearch.setOrigin'
               })}
               isRequired
               locationType="from"
               onTextInputClick={this._fromFieldClicked}
-              renderOtherFirst={renderOtherFirst}
               selfValidate={planTripClicked}
               showClearButton={false}
             />
             <LocationField
+              geocoderResultsOrder={geocoderResultsOrder}
               inputPlaceholder={intl.formatMessage({
                 id: 'components.LocationSearch.setDestination'
               })}
               isRequired
               locationType="to"
               onTextInputClick={this._toFieldClicked}
-              renderOtherFirst={renderOtherFirst}
               selfValidate={planTripClicked}
               showClearButton={false}
             />
@@ -89,10 +89,10 @@ const mapDispatchToProps = {
 }
 
 const mapStateToProps = (state: any) => {
-  const { renderOtherFirst } = state.otp.config.geocoder
+  const { geocoderResultsOrder } = state.otp.config.geocoder
 
   return {
-    renderOtherFirst
+    geocoderResultsOrder
   }
 }
 

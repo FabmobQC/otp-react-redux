@@ -12,11 +12,14 @@ import MobileContainer from './container'
 import MobileNavigationBar from './navigation-bar'
 
 interface Props {
-  renderOtherFirst: boolean
+  geocoderResultsOrder: Array<string>
   setMobileScreen: (screen: number) => void
 }
 
-const MobileWelcomeScreen = ({ renderOtherFirst, setMobileScreen }: Props) => {
+const MobileWelcomeScreen = ({
+  geocoderResultsOrder,
+  setMobileScreen
+}: Props) => {
   const intl = useIntl()
 
   const toFieldClicked = useCallback(
@@ -34,12 +37,12 @@ const MobileWelcomeScreen = ({ renderOtherFirst, setMobileScreen }: Props) => {
       <main tabIndex={-1}>
         <div className="welcome-location mobile-padding">
           <LocationField
+            geocoderResultsOrder={geocoderResultsOrder}
             inputPlaceholder={intl.formatMessage({
               id: 'components.WelcomeScreen.prompt'
             })}
             locationType="to"
             onTextInputClick={toFieldClicked}
-            renderOtherFirst={renderOtherFirst}
             showClearButton={false}
           />
         </div>
@@ -59,10 +62,10 @@ const mapDispatchToProps = {
 }
 
 const mapStateToProps = (state: any) => {
-  const { renderOtherFirst } = state.otp.config.geocoder
+  const { geocoderResultsOrder } = state.otp.config.geocoder
 
   return {
-    renderOtherFirst
+    geocoderResultsOrder
   }
 }
 
