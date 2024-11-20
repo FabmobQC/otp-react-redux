@@ -15,6 +15,7 @@ import TripNotFound from './trip-not-found'
 interface Props {
   hasMobilityProfile: boolean
   isCreating: boolean
+  isReadOnly: boolean
   onCancel: () => void
   panes: Record<string, ComponentType>
   values: MonitoredTrip

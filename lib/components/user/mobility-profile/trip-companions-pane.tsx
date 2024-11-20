@@ -6,7 +6,10 @@ import { MonitoredTrip } from '../types'
 
 import CompanionSelector, { Option } from './companion-selector'
 
-type Props = WrappedComponentProps & FormikProps<MonitoredTrip>
+type Props = WrappedComponentProps &
+  FormikProps<MonitoredTrip> & {
+    isReadOnly: boolean
+  }
 
 function optionValue(option: Option) {
   if (!option) return null
@@ -17,6 +20,7 @@ function optionValue(option: Option) {
  * Pane for showing/setting trip companions and observers.
  */
 const TripCompanions = ({
+  isReadOnly,
   setFieldValue,
   values: trip
 }: Props): JSX.Element => {
@@ -36,26 +40,29 @@ const TripCompanions = ({
 
   const { companion, observers, primary } = trip
 
-  const didIPlanThisTrip = !primary
+  const iAmThePrimaryTraveler = !primary
 
   return (
     <div>
       <p>
         Primary traveler:{' '}
-        <strong>{didIPlanThisTrip ? 'Myself' : primary.email}</strong>
+        <strong>{iAmThePrimaryTraveler ? 'Myself' : primary.email}</strong>
       </p>
       <p>
+        {/* TODO: a11y label */}
         Companion on this trip:
         <CompanionSelector
-          disabled={!didIPlanThisTrip}
+          disabled={isReadOnly || !iAmThePrimaryTraveler}
           excludedUsers={observers}
           onChange={handleCompanionChange}
           selectedCompanions={companion}
         />
       </p>
       <p>
+        {/* TODO: a11y label */}
         Observers:
         <CompanionSelector
+          disabled={isReadOnly}
           excludedUsers={[companion]}
           multi
           onChange={handleObserversChange}
