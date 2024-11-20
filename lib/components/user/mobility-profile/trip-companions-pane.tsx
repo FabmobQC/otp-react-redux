@@ -56,7 +56,6 @@ const TripCompanions = ({
       <p>
         Observers:
         <CompanionSelector
-          disabled={!didIPlanThisTrip}
           excludedUsers={[companion]}
           multi
           onChange={handleObserversChange}
