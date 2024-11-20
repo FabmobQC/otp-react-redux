@@ -25,7 +25,13 @@ export type VisionLimitation = typeof visionLimitations[number]
 export interface MobilityProfile {
   isMobilityLimited: boolean
   mobilityDevices: string[]
+  mobilityMode: string
   visionLimitation: VisionLimitation
+}
+
+export interface CompanionInfo {
+  email: string
+  status?: 'PENDING' | 'CONFIRMED' | 'INVALID'
 }
 
 /**
@@ -43,6 +49,7 @@ export interface User {
   phoneNumber?: string
   preferredLocale?: string
   pushDevices?: number
+  relatedUsers?: CompanionInfo[]
   savedLocations?: UserSavedLocation[]
   storeTripHistory?: boolean
 }
@@ -57,6 +64,10 @@ export interface ItineraryExistenceDay {
 
 export type ItineraryExistence = Record<DaysOfWeek, ItineraryExistenceDay>
 
+export interface JourneyState {
+  matchingItinerary?: Itinerary
+}
+
 export type MonitoredTrip = Record<DaysOfWeek, boolean> & {
   arrivalVarianceMinutesThreshold: number
   departureVarianceMinutesThreshold: number
@@ -65,8 +76,10 @@ export type MonitoredTrip = Record<DaysOfWeek, boolean> & {
   isActive: boolean
   itinerary: Itinerary
   itineraryExistence?: ItineraryExistence
+  journeyState?: JourneyState
   leadTimeInMinutes: number
-  queryParams: string
+  otp2QueryParams: Record<string, unknown>
+  queryParams: Record<string, unknown>
   tripName: string
   userId: string
 }

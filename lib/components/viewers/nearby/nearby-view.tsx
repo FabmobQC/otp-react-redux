@@ -8,6 +8,7 @@ import * as apiActions from '../../../actions/api'
 import * as mapActions from '../../../actions/map'
 import * as uiActions from '../../../actions/ui'
 import { AppReduxState } from '../../../util/state-types'
+import { getCurrentServiceWeek } from '../../../util/current-service-week'
 import { SetLocationHandler, ZoomToPlaceHandler } from '../../util/types'
 import Loading from '../../narrative/loading'
 import MobileContainer from '../../mobile/container'
@@ -31,12 +32,19 @@ const AUTO_REFRESH_INTERVAL = 15000
 // TODO: use lonlat package
 type LatLonObj = { lat: number; lon: number }
 type CurrentPosition = { coords?: { latitude: number; longitude: number } }
+type ServiceWeek = { end: string; start: string }
 
 type Props = {
   currentPosition?: CurrentPosition
+  currentServiceWeek?: ServiceWeek
+  defaultLatLon: LatLonObj | null
   displayedCoords?: LatLonObj
   entityId?: string
-  fetchNearby: (latLon: LatLonObj, radius?: number) => void
+  fetchNearby: (
+    latLon: LatLonObj,
+    radius?: number,
+    currentServiceWeek?: ServiceWeek
+  ) => void
   hideBackButton?: boolean
   location: string
   mobile?: boolean
@@ -73,7 +81,8 @@ const getNearbyItem = (place: any) => {
 function getNearbyCoordsFromUrlOrLocationOrMapCenter(
   coordsFromUrl?: LatLonObj,
   currentPosition?: CurrentPosition,
-  map?: MapRef
+  map?: MapRef,
+  defaultLatLon?: LatLonObj | null
 ): LatLonObj | null {
   if (coordsFromUrl) {
     return coordsFromUrl
@@ -92,11 +101,16 @@ function getNearbyCoordsFromUrlOrLocationOrMapCenter(
   if (mapCoords) {
     return mapCoords
   }
+  if (defaultLatLon) {
+    return defaultLatLon
+  }
   return null
 }
 
 function NearbyView({
   currentPosition,
+  currentServiceWeek,
+  defaultLatLon,
   displayedCoords,
   entityId,
   fetchNearby,
@@ -119,7 +133,8 @@ function NearbyView({
       getNearbyCoordsFromUrlOrLocationOrMapCenter(
         nearbyViewCoords,
         currentPosition,
-        map
+        map,
+        defaultLatLon
       ),
     [nearbyViewCoords, currentPosition, map]
   )
@@ -168,10 +183,10 @@ function NearbyView({
       firstItemRef.current?.scrollIntoView({ behavior: 'smooth' })
     }
     if (finalNearbyCoords) {
-      fetchNearby(finalNearbyCoords, radius)
+      fetchNearby(finalNearbyCoords, radius, currentServiceWeek)
       setLoading(true)
       const interval = setInterval(() => {
-        fetchNearby(finalNearbyCoords, radius)
+        fetchNearby(finalNearbyCoords, radius, currentServiceWeek)
         setLoading(true)
       }, AUTO_REFRESH_INTERVAL)
       return function cleanup() {
@@ -197,6 +212,16 @@ function NearbyView({
     finalNearbyCoords?.lat !== displayedCoords?.lat ||
     finalNearbyCoords?.lon !== displayedCoords?.lon
 
+  // Build list of nearby routes for filtering within the stop card
+  const nearbyRoutes = Array.from(
+    new Set(
+      nearby
+        ?.map((n: any) =>
+          n.place?.stopRoutes?.map((sr: { gtfsId?: string }) => sr?.gtfsId)
+        )
+        .flat(Infinity)
+    )
+  )
   const nearbyItemList =
     nearby?.map &&
     nearby?.map((n: any) => (
@@ -216,7 +241,7 @@ function NearbyView({
           /* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */
           tabIndex={0}
         >
-          {getNearbyItem({ ...n.place, distance: n.distance })}
+          {getNearbyItem({ ...n.place, distance: n.distance, nearbyRoutes })}
         </div>
       </li>
     ))
@@ -283,12 +308,23 @@ function NearbyView({
 
 const mapStateToProps = (state: AppReduxState) => {
   const { config, location, transitIndex, ui } = state.otp
+  const { map, routeViewer } = config
   const { nearbyViewCoords } = ui
   const { nearby } = transitIndex
   const { entityId } = state.router.location.query
   const { currentPosition } = location
+  const defaultLatLon =
+    map?.initLat && map?.initLon ? { lat: map.initLat, lon: map.initLon } : null
+
+  const currentServiceWeek =
+    routeViewer?.onlyShowCurrentServiceWeek === true
+      ? getCurrentServiceWeek()
+      : undefined
+
   return {
     currentPosition,
+    currentServiceWeek,
+    defaultLatLon,
     displayedCoords: nearby?.coords,
     entityId: entityId && decodeURIComponent(entityId),
     homeTimezone: config.homeTimezone,
