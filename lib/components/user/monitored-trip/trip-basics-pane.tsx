@@ -34,7 +34,7 @@ import FormattedDayOfWeekCompact from '../../util/formatted-day-of-week-compact'
 import FormattedValidationError from '../../util/formatted-validation-error'
 import InvisibleA11yLabel from '../../util/invisible-a11y-label'
 
-import { MonitoredDayCircle } from './trip-monitored-days'
+import MonitoredDays, { MonitoredDayCircle } from './trip-monitored-days'
 import TripStatus from './trip-status'
 import TripSummary from './trip-duration-summary'
 
@@ -48,6 +48,7 @@ type TripBasicsProps = WrappedComponentProps &
     clearItineraryExistence: () => void
     disableSingleItineraryDays?: boolean
     isCreating: boolean
+    isReadOnly: boolean
     itineraryExistence?: ItineraryExistence
   }
 
@@ -138,16 +139,23 @@ const RenderAvailableDays = ({
   errorSelectingDays,
   finalItineraryExistence,
   isCreating,
+  isReadOnly,
   monitoredTrip
 }: {
   errorCheckingTrip: boolean
   errorSelectingDays?: 'error' | null
   finalItineraryExistence?: ItineraryExistence
   isCreating: boolean
+  isReadOnly: boolean
   monitoredTrip: MonitoredTrip
 }) => {
   const intl = useIntl()
   const baseColor = getBaseColor()
+
+  if (isReadOnly) {
+    return <MonitoredDays days={dayFieldsToArray(monitoredTrip)} />
+  }
+
   return (
     <>
       {errorCheckingTrip && (
@@ -316,6 +324,7 @@ class TripBasicsPane extends Component<TripBasicsProps, State> {
       errors,
       intl,
       isCreating,
+      isReadOnly,
       isSubmitting,
       itineraryExistence,
       values: monitoredTrip
@@ -361,7 +370,9 @@ class TripBasicsPane extends Component<TripBasicsProps, State> {
 
           {/* Do not show trip status when saving trip for the first time
               (it doesn't exist in backend yet). */}
-          {!isCreating && <TripStatus monitoredTrip={monitoredTrip} />}
+          {!isCreating && (
+            <TripStatus isReadOnly={isReadOnly} monitoredTrip={monitoredTrip} />
+          )}
           <TripSummary monitoredTrip={monitoredTrip} />
 
           <FormGroup validationState={errorStates.tripName}>
@@ -372,6 +383,7 @@ class TripBasicsPane extends Component<TripBasicsProps, State> {
             <Field
               aria-invalid={!!errorStates.tripName}
               as={FormControl}
+              disabled={isReadOnly}
               id="tripName"
               name="tripName"
             />
@@ -392,6 +404,7 @@ class TripBasicsPane extends Component<TripBasicsProps, State> {
                 errorSelectingDays={selectOneDayError}
                 finalItineraryExistence={finalItineraryExistence}
                 isCreating={isCreating}
+                isReadOnly={isReadOnly}
                 monitoredTrip={monitoredTrip}
               />
             </FormGroup>
@@ -403,7 +416,7 @@ class TripBasicsPane extends Component<TripBasicsProps, State> {
               <Radio
                 checked={!isOneTime}
                 // FIXME: Temporary solution until itinerary existence check is fixed.
-                disabled={errorCheckingTrip}
+                disabled={errorCheckingTrip || isReadOnly}
                 onChange={this._handleRecurringTrip}
               >
                 <FormattedMessage id="components.TripBasicsPane.recurringEachWeek" />
@@ -414,11 +427,16 @@ class TripBasicsPane extends Component<TripBasicsProps, State> {
                     errorCheckingTrip={errorCheckingTrip}
                     finalItineraryExistence={finalItineraryExistence}
                     isCreating={isCreating}
+                    isReadOnly={isReadOnly}
                     monitoredTrip={monitoredTrip}
                   />
                 </>
               )}
-              <Radio checked={isOneTime} onChange={this._handleOneTimeTrip}>
+              <Radio
+                checked={isOneTime}
+                disabled={isReadOnly}
+                onChange={this._handleOneTimeTrip}
+              >
                 <FormattedMessage
                   id="components.TripBasicsPane.onlyOnDate"
                   values={{ date: itinerary.startTime }}

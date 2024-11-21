@@ -45,6 +45,7 @@ const Summary = styled.summary`
 `
 
 interface Props extends FormikProps<MonitoredTrip> {
+  isReadOnly: boolean
   notificationChannel: string
 }
 
@@ -65,7 +66,7 @@ class TripNotificationsPane extends Component<Props> {
   }
 
   render(): JSX.Element {
-    const { notificationChannel, values } = this.props
+    const { isReadOnly, notificationChannel, values } = this.props
     const areNotificationsDisabled =
       notificationChannel === 'none' || !notificationChannel?.length
     // Define a common trip delay field for simplicity, set to the smallest between the
@@ -122,6 +123,7 @@ class TripNotificationsPane extends Component<Props> {
               <SettingsList>
                 <li>
                   <Select
+                    disabled={isReadOnly}
                     label={
                       <FormattedMessage id="components.TripNotificationsPane.realtimeAlertFlagged" />
                     }
@@ -132,6 +134,7 @@ class TripNotificationsPane extends Component<Props> {
                 </li>
                 <li>
                   <Select
+                    disabled={isReadOnly}
                     label={
                       <FormattedMessage id="components.TripNotificationsPane.altRouteRecommended" />
                     }
@@ -146,6 +149,7 @@ class TripNotificationsPane extends Component<Props> {
                   </label>
                   <FormControl
                     componentClass="select"
+                    disabled={isReadOnly}
                     id="commonDelayThreshold"
                     // Special event handler, hence not using <Select> as above.
                     onChange={this._handleDelayThresholdChange}
@@ -168,6 +172,7 @@ class TripNotificationsPane extends Component<Props> {
             <SettingsList>
               <li>
                 <Select
+                  disabled={isReadOnly}
                   label={
                     <FormattedMessage id="components.TripNotificationsPane.monitorThisTrip" />
                   }
