@@ -339,8 +339,7 @@ components:
       mobilityLimitations: "Mobility limitations: "
       planTripDescription: >-
         If you have a travel companion, you can choose to plan this trip
-        according  to their mobility profile. To add travel companions, visit
-        your <manageLink>account settings</manageLink>.
+        according  to their mobility profile.
       visionLimitations: "Vision limitations: "
     dropdownLabel: "User mobility profile:"
     intro: >-
