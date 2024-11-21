@@ -79,6 +79,7 @@ const SavedTripEditor = (props: Props): JSX.Element => {
               ? { content: <DeleteForm tripId={monitoredTrip.id} /> }
               : undefined
           }
+          isReadOnly={props.isReadOnly}
           onCancel={onCancel}
           panes={paneSequence}
           title={title}
