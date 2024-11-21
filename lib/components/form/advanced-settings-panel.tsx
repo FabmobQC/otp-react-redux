@@ -33,6 +33,7 @@ import { AppReduxState } from '../../util/state-types'
 import { blue, getBaseColor } from '../util/colors'
 import { ComponentContext } from '../../util/contexts'
 import { generateModeSettingValues } from '../../util/api'
+import { getDependentName } from '../../util/user'
 import { User } from '../user/types'
 import Link from '../util/link'
 
@@ -321,7 +322,7 @@ const AdvancedSettingsPanel = ({
                   value: loggedInUser?.email
                 },
                 ...(loggedInUser?.dependentsInfo?.map((user) => ({
-                  text: user.name || user.email,
+                  text: getDependentName(user),
                   value: user.email
                 })) || [])
               ]}

@@ -1,14 +1,20 @@
+import { connect } from 'react-redux'
 import { FormikProps } from 'formik'
-import React, { useCallback } from 'react'
-import type { WrappedComponentProps } from 'react-intl'
+import { useIntl, WrappedComponentProps } from 'react-intl'
+import React, { useCallback, useEffect } from 'react'
 
-import { MonitoredTrip } from '../types'
+import * as userActions from '../../../actions/user'
+import { AppReduxState } from '../../../util/state-types'
+import { DependentInfo, MonitoredTrip, User } from '../types'
+import { getDependentName } from '../../../util/user'
 
 import CompanionSelector, { Option } from './companion-selector'
 
 type Props = WrappedComponentProps &
   FormikProps<MonitoredTrip> & {
+    getDependentUserInfo: (args: string[]) => DependentInfo[]
     isReadOnly: boolean
+    loggedInUser: User
   }
 
 function optionValue(option: Option) {
@@ -20,7 +26,9 @@ function optionValue(option: Option) {
  * Pane for showing/setting trip companions and observers.
  */
 const TripCompanions = ({
+  getDependentUserInfo,
   isReadOnly,
+  loggedInUser,
   setFieldValue,
   values: trip
 }: Props): JSX.Element => {
@@ -38,15 +46,32 @@ const TripCompanions = ({
     [setFieldValue]
   )
 
+  const intl = useIntl()
+
+  useEffect(() => {
+    if (loggedInUser?.dependents.length > 0) {
+      getDependentUserInfo(loggedInUser?.dependents, intl)
+    }
+  }, [loggedInUser.dependents, getDependentUserInfo, intl])
+
   const { companion, observers, primary } = trip
 
-  const iAmThePrimaryTraveler = !primary
+  const iAmThePrimaryTraveler =
+    (!primary && trip.userId === loggedInUser?.id) ||
+    primary?.userId === loggedInUser?.id
+
+  const primaryTraveler = iAmThePrimaryTraveler
+    ? 'Myself'
+    : primary
+    ? primary.email
+    : getDependentName(
+        loggedInUser?.dependentsInfo?.find((d) => d.userId === trip.userId)
+      )
 
   return (
     <div>
       <p>
-        Primary traveler:{' '}
-        <strong>{iAmThePrimaryTraveler ? 'Myself' : primary.email}</strong>
+        Primary traveler: <strong>{primaryTraveler}</strong>
       </p>
       <p>
         {/* TODO: a11y label */}
@@ -73,4 +98,14 @@ const TripCompanions = ({
   )
 }
 
-export default TripCompanions
+// connect to the redux store
+
+const mapStateToProps = (state: AppReduxState) => ({
+  loggedInUser: state.user.loggedInUser
+})
+
+const mapDispatchToProps = {
+  getDependentUserInfo: userActions.getDependentUserInfo
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(TripCompanions)
