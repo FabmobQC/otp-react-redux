@@ -53,7 +53,6 @@ const SavedTripEditor = (props: Props): JSX.Element => {
     // if mobility profile is present, then add travel companions pane
     if (props.hasMobilityProfile) {
       paneSequence.push({
-        collapsible: true,
         pane: panes.travelCompanions,
         props,
         title: (

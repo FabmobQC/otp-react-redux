@@ -16,6 +16,7 @@ import {
   ModeSetting,
   ModeSettingValues
 } from '@opentripplanner/types'
+import { QueryParamChangeEvent } from '@opentripplanner/trip-form/lib/types'
 import React, {
   RefObject,
   useCallback,
@@ -160,7 +161,7 @@ const AdvancedSettingsPanel = ({
   getDependentUserInfo: (userIds: string[], intl: IntlShape) => void
   handlePlanTrip: () => void
   innerRef: RefObject<HTMLDivElement>
-  loggedInUser: User | null
+  loggedInUser?: User | null
   mobilityProfile: boolean
   modeButtonOptions: ModeButtonDefinition[]
   modeSettingDefinitions: ModeSetting[]
@@ -251,6 +252,16 @@ const AdvancedSettingsPanel = ({
     closePanel()
   }, [closePanel, setCloseAdvancedSettingsWithDelay])
 
+  const onMobilityProfileChange = useCallback(
+    (evt: QueryParamChangeEvent) => {
+      const value = evt.mobilityProfile
+      setSelectedMobilityProfile(value as string)
+      setQueryParam({
+        mobilityProfile: value
+      })
+    },
+    [setSelectedMobilityProfile, setQueryParam]
+  )
   return (
     <PanelOverlay className="advanced-settings" ref={innerRef}>
       <HeaderContainer>
@@ -301,13 +312,12 @@ const AdvancedSettingsPanel = ({
                 id: 'components.MobilityProfile.dropdownLabel'
               })}
               name="forEmail"
-              onChange={(e) => {
-                setSelectedMobilityProfile(e.forEmail as string)
-                setQueryParam(e)
-              }}
+              onChange={onMobilityProfileChange}
               options={[
                 {
-                  text: 'Myself',
+                  text: intl.formatMessage({
+                    id: 'components.MobilityProfile.myself'
+                  }),
                   value: loggedInUser?.email
                 },
                 ...(loggedInUser?.dependentsInfo?.map((user) => ({
@@ -349,7 +359,6 @@ const AdvancedSettingsPanel = ({
     </PanelOverlay>
   )
 }
-
 const queryParamConfig = { modeButtons: DelimitedArrayParam }
 
 const mapStateToProps = (state: AppReduxState) => {
@@ -364,7 +373,6 @@ const mapStateToProps = (state: AppReduxState) => {
   const { autoPlan } = state.otp.config
   const saveAndReturnButton =
     state.otp.config?.advancedSettingsPanel?.saveAndReturnButton
-  console.log('state:::', state)
   return {
     autoPlan: autoPlan !== false,
     currentQuery: state.otp.currentQuery,
