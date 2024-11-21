@@ -638,6 +638,10 @@ components:
     tripNotAvailableOnDay: Trip not available on {repeatedDay}
     unsavedChangesExistingTrip: You haven't saved your trip yet. If you leave, changes will be lost.
     unsavedChangesNewTrip: You haven't saved your new trip yet. If you leave, it will be lost.
+  TripCompanionsPane:
+    companionLabel: "Companion on this trip:"
+    observersLabel: "Observers watching this trip:"
+    primaryLabel: "Primary traveler: "
   TripNotificationsPane:
     advancedSettings: Advanced settings
     altRouteRecommended: An alternative route or transfer point is recommended

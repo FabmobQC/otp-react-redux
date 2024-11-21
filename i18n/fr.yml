@@ -670,6 +670,10 @@ components:
     unsavedChangesNewTrip: >-
       Vous n'avez pas encore enregistré votre nouveau trajet. Si vous annulez,
       ce trajet sera perdu.
+  TripCompanionsPane:
+    companionLabel: "Accompagnateurs sur ce trajet :"
+    observersLabel: "Observateurs suivant ce trajet :"
+    primaryLabel: "Voyageur principal : "
   TripNotificationsPane:
     advancedSettings: Paramètres avancés
     altRouteRecommended: Un·e autre trajet ou correspondance est conseillé·e

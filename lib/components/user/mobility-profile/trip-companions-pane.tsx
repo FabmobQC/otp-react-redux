@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
+import { FormattedMessage, useIntl, WrappedComponentProps } from 'react-intl'
 import { FormikProps } from 'formik'
-import { useIntl, WrappedComponentProps } from 'react-intl'
 import React, { useCallback, useEffect } from 'react'
 
 import * as userActions from '../../../actions/user'
@@ -61,7 +61,7 @@ const TripCompanions = ({
     primary?.userId === loggedInUser?.id
 
   const primaryTraveler = iAmThePrimaryTraveler
-    ? 'Myself'
+    ? intl.formatMessage({ id: 'components.MobilityProfile.myself' })
     : primary
     ? primary.email
     : getDependentName(
@@ -71,11 +71,11 @@ const TripCompanions = ({
   return (
     <div>
       <p>
-        Primary traveler: <strong>{primaryTraveler}</strong>
+        <FormattedMessage id="components.TripCompanionsPane.primaryLabel" />
+        <strong>{primaryTraveler}</strong>
       </p>
       <p>
-        {/* TODO: a11y label */}
-        Companion on this trip:
+        <FormattedMessage id="components.TripCompanionsPane.companionLabel" />
         <CompanionSelector
           disabled={isReadOnly || !iAmThePrimaryTraveler}
           excludedUsers={observers}
@@ -84,8 +84,7 @@ const TripCompanions = ({
         />
       </p>
       <p>
-        {/* TODO: a11y label */}
-        Observers:
+        <FormattedMessage id="components.TripCompanionsPane.observersLabel" />
         <CompanionSelector
           disabled={isReadOnly}
           excludedUsers={[companion]}
