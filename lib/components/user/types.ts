@@ -29,6 +29,11 @@ export interface MobilityProfile {
   visionLimitation: VisionLimitation
 }
 
+export interface CompanionInfo {
+  email: string
+  status?: 'PENDING' | 'CONFIRMED' | 'INVALID'
+}
+
 /**
  * Type definition for an OTP-middleware (OTP-personas) user.
  */
@@ -44,6 +49,7 @@ export interface User {
   phoneNumber?: string
   preferredLocale?: string
   pushDevices?: number
+  relatedUsers?: CompanionInfo[]
   savedLocations?: UserSavedLocation[]
   storeTripHistory?: boolean
 }

@@ -388,7 +388,6 @@ components:
     changeNumber: Изменить номер
     invalidCode: "Введите проверочный код из 6 цифр."
     invalidPhone: Введите действительный номер телефона.
-    pending: Ожидание
     phoneNumberSubmitted: Номер телефона{phoneNumber} был успешно отправлен.
     phoneNumberVerified: Номер телефона{phoneNumber}  был успешно проверен.
     placeholder: Введите свой номер телефона
@@ -515,6 +514,10 @@ components:
       режиме реального времени.
   StackedPaneDisplay:
     savePreferences: Сохранить параметры
+  StatusBadge:
+    invalid: Invalid
+    pending: Ожидание
+    verified: Подтверждено
   StopScheduleTable:
     block: Заблокировать
     departure: Отправление
