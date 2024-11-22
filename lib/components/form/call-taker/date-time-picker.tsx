@@ -7,9 +7,9 @@ import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 import coreUtils from '@opentripplanner/core-utils'
 import React, { useEffect, useRef, useState } from 'react'
 
-import * as narriativeActions from '../../../actions/narrative'
 import { AppReduxState, FilterType, SortType } from '../../../util/state-types'
 import { DepartArriveTypeMap, DepartArriveValue } from '../date-time-modal'
+import { updateItineraryFilter } from '../../../actions/narrative'
 
 const { getCurrentDate, OTP_API_DATE_FORMAT, OTP_API_TIME_FORMAT } =
   coreUtils.time
@@ -74,6 +74,7 @@ type Props = {
   date?: string
   departArrive?: DepartArriveValue
   homeTimezone: string
+  importedUpdateItineraryFilter: (payload: FilterType) => void
   onKeyDown: () => void
   setQueryParam: ({
     date,
@@ -88,7 +89,6 @@ type Props = {
   syncSortWithDepartArrive?: boolean
   time?: string
   timeFormat: string
-  updateItineraryFilter: (payload: FilterType) => void
 }
 /**
  * Contains depart/arrive selector and time/date inputs for the admin-oriented
@@ -108,13 +108,13 @@ const DateTimeOptions = ({
   date: initialDate,
   departArrive: initialDepartArrive,
   homeTimezone,
+  importedUpdateItineraryFilter,
   onKeyDown,
   setQueryParam,
   sort,
   syncSortWithDepartArrive,
   time: initialTime,
-  timeFormat,
-  updateItineraryFilter
+  timeFormat
 }: Props) => {
   const [departArrive, setDepartArrive] = useState<DepartArriveValue>(
     initialDate || initialTime ? 'DEPART' : 'NOW'
@@ -202,7 +202,7 @@ const DateTimeOptions = ({
       syncSortWithDepartArrive &&
       DepartArriveTypeMap[departArrive] !== sort.type
     ) {
-      updateItineraryFilter({
+      importedUpdateItineraryFilter({
         sort: {
           ...sort,
           type: DepartArriveTypeMap[departArrive]
@@ -306,8 +306,7 @@ const DateTimeOptions = ({
 // connect to the redux store
 const mapStateToProps = (state: AppReduxState) => {
   const { dateTime, homeTimezone, itinerary } = state.otp.config
-  // @ts-expect-error TS doesn't understand it's fine if this value is undefined
-  const { syncSortWithDepartArrive } = itinerary
+  const syncSortWithDepartArrive = itinerary?.syncSortWithDepartArrive
   const { sort } = state.otp.filter
   return {
     homeTimezone,
@@ -317,7 +316,7 @@ const mapStateToProps = (state: AppReduxState) => {
   }
 }
 const mapDispatchToProps = {
-  updateItineraryFilter: narriativeActions.updateItineraryFilter
+  importedUpdateItineraryFilter: updateItineraryFilter
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DateTimeOptions)
