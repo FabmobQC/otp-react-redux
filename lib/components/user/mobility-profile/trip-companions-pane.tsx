@@ -1,18 +1,23 @@
 import { connect } from 'react-redux'
-import { FormattedMessage, useIntl, WrappedComponentProps } from 'react-intl'
+import {
+  FormattedMessage,
+  IntlShape,
+  useIntl,
+  WrappedComponentProps
+} from 'react-intl'
 import { FormikProps } from 'formik'
 import React, { useCallback, useEffect } from 'react'
 
 import * as userActions from '../../../actions/user'
 import { AppReduxState } from '../../../util/state-types'
-import { DependentInfo, MonitoredTrip, User } from '../types'
 import { getDependentName } from '../../../util/user'
+import { MonitoredTrip, User } from '../types'
 
 import CompanionSelector, { Option } from './companion-selector'
 
 type Props = WrappedComponentProps &
   FormikProps<MonitoredTrip> & {
-    getDependentUserInfo: (args: string[]) => DependentInfo[]
+    getDependentUserInfo: (userIds: string[], intl: IntlShape) => void
     isReadOnly: boolean
     loggedInUser: User
   }
@@ -33,26 +38,31 @@ const TripCompanions = ({
   values: trip
 }: Props): JSX.Element => {
   const handleCompanionChange = useCallback(
-    (option: Option) => {
-      setFieldValue('companion', optionValue(option))
+    (option: Option | Option[]) => {
+      if ('label' in option) {
+        setFieldValue('companion', optionValue(option))
+      }
     },
     [setFieldValue]
   )
 
   const handleObserversChange = useCallback(
-    (options: Option[]) => {
-      setFieldValue('observers', (options || []).map(optionValue))
+    (options: Option | Option[]) => {
+      if ('length' in options) {
+        setFieldValue('observers', (options || []).map(optionValue))
+      }
     },
     [setFieldValue]
   )
 
   const intl = useIntl()
+  const dependents = loggedInUser?.dependents
 
   useEffect(() => {
-    if (loggedInUser?.dependents.length > 0) {
-      getDependentUserInfo(loggedInUser?.dependents, intl)
+    if (dependents && dependents.length > 0) {
+      getDependentUserInfo(dependents, intl)
     }
-  }, [loggedInUser.dependents, getDependentUserInfo, intl])
+  }, [dependents, getDependentUserInfo, intl])
 
   const { companion, observers, primary } = trip
 
@@ -80,7 +90,7 @@ const TripCompanions = ({
           disabled={isReadOnly || !iAmThePrimaryTraveler}
           excludedUsers={observers}
           onChange={handleCompanionChange}
-          selectedCompanions={companion}
+          selectedCompanions={[companion]}
         />
       </p>
       <p>

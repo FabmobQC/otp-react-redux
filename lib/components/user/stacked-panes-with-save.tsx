@@ -51,22 +51,24 @@ const StackedPanesWithSave = ({
               <FormattedMessage id="common.forms.cancel" />
             )
         }}
-        extraButton={!isReadOnly && extraButton}
+        extraButton={isReadOnly ? undefined : extraButton}
         okayButton={
-          !isReadOnly && {
-            disabled: buttonClicked === 'okay',
-            onClick: () => {
-              // Some browsers need this to happen after the formik action finishes firing
-              setTimeout(() => setButtonClicked('okay'), 10)
-            },
-            text:
-              buttonClicked === 'okay' ? (
-                <InlineLoading />
-              ) : (
-                <FormattedMessage id="components.StackedPaneDisplay.savePreferences" />
-              ),
-            type: 'submit'
-          }
+          isReadOnly
+            ? undefined
+            : {
+                disabled: buttonClicked === 'okay',
+                onClick: () => {
+                  // Some browsers need this to happen after the formik action finishes firing
+                  setTimeout(() => setButtonClicked('okay'), 10)
+                },
+                text:
+                  buttonClicked === 'okay' ? (
+                    <InlineLoading />
+                  ) : (
+                    <FormattedMessage id="components.StackedPaneDisplay.savePreferences" />
+                  ),
+                type: 'submit'
+              }
         }
       />
     </>

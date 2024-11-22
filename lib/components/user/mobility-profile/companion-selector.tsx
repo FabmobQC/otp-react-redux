@@ -1,8 +1,7 @@
 import { connect } from 'react-redux'
-import { QueryParamChangeEvent } from '@opentripplanner/trip-form/lib/types'
 import React, { lazy, Suspense, useCallback } from 'react'
 
-import { AppReduxState } from '../../util/state-types'
+import { AppReduxState } from '../../../util/state-types'
 import { CompanionInfo, User } from '../types'
 
 export interface Option {
@@ -10,13 +9,14 @@ export interface Option {
   value: CompanionInfo
 }
 
+// @ts-expect-error: No types for react-select.
 const Select = lazy(() => import('react-select'))
 
-function notNull(item) {
+function notNull(item: unknown) {
   return !!item
 }
 
-function makeOption(companion: CompanionInfo) {
+function makeOption(companion?: CompanionInfo) {
   return {
     label: companion?.nickname || companion?.email,
     value: companion
@@ -32,11 +32,11 @@ const CompanionSelector = ({
   selectedCompanions
 }: {
   disabled?: boolean
-  excludedUsers?: CompanionInfo[]
+  excludedUsers?: (CompanionInfo | undefined)[]
   loggedInUser?: User
   multi?: boolean
-  onChange: (e: QueryParamChangeEvent) => void
-  selectedCompanions?: CompanionInfo | CompanionInfo[]
+  onChange: (e: Option | Option[]) => void
+  selectedCompanions?: (CompanionInfo | undefined)[]
 }): JSX.Element => {
   const companionOptions = (loggedInUser?.relatedUsers || [])
     .filter(notNull)
@@ -44,8 +44,8 @@ const CompanionSelector = ({
     .map(makeOption)
   const companionValues = multi
     ? selectedCompanions?.filter(notNull).map(makeOption)
-    : selectedCompanions !== null
-    ? makeOption(selectedCompanions)
+    : selectedCompanions?.[0]
+    ? makeOption(selectedCompanions[0])
     : null
 
   const isOptionDisabled = useCallback(
