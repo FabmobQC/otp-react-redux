@@ -28,8 +28,14 @@ exports[`components > form > call-taker > date time options should correctly han
     >
       <DateTimeOptions
         date="2022-11-17"
-        dispatch={[Function]}
         homeTimezone="America/Los_Angeles"
+        importedUpdateItineraryFilter={[Function]}
+        sort={
+          Object {
+            "direction": "ASC",
+            "type": "BEST",
+          }
+        }
         time="12a"
         timeFormat="h:mm a"
       >
@@ -145,8 +151,14 @@ exports[`components > form > call-taker > date time options should correctly han
     >
       <DateTimeOptions
         date="2022-11-17"
-        dispatch={[Function]}
         homeTimezone="America/Los_Angeles"
+        importedUpdateItineraryFilter={[Function]}
+        sort={
+          Object {
+            "direction": "ASC",
+            "type": "BEST",
+          }
+        }
         time="12p"
         timeFormat="h:mm a"
       >
@@ -262,8 +274,14 @@ exports[`components > form > call-taker > date time options should correctly han
     >
       <DateTimeOptions
         date="2022-11-17"
-        dispatch={[Function]}
         homeTimezone="America/Los_Angeles"
+        importedUpdateItineraryFilter={[Function]}
+        sort={
+          Object {
+            "direction": "ASC",
+            "type": "BEST",
+          }
+        }
         time="133"
         timeFormat="h:mm a"
       >
@@ -379,8 +397,14 @@ exports[`components > form > call-taker > date time options should correctly han
     >
       <DateTimeOptions
         date="2022-11-17"
-        dispatch={[Function]}
         homeTimezone="America/Los_Angeles"
+        importedUpdateItineraryFilter={[Function]}
+        sort={
+          Object {
+            "direction": "ASC",
+            "type": "BEST",
+          }
+        }
         time="133p"
         timeFormat="h:mm a"
       >
@@ -496,8 +520,14 @@ exports[`components > form > call-taker > date time options should correctly han
     >
       <DateTimeOptions
         date="2022-11-17"
-        dispatch={[Function]}
         homeTimezone="America/Los_Angeles"
+        importedUpdateItineraryFilter={[Function]}
+        sort={
+          Object {
+            "direction": "ASC",
+            "type": "BEST",
+          }
+        }
         time="135p"
         timeFormat="h:mm a"
       >
@@ -613,8 +643,14 @@ exports[`components > form > call-taker > date time options should correctly han
     >
       <DateTimeOptions
         date="2022-11-17"
-        dispatch={[Function]}
         homeTimezone="America/Los_Angeles"
+        importedUpdateItineraryFilter={[Function]}
+        sort={
+          Object {
+            "direction": "ASC",
+            "type": "BEST",
+          }
+        }
         time="1335"
         timeFormat="h:mm a"
       >
@@ -730,8 +766,14 @@ exports[`components > form > call-taker > date time options should render 1`] = 
     >
       <DateTimeOptions
         date="2022-11-17"
-        dispatch={[Function]}
         homeTimezone="America/Los_Angeles"
+        importedUpdateItineraryFilter={[Function]}
+        sort={
+          Object {
+            "direction": "ASC",
+            "type": "BEST",
+          }
+        }
         time="12:34"
         timeFormat="h:mm a"
       >
