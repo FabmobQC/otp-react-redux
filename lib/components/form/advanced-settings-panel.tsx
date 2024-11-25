@@ -82,11 +82,17 @@ const HeaderContainer = styled.div`
   height: 30px;
 `
 
-const Subheader = styled.h2<{ invisible?: boolean }>`
-  ${(props) =>
-    props.invisible !== false
-      ? invisibleCss
-      : 'display: block; font-size: 18px; font-weight: 700; height: auto; margin: 1em 0; position: static; width: auto;'}
+const InvisibleSubheader = styled.h2`
+  ${invisibleCss}
+`
+const VisibleSubheader = styled.h2`
+  display: block;
+  font-size: 18px;
+  font-weight: 700;
+  height: auto;
+  margin: 1em 0;
+  position: static;
+  width: auto;
 `
 const ReturnToTripPlanButton = styled.button`
   align-items: center;
@@ -162,7 +168,7 @@ const AdvancedSettingsPanel = ({
   getDependentUserInfo: (userIds: string[], intl: IntlShape) => void
   handlePlanTrip: () => void
   innerRef: RefObject<HTMLDivElement>
-  loggedInUser?: User | null
+  loggedInUser?: User
   mobilityProfile: boolean
   modeButtonOptions: ModeButtonDefinition[]
   modeSettingDefinitions: ModeSetting[]
@@ -255,10 +261,10 @@ const AdvancedSettingsPanel = ({
 
   const onMobilityProfileChange = useCallback(
     (evt: QueryParamChangeEvent) => {
-      const value = evt.mobilityProfile
+      const value = evt.forEmail
       setSelectedMobilityProfile(value as string)
       setQueryParam({
-        mobilityProfile: value
+        forEmail: value
       })
     },
     [setSelectedMobilityProfile, setQueryParam]
@@ -283,53 +289,51 @@ const AdvancedSettingsPanel = ({
       </DtSelectorContainer>
       {processedGlobalSettings.length > 0 && (
         <>
-          <Subheader>
+          <InvisibleSubheader>
             <FormattedMessage id="components.BatchSearchScreen.tripOptions" />
-          </Subheader>
+          </InvisibleSubheader>
           <GlobalSettingsContainer className="global-settings-container">
             {globalSettingsComponents}
           </GlobalSettingsContainer>
         </>
       )}
-      {loggedInUser &&
-        loggedInUser.dependentsInfo &&
-        loggedInUser.dependentsInfo.length > 0 && (
-          <MobilityProfileContainer>
-            <Subheader invisible={false}>
-              <FormattedMessage id="components.MobilityProfile.MobilityPane.header" />
-            </Subheader>
-            <FormattedMessage
-              id="components.MobilityProfile.MobilityPane.planTripDescription"
-              values={{
-                manageLink: (linkText: string) => (
-                  <UnderlinedLink to="/account/settings">
-                    {linkText}
-                  </UnderlinedLink>
-                )
-              }}
-            />
-            <MobilityProfileDropdown
-              label={intl.formatMessage({
-                id: 'components.MobilityProfile.dropdownLabel'
-              })}
-              name="forEmail"
-              onChange={onMobilityProfileChange}
-              options={[
-                {
-                  text: intl.formatMessage({
-                    id: 'components.MobilityProfile.myself'
-                  }),
-                  value: loggedInUser?.email
-                },
-                ...(loggedInUser?.dependentsInfo?.map((user) => ({
-                  text: getDependentName(user),
-                  value: user.email
-                })) || [])
-              ]}
-              value={selectedMobilityProfile}
-            />
-          </MobilityProfileContainer>
-        )}
+      {loggedInUser?.dependentsInfo?.length && (
+        <MobilityProfileContainer>
+          <VisibleSubheader>
+            <FormattedMessage id="components.MobilityProfile.MobilityPane.header" />
+          </VisibleSubheader>
+          <FormattedMessage
+            id="components.MobilityProfile.MobilityPane.planTripDescription"
+            values={{
+              manageLink: (linkText: string) => (
+                <UnderlinedLink to="/account/settings">
+                  {linkText}
+                </UnderlinedLink>
+              )
+            }}
+          />
+          <MobilityProfileDropdown
+            label={intl.formatMessage({
+              id: 'components.MobilityProfile.dropdownLabel'
+            })}
+            name="forEmail"
+            onChange={onMobilityProfileChange}
+            options={[
+              {
+                text: intl.formatMessage({
+                  id: 'components.MobilityProfile.myself'
+                }),
+                value: loggedInUser?.email
+              },
+              ...(loggedInUser?.dependentsInfo?.map((user) => ({
+                text: getDependentName(user),
+                value: user.email
+              })) || [])
+            ]}
+            value={selectedMobilityProfile}
+          />
+        </MobilityProfileContainer>
+      )}
 
       <AdvancedModeSubsettingsContainer
         accentColor={accentColor}
@@ -384,7 +388,7 @@ const mapStateToProps = (state: AppReduxState) => {
       })?.modeButtons?.filter((mb): mb is string => mb !== null) ||
       modes?.initialState?.enabledModeButtons ||
       [],
-    loggedInUser: state.user.loggedInUser || null,
+    loggedInUser: state.user.loggedInUser,
     mobilityProfile: state.otp.config?.mobilityProfile || false,
     modeButtonOptions: modes?.modeButtons || [],
     modeSettingDefinitions: state.otp?.modeSettingDefinitions || [],
