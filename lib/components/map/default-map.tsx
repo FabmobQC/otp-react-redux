@@ -320,7 +320,7 @@ class DefaultMap extends Component {
     const baseLayerNames = baseLayersWithNames?.map((bl) => bl.name)
 
     const routeBasedTransitVehicleOverlayNameOverride =
-      overlays.find((o) => o.type === 'vehicles-one-route')?.name || undefined
+      overlays?.find((o) => o.type === 'vehicles-one-route')?.name || undefined
 
     return (
       <MapContainer className="percy-hide">
