@@ -22,7 +22,7 @@ type Props = WrappedComponentProps &
     loggedInUser: User
   }
 
-function optionValue(option: Option) {
+function optionValue(option: Option | null) {
   if (!option) return null
   return option?.value
 }
@@ -38,8 +38,8 @@ const TripCompanions = ({
   values: trip
 }: Props): JSX.Element => {
   const handleCompanionChange = useCallback(
-    (option: Option | Option[]) => {
-      if ('label' in option) {
+    (option: Option | Option[] | null) => {
+      if (!option || 'label' in option) {
         setFieldValue('companion', optionValue(option))
       }
     },
@@ -47,8 +47,8 @@ const TripCompanions = ({
   )
 
   const handleObserversChange = useCallback(
-    (options: Option | Option[]) => {
-      if ('length' in options) {
+    (options: Option | Option[] | null) => {
+      if (!options || 'length' in options) {
         setFieldValue('observers', (options || []).map(optionValue))
       }
     },
