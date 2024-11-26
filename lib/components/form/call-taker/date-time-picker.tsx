@@ -1,11 +1,15 @@
 import { connect } from 'react-redux'
-import { format, toDate } from 'date-fns-tz'
+import { format, OptionsWithTZ, toDate } from 'date-fns-tz'
 import { getCurrentTime } from '@opentripplanner/core-utils/lib/time'
 import { IntlShape, useIntl } from 'react-intl'
 import { isMatch, parse } from 'date-fns'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 import coreUtils from '@opentripplanner/core-utils'
 import React, { useEffect, useRef, useState } from 'react'
+
+import { AppReduxState, FilterType, SortType } from '../../../util/state-types'
+import { DepartArriveTypeMap, DepartArriveValue } from '../date-time-modal'
+import { updateItineraryFilter } from '../../../actions/narrative'
 
 const { getCurrentDate, OTP_API_DATE_FORMAT, OTP_API_TIME_FORMAT } =
   coreUtils.time
@@ -56,7 +60,7 @@ const SUPPORTED_TIME_FORMATS = [
   'HH:mm'
 ]
 
-const safeFormat = (date: Date | '', time: string, options: any) => {
+const safeFormat = (date: Date | '', time: string, options?: OptionsWithTZ) => {
   if (date === '') return ''
   try {
     return format(date, time, options)
@@ -68,8 +72,9 @@ const safeFormat = (date: Date | '', time: string, options: any) => {
 
 type Props = {
   date?: string
-  departArrive?: string
+  departArrive?: DepartArriveValue
   homeTimezone: string
+  importedUpdateItineraryFilter: (payload: FilterType) => void
   onKeyDown: () => void
   setQueryParam: ({
     date,
@@ -80,6 +85,8 @@ type Props = {
     departArrive: string
     time: string
   }) => void
+  sort: SortType
+  syncSortWithDepartArrive?: boolean
   time?: string
   timeFormat: string
 }
@@ -101,12 +108,15 @@ const DateTimeOptions = ({
   date: initialDate,
   departArrive: initialDepartArrive,
   homeTimezone,
+  importedUpdateItineraryFilter,
   onKeyDown,
   setQueryParam,
+  sort,
+  syncSortWithDepartArrive,
   time: initialTime,
   timeFormat
 }: Props) => {
-  const [departArrive, setDepartArrive] = useState(
+  const [departArrive, setDepartArrive] = useState<DepartArriveValue>(
     initialDate || initialTime ? 'DEPART' : 'NOW'
   )
   const [date, setDate] = useState<string | undefined>(initialDate)
@@ -187,6 +197,18 @@ const DateTimeOptions = ({
         })
       })
     }
+
+    if (
+      syncSortWithDepartArrive &&
+      DepartArriveTypeMap[departArrive] !== sort.type
+    ) {
+      importedUpdateItineraryFilter({
+        sort: {
+          ...sort,
+          type: DepartArriveTypeMap[departArrive]
+        }
+      })
+    }
   }, [dateTime, departArrive, homeTimezone, setQueryParam])
 
   // Handler for updating the time and date fields when NOW is selected
@@ -209,8 +231,8 @@ const DateTimeOptions = ({
   return (
     <>
       <select
-        onBlur={(e) => setDepartArrive(e.target.value)}
-        onChange={(e) => setDepartArrive(e.target.value)}
+        onBlur={(e) => setDepartArrive(e.target.value as DepartArriveValue)}
+        onChange={(e) => setDepartArrive(e.target.value as DepartArriveValue)}
         onKeyDown={onKeyDown}
         value={departArrive}
       >
@@ -282,12 +304,19 @@ const DateTimeOptions = ({
 }
 
 // connect to the redux store
-const mapStateToProps = (state: any) => {
-  const { dateTime, homeTimezone } = state.otp.config
+const mapStateToProps = (state: AppReduxState) => {
+  const { dateTime, homeTimezone, itinerary } = state.otp.config
+  const syncSortWithDepartArrive = itinerary?.syncSortWithDepartArrive
+  const { sort } = state.otp.filter
   return {
     homeTimezone,
+    sort,
+    syncSortWithDepartArrive,
     timeFormat: dateTime?.timeFormat || 'h:mm a'
   }
 }
+const mapDispatchToProps = {
+  importedUpdateItineraryFilter: updateItineraryFilter
+}
 
-export default connect(mapStateToProps)(DateTimeOptions)
+export default connect(mapStateToProps, mapDispatchToProps)(DateTimeOptions)
