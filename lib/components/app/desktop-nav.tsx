@@ -13,6 +13,7 @@ import { DEFAULT_APP_TITLE } from '../../util/constants'
 import InvisibleA11yLabel from '../util/invisible-a11y-label'
 import NavLoginButtonAuth0 from '../user/nav-login-button-auth0'
 
+import { NetworkConnectionBanner } from './network-connection-banner'
 import AppMenu, { Icon } from './app-menu'
 import LocaleSelector from './locale-selector'
 import NavbarItem from './nav-item'
@@ -63,6 +64,7 @@ const NavItemOnLargeScreens = styled(NavbarItem)`
 // Typscript TODO: otpConfig type
 export type Props = {
   locale: string
+  networkConnectionLost: boolean
   otpConfig: AppConfig
   popupTarget?: string
   setPopupContent: (url: string) => void
@@ -83,6 +85,7 @@ export type Props = {
  */
 const DesktopNav = ({
   locale,
+  networkConnectionLost,
   otpConfig,
   popupTarget,
   setPopupContent
@@ -116,6 +119,8 @@ const DesktopNav = ({
     intl.formatMessage({
       id: `config.popups.${popupTarget}`
     })
+
+  console.log(networkConnectionLost)
 
   return (
     <header>
@@ -166,6 +171,7 @@ const DesktopNav = ({
           </StyledNav>
         </Navbar.Header>
       </Navbar>
+      <NetworkConnectionBanner networkConnectionLost={networkConnectionLost} />
     </header>
   )
 }
@@ -173,8 +179,10 @@ const DesktopNav = ({
 // connect to the redux store
 const mapStateToProps = (state: AppReduxState) => {
   const { config: otpConfig } = state.otp
+  const { networkConnectionLost } = state.otp.ui.errors
   return {
     locale: state.otp.ui.locale,
+    networkConnectionLost,
     otpConfig,
     popupTarget: otpConfig.popups?.launchers?.toolbar
   }
