@@ -62,7 +62,7 @@
 .navbar .navbar-brand {
   align-items: center;
   display: flex;
-  gap: 35px;
+  gap: 25px;
   grid-column: 1 / span 1;
   width: 100%;
 }
