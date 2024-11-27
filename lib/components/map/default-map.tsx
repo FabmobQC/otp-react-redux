@@ -319,6 +319,9 @@ class DefaultMap extends Component {
     const baseLayerUrls = baseLayersWithNames?.map((bl) => bl.url)
     const baseLayerNames = baseLayersWithNames?.map((bl) => bl.name)
 
+    const routeBasedTransitVehicleOverlayNameOverride =
+      overlays?.find((o) => o.type === 'vehicles-one-route')?.name || undefined
+
     return (
       <MapContainer className="percy-hide">
         <BaseMap
@@ -342,7 +345,13 @@ class DefaultMap extends Component {
           {/* The default overlays */}
           <EndpointsOverlay />
           <RouteViewerOverlay />
-          <TransitVehicleOverlay ModeIcon={ModeIcon} />
+          <TransitVehicleOverlay
+            id={routeBasedTransitVehicleOverlayNameOverride}
+            key={routeBasedTransitVehicleOverlayNameOverride}
+            ModeIcon={ModeIcon}
+            name={routeBasedTransitVehicleOverlayNameOverride}
+            visible
+          />
           <GeolocateControl
             onGeolocate={() => {
               getCurrentPosition(intl)
