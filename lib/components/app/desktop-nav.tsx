@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
+import { FormattedMessage, useIntl } from 'react-intl'
 import { isMobile } from '@opentripplanner/core-utils/lib/ui'
 import { Nav, Navbar } from 'react-bootstrap'
-import { useIntl } from 'react-intl'
 import React from 'react'
 import styled from 'styled-components'
 
@@ -120,8 +120,6 @@ const DesktopNav = ({
       id: `config.popups.${popupTarget}`
     })
 
-  console.log(networkConnectionLost)
-
   return (
     <header>
       <Navbar fluid inverse>
@@ -171,6 +169,13 @@ const DesktopNav = ({
           </StyledNav>
         </Navbar.Header>
       </Navbar>
+      <InvisibleA11yLabel aria-live="assertive" role="status">
+        {networkConnectionLost ? (
+          <FormattedMessage id="components.AppMenu.networkConnectionLost" />
+        ) : (
+          <FormattedMessage id="components.AppMenu.networkConnectionRestored" />
+        )}
+      </InvisibleA11yLabel>
       <NetworkConnectionBanner networkConnectionLost={networkConnectionLost} />
     </header>
   )

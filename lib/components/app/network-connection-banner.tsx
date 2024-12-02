@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { RED_ON_WHITE } from '../util/colors'
 
 const containerClassname = 'network-connection-banner'
-const timeout = 200
+const timeout = 250
 
 const TransitionStyles = styled.div`
   .${containerClassname} {
@@ -20,7 +20,12 @@ const TransitionStyles = styled.div`
     text-align: center;
     top: 50px;
     width: 100%;
-    z-index: 1;
+    // When banner is fully loaded, set z-index higher than nav so we're not seeing the nav border.
+    z-index: 26;
+
+    @media (max-width: 768px) {
+      border: 0;
+    }
   }
   .${containerClassname}-enter {
     opacity: 0;
@@ -34,11 +39,13 @@ const TransitionStyles = styled.div`
   .${containerClassname}-exit {
     opacity: 1;
     transform: translateY(0);
+    z-index: 20;
   }
   .${containerClassname}-exit-active {
     opacity: 0;
     transform: translateY(-100%);
     transition: opacity ${timeout}ms ease-in, transform ${timeout}ms ease-in;
+    z-index: 20;
   }
 `
 export const NetworkConnectionLostBanner = styled.div``
@@ -62,13 +69,9 @@ export const NetworkConnectionBanner = ({
               aria-live="assertive"
               className={containerClassname}
               ref={connectionLostBannerRef}
-              role="status"
+              role="alert"
             >
-              {networkConnectionLost ? (
-                <FormattedMessage id="components.AppMenu.networkConnectionLost" />
-              ) : (
-                <FormattedMessage id="components.AppMenu.networkConnectionRestored" />
-              )}
+              <FormattedMessage id="components.AppMenu.networkConnectionLost" />
             </NetworkConnectionLostBanner>
           </CSSTransition>
         )}

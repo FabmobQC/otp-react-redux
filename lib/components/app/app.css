@@ -108,6 +108,9 @@
   height: 100%;
   width: 100%;
 }
+.otp .navbar {
+  z-index: 25;
+}
 
 /** These changes kick in when the map is hidden. These rules ensure that the entire "sidebar"
     (which at this point fills the entire screen) scrolls as a single unit.
