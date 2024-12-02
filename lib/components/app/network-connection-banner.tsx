@@ -4,6 +4,7 @@ import React, { useRef } from 'react'
 import styled from 'styled-components'
 
 import { RED_ON_WHITE } from '../util/colors'
+import InvisibleA11yLabel from '../util/invisible-a11y-label'
 
 const containerClassname = 'network-connection-banner'
 const timeout = 250
@@ -48,7 +49,6 @@ const TransitionStyles = styled.div`
     z-index: 20;
   }
 `
-export const NetworkConnectionLostBanner = styled.div``
 
 export const NetworkConnectionBanner = ({
   networkConnectionLost
@@ -58,6 +58,13 @@ export const NetworkConnectionBanner = ({
   const connectionLostBannerRef = useRef<HTMLDivElement>(null)
   return (
     <TransitionStyles>
+      <InvisibleA11yLabel aria-live="assertive" role="status">
+        {networkConnectionLost ? (
+          <FormattedMessage id="components.AppMenu.networkConnectionLost" />
+        ) : (
+          <FormattedMessage id="components.AppMenu.networkConnectionRestored" />
+        )}
+      </InvisibleA11yLabel>
       <TransitionGroup style={{ display: 'content' }}>
         {networkConnectionLost && (
           <CSSTransition
@@ -65,14 +72,9 @@ export const NetworkConnectionBanner = ({
             nodeRef={connectionLostBannerRef}
             timeout={timeout}
           >
-            <NetworkConnectionLostBanner
-              aria-live="assertive"
-              className={containerClassname}
-              ref={connectionLostBannerRef}
-              role="alert"
-            >
+            <div className={containerClassname} ref={connectionLostBannerRef}>
               <FormattedMessage id="components.AppMenu.networkConnectionLost" />
-            </NetworkConnectionLostBanner>
+            </div>
           </CSSTransition>
         )}
       </TransitionGroup>
