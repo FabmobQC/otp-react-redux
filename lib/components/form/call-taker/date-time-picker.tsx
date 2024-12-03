@@ -8,7 +8,11 @@ import coreUtils from '@opentripplanner/core-utils'
 import React, { useEffect, useRef, useState } from 'react'
 
 import { AppReduxState, FilterType, SortType } from '../../../util/state-types'
-import { DepartArriveTypeMap, DepartArriveValue } from '../date-time-modal'
+import {
+  DepartArriveDirectionMap,
+  DepartArriveTypeMap,
+  DepartArriveValue
+} from '../date-time-modal'
 import { updateItineraryFilter } from '../../../actions/narrative'
 
 const { getCurrentDate, OTP_API_DATE_FORMAT, OTP_API_TIME_FORMAT } =
@@ -205,6 +209,7 @@ const DateTimeOptions = ({
       importedUpdateItineraryFilter({
         sort: {
           ...sort,
+          direction: DepartArriveDirectionMap[departArrive] || sort.direction,
           type: DepartArriveTypeMap[departArrive]
         }
       })
