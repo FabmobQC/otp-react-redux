@@ -20,8 +20,8 @@ import NavbarItem from './nav-item'
 import ViewSwitcher from './view-switcher'
 
 const StyledNav = styled(Nav)`
-  /* Almost override bootstrap's margin-right: -15px */
-  margin-right: -5px;
+  display: flex;
+  justify-content: end;
   /* Target only the svgs in the Navbar */
   & > li > button > svg,
   & > li > span > button > span > svg {
@@ -41,10 +41,6 @@ const StyledNav = styled(Nav)`
       color: white;
       padding: 15px;
       line-height: 20px;
-
-      @media (max-width: 768px) {
-        padding: 10px;
-      }
 
       &:hover {
         background: rgba(0, 0, 0, 0.05);
@@ -102,18 +98,14 @@ const DesktopNav = ({
 
   const BrandingElement = brandClickable ? 'a' : 'div'
 
-  const commonStyles = { marginLeft: 50 }
-  const brandingProps = brandClickable
-    ? {
-        href: '/#/',
-        style: {
-          ...commonStyles,
-          display: 'block',
-          position: 'relative',
-          zIndex: 10
-        }
-      }
-    : { style: { ...commonStyles } }
+  const brandingProps = brandClickable && {
+    href: '/#/',
+    style: {
+      display: 'block',
+      position: 'relative',
+      zIndex: 10
+    }
+  }
   const popupButtonText =
     popupTarget &&
     intl.formatMessage({
@@ -145,7 +137,7 @@ const DesktopNav = ({
             )}
           </Navbar.Brand>
 
-          <ViewSwitcher sticky />
+          <ViewSwitcher />
 
           <StyledNav pullRight>
             {popupTarget && (
