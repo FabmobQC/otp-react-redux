@@ -163,32 +163,15 @@ const DateTimeOptions = ({
   useEffect(() => {
     if (initialDate !== date) setDate(initialDate)
     if (initialTime !== time) {
-      setTime(initialTime)
+      handleTimeChange(initialTime || '')
     }
   }, [initialTime, initialDate])
-
-  useEffect(() => {
-    // Don't update if still typing
-    if (timeRef.current !== document.activeElement) {
-      setTypedTime(
-        safeFormat(dateTime, timeFormat, {
-          timeZone: homeTimezone
-        }) ||
-          // TODO: there doesn't seem to be an intl object present?
-          'Invalid Time'
-      )
-    }
-  }, [time])
 
   useEffect(() => {
     if (initialDepartArrive && departArrive !== initialDepartArrive) {
       setDepartArrive(initialDepartArrive)
     }
   }, [initialDepartArrive])
-
-  useEffect(() => {
-    if (departArrive === 'NOW') setTypedTime('')
-  }, [departArrive])
 
   // Handler for setting the query parameters
   useEffect(() => {
@@ -212,7 +195,7 @@ const DateTimeOptions = ({
 
       // Handler for updating the time and date fields when NOW is selected
       if (newValue === 'NOW') {
-        setTime(getCurrentTime(homeTimezone))
+        handleTimeChange(getCurrentTime(homeTimezone))
         setDate(getCurrentDate(homeTimezone))
         setTypedTime(
           safeFormat(dateTime, timeFormat, {
@@ -237,9 +220,24 @@ const DateTimeOptions = ({
     [syncSortWithDepartArrive, sort, importedUpdateItineraryFilter]
   )
 
-  const unsetNow = () => {
+  const unsetNow = useCallback(() => {
     if (departArrive === 'NOW') setDepartArrive('DEPART')
-  }
+  }, [departArrive])
+
+  const handleTimeChange = useCallback(
+    (newTime: string) => {
+      setTime(newTime)
+      // Only update typed time if not actively typing
+      if (timeRef.current !== document.activeElement) {
+        setTypedTime(
+          safeFormat(dateTime, timeFormat, {
+            timeZone: homeTimezone
+          }) || 'Invalid Time'
+        )
+      }
+    },
+    [dateTime, timeFormat, homeTimezone]
+  )
 
   return (
     <>
@@ -271,7 +269,7 @@ const DateTimeOptions = ({
         <input
           className="datetime-slim"
           onChange={(e) => {
-            setTime(e.target.value)
+            handleTimeChange(e.target.value)
             setTypedTime(e.target.value)
             unsetNow()
           }}
