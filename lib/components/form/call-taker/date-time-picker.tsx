@@ -5,7 +5,13 @@ import { IntlShape, useIntl } from 'react-intl'
 import { isMatch, parse } from 'date-fns'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 import coreUtils from '@opentripplanner/core-utils'
-import React, { useEffect, useRef, useState } from 'react'
+import React, {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState
+} from 'react'
 
 import { AppReduxState, FilterType, SortType } from '../../../util/state-types'
 import { DepartArriveTypeMap, DepartArriveValue } from '../date-time-modal'
@@ -197,32 +203,39 @@ const DateTimeOptions = ({
         })
       })
     }
-
-    if (
-      syncSortWithDepartArrive &&
-      DepartArriveTypeMap[departArrive] !== sort.type
-    ) {
-      importedUpdateItineraryFilter({
-        sort: {
-          ...sort,
-          type: DepartArriveTypeMap[departArrive]
-        }
-      })
-    }
   }, [dateTime, departArrive, homeTimezone, setQueryParam])
 
-  // Handler for updating the time and date fields when NOW is selected
-  useEffect(() => {
-    if (departArrive === 'NOW') {
-      setTime(getCurrentTime(homeTimezone))
-      setDate(getCurrentDate(homeTimezone))
-      setTypedTime(
-        safeFormat(dateTime, timeFormat, {
-          timeZone: homeTimezone
+  const handleDepartArriveChange = useCallback(
+    (e: ChangeEvent<HTMLSelectElement>) => {
+      const newValue = e.target.value as DepartArriveValue
+      setDepartArrive(newValue)
+
+      // Handler for updating the time and date fields when NOW is selected
+      if (newValue === 'NOW') {
+        setTime(getCurrentTime(homeTimezone))
+        setDate(getCurrentDate(homeTimezone))
+        setTypedTime(
+          safeFormat(dateTime, timeFormat, {
+            timeZone: homeTimezone
+          })
+        )
+      }
+
+      // Update sort type if needed
+      if (
+        syncSortWithDepartArrive &&
+        DepartArriveTypeMap[newValue] !== sort.type
+      ) {
+        importedUpdateItineraryFilter({
+          sort: {
+            ...sort,
+            type: DepartArriveTypeMap[newValue]
+          }
         })
-      )
-    }
-  }, [departArrive, setTime, setDate, homeTimezone])
+      }
+    },
+    [syncSortWithDepartArrive, sort, importedUpdateItineraryFilter]
+  )
 
   const unsetNow = () => {
     if (departArrive === 'NOW') setDepartArrive('DEPART')
@@ -231,8 +244,8 @@ const DateTimeOptions = ({
   return (
     <>
       <select
-        onBlur={(e) => setDepartArrive(e.target.value as DepartArriveValue)}
-        onChange={(e) => setDepartArrive(e.target.value as DepartArriveValue)}
+        onBlur={handleDepartArriveChange}
+        onChange={handleDepartArriveChange}
         onKeyDown={onKeyDown}
         value={departArrive}
       >
