@@ -75,6 +75,30 @@ const safeFormat = (date: Date | '', time: string, options?: OptionsWithTZ) => {
   }
   return ''
 }
+/**
+ * Parse a time input expressed in the agency time zone.
+ * @returns A date if the parsing succeeded, or null.
+ */
+const parseInputAsTime = (
+  homeTimezone: string,
+  timeInput: string = getCurrentTime(homeTimezone),
+  date: string = getCurrentDate(homeTimezone)
+) => {
+  if (!timeInput) timeInput = getCurrentTime(homeTimezone)
+
+  // Match one of the supported time formats
+  const matchedTimeFormat = SUPPORTED_TIME_FORMATS.find((timeFormat) =>
+    isMatch(timeInput, timeFormat)
+  )
+  if (matchedTimeFormat) {
+    const resolvedDateTime = format(
+      parse(timeInput, matchedTimeFormat, new Date()),
+      'HH:mm:ss'
+    )
+    return toDate(`${date}T${resolvedDateTime}`)
+  }
+  return ''
+}
 
 type Props = {
   date?: string
@@ -127,37 +151,17 @@ const DateTimeOptions = ({
   )
   const [date, setDate] = useState<string | undefined>(initialDate)
   const [time, setTime] = useState<string | undefined>(initialTime)
-  const [typedTime, setTypedTime] = useState<string | undefined>(initialTime)
+  const [typedTime, setTypedTime] = useState<string | undefined>(
+    safeFormat(parseInputAsTime(homeTimezone, time, date), timeFormat, {
+      timeZone: homeTimezone
+    })
+  )
 
   const timeRef = useRef(null)
 
   const intl = useIntl()
 
-  /**
-   * Parse a time input expressed in the agency time zone.
-   * @returns A date if the parsing succeeded, or null.
-   */
-  const parseInputAsTime = (
-    timeInput: string = getCurrentTime(homeTimezone),
-    date: string = getCurrentDate(homeTimezone)
-  ) => {
-    if (!timeInput) timeInput = getCurrentTime(homeTimezone)
-
-    // Match one of the supported time formats
-    const matchedTimeFormat = SUPPORTED_TIME_FORMATS.find((timeFormat) =>
-      isMatch(timeInput, timeFormat)
-    )
-    if (matchedTimeFormat) {
-      const resolvedDateTime = format(
-        parse(timeInput, matchedTimeFormat, new Date()),
-        'HH:mm:ss'
-      )
-      return toDate(`${date}T${resolvedDateTime}`)
-    }
-    return ''
-  }
-
-  const dateTime = parseInputAsTime(time, date)
+  const dateTime = parseInputAsTime(homeTimezone, time, date)
 
   // Update state when external state is updated
   useEffect(() => {
