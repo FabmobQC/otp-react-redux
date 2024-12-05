@@ -83,6 +83,9 @@ Object {
   },
   "ui": Object {
     "diagramLeg": null,
+    "errors": Object {
+      "networkConnectionLost": false,
+    },
     "locale": null,
     "localizedMessages": null,
     "mainPanelContent": null,
