@@ -353,6 +353,8 @@ itinerary:
   showPlanFirstLastButtons: false
   # adds the 'about' and '~' prefixes to the duration of non transit legs and trip details panel
   showApproximatePrefixAccessLegs: false
+  # Whether to show the effective date and time of alerts
+  showAlertEffectiveDateTimeText: true
   # Show all walking legs regardless of distance
   showAllWalkLegs: false
   # Filters out trips returned by OTP by default, unless specifically requested.
