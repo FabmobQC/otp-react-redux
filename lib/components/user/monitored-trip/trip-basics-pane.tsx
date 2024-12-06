@@ -180,9 +180,8 @@ const RenderAvailableDays = ({
               title={notAvailableText}
             >
               <Field
-                // Let users save an existing trip, even though it may not be available on some days.
                 // TODO: improve checking trip availability.
-                disabled={isDayDisabled && isCreating}
+                disabled={isDayDisabled}
                 id={day}
                 name={day}
                 type="checkbox"

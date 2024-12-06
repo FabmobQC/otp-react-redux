@@ -33,7 +33,11 @@ import TimezoneWarning from './timezone-warning'
 interface Props {
   calendarMax: string
   calendarMin: string
-  findStopTimesForStop: (arg: { date: string; stopId: string }) => void
+  findStopTimesForStop: (arg: {
+    date: string
+    forceFetch?: boolean
+    stopId: string
+  }) => void
   hideBackButton?: boolean
   homeTimezone: string
   intl: IntlShape
@@ -137,7 +141,7 @@ class StopScheduleViewer extends Component<Props, State> {
   _findStopTimesForDate = (date: string) => {
     const { findStopTimesForStop, stopId } = this.props
     if (stopId) {
-      findStopTimesForStop({ date, stopId })
+      findStopTimesForStop({ date, forceFetch: true, stopId })
     }
   }
 
