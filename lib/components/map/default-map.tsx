@@ -353,7 +353,6 @@ class DefaultMap extends Component {
             visible
           />
           <GeolocateControl
-            enableHighAccuracy
             onGeolocate={() => {
               getCurrentPosition(intl)
             }}
