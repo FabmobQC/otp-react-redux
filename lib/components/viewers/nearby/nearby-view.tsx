@@ -2,12 +2,17 @@ import { connect } from 'react-redux'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Location } from '@opentripplanner/types'
 import { MapRef, useMap } from 'react-map-gl'
+import { Search } from '@styled-icons/fa-solid'
+import getGeocoder from '@opentripplanner/geocoder'
+import LocationField from '@opentripplanner/location-field'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import * as apiActions from '../../../actions/api'
+import * as locationActions from '../../../actions/location'
 import * as mapActions from '../../../actions/map'
 import * as uiActions from '../../../actions/ui'
 import { AppReduxState } from '../../../util/state-types'
+import { GeocoderConfig } from '../../../util/config-types'
 import { getCurrentServiceWeek } from '../../../util/current-service-week'
 import { SetLocationHandler, ZoomToPlaceHandler } from '../../util/types'
 import Loading from '../../narrative/loading'
@@ -45,6 +50,8 @@ type Props = {
     radius?: number,
     currentServiceWeek?: ServiceWeek
   ) => void
+  geocoderConfig: GeocoderConfig
+  getCurrentPosition: TODO
   hideBackButton?: boolean
   location: string
   mobile?: boolean
@@ -114,6 +121,8 @@ function NearbyView({
   displayedCoords,
   entityId,
   fetchNearby,
+  geocoderConfig,
+  getCurrentPosition,
   location,
   mobile,
   nearby,
@@ -127,6 +136,7 @@ function NearbyView({
   const map = useMap().default
   const intl = useIntl()
   const [loading, setLoading] = useState(true)
+  const [reversedPoint, setReversedPoint] = useState('')
   const firstItemRef = useRef<HTMLDivElement>(null)
   const finalNearbyCoords = useMemo(
     () =>
@@ -139,6 +149,12 @@ function NearbyView({
     [nearbyViewCoords, currentPosition, map]
   )
 
+  const reverseCoords = (coords) => {
+    getGeocoder(geocoderConfig)
+      .reverse({ point: coords })
+      .then((result) => setReversedPoint(result.name))
+  }
+
   // Make sure the highlighted location is cleaned up when leaving nearby
   useEffect(() => {
     return function cleanup() {
@@ -149,10 +165,12 @@ function NearbyView({
   useEffect(() => {
     const moveListener = (e: mapboxgl.EventData) => {
       if (e.geolocateSource) {
-        setViewedNearbyCoords({
+        const coords = {
           lat: e.viewState.latitude,
           lon: e.viewState.longitude
-        })
+        }
+        setViewedNearbyCoords(coords)
+        reverseCoords(coords)
       }
     }
 
@@ -162,9 +180,11 @@ function NearbyView({
         lon: e.viewState.longitude
       }
       setViewedNearbyCoords(coords)
+      reverseCoords(coords)
 
       // Briefly flash the highlight to alert the user that we've moved
       setHighlightedLocation(coords)
+
       setTimeout(() => {
         setHighlightedLocation(null)
       }, 500)
@@ -286,6 +306,32 @@ function NearbyView({
       >
         {/* This is used to scroll to top */}
         <div aria-hidden ref={firstItemRef} />
+        <LocationField
+          className="nearby-view-location-field"
+          geocoderConfig={geocoderConfig}
+          getCurrentPosition={getCurrentPosition}
+          inputPlaceholder={intl.formatMessage({
+            id: 'components.NearbyView.searchNearby'
+          })}
+          location={{
+            // Provide a 0 default in case the nearby view coords are null
+            lat: 0,
+            lon: 0,
+            ...nearbyViewCoords,
+            name: reversedPoint
+          }}
+          LocationIconComponent={() => (
+            <Search style={{ marginRight: 5, padding: 5 }} />
+          )}
+          locationType="to"
+          onLocationSelected={(selection) => {
+            const { location } = selection
+            setViewedNearbyCoords(location)
+            map && zoomToPlace(map, location)
+            setReversedPoint(location.name || '')
+          }}
+          sortByDistance
+        />
         {loading && (
           <FloatingLoadingIndicator>
             <Loading extraSmall />
@@ -327,6 +373,7 @@ const mapStateToProps = (state: AppReduxState) => {
     defaultLatLon,
     displayedCoords: nearby?.coords,
     entityId: entityId && decodeURIComponent(entityId),
+    geocoderConfig: config.geocoder,
     homeTimezone: config.homeTimezone,
     location: state.router.location.hash,
     nearby: nearby?.data,
@@ -337,6 +384,7 @@ const mapStateToProps = (state: AppReduxState) => {
 
 const mapDispatchToProps = {
   fetchNearby: apiActions.fetchNearby,
+  getCurrentPosition: locationActions.getCurrentPosition,
   setHighlightedLocation: uiActions.setHighlightedLocation,
   setLocation: mapActions.setLocation,
   setMainPanelContent: uiActions.setMainPanelContent,
