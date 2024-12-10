@@ -40,8 +40,9 @@ const MobileSearchSettings = styled.div<{
   top: 50px;
   transition: ${(props) => `all ${props.transitionDuration}ms ease`};
   transition-delay: ${(props) => props.transitionDelay}ms;
-  /* Must appear under the 'hamburger' dropdown which has z-index of 1000. */
-  z-index: 999;
+  /* Must appear under the 'hamburger' dropdown which has z-index of 1000, and the "network lost"
+    banner which has a z-index of 10 */
+  z-index: 9;
 `
 
 interface Props {

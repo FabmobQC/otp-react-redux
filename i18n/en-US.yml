@@ -183,6 +183,8 @@ components:
     closeMenu: Close Menu
     fieldTrip: Field Trip
     mailables: Mailables
+    networkConnectionLost: Network connection lost
+    networkConnectionRestored: Network connection restored
     openMenu: Open Menu
     skipNavigation: Skip navigation
   BackToTripPlanner:
