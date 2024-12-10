@@ -1,6 +1,7 @@
 import {
   addSettingsToButton,
   AdvancedModeSubsettingsContainer,
+  DropdownSelector,
   ModeSettingRenderer,
   populateSettingWithValue
 } from '@opentripplanner/trip-form'
@@ -8,21 +9,32 @@ import { ArrowLeft } from '@styled-icons/fa-solid/ArrowLeft'
 import { Check } from '@styled-icons/boxicons-regular'
 import { connect } from 'react-redux'
 import { decodeQueryParams, DelimitedArrayParam } from 'serialize-query-params'
-import { FormattedMessage, useIntl } from 'react-intl'
+import { FormattedMessage, IntlShape, useIntl } from 'react-intl'
 import { invisibleCss } from '@opentripplanner/trip-form/lib/MetroModeSelector'
 import {
   ModeButtonDefinition,
   ModeSetting,
   ModeSettingValues
 } from '@opentripplanner/types'
-import React, { RefObject, useCallback, useContext, useState } from 'react'
+import { QueryParamChangeEvent } from '@opentripplanner/trip-form/lib/types'
+import React, {
+  RefObject,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState
+} from 'react'
 import styled from 'styled-components'
 
 import * as formActions from '../../actions/form'
+import * as userActions from '../../actions/user'
 import { AppReduxState } from '../../util/state-types'
 import { blue, getBaseColor } from '../util/colors'
 import { ComponentContext } from '../../util/contexts'
 import { generateModeSettingValues } from '../../util/api'
+import { User } from '../user/types'
+import Link from '../util/link'
 
 import {
   addCustomSettingLabels,
@@ -69,10 +81,18 @@ const HeaderContainer = styled.div`
   height: 30px;
 `
 
-const Subheader = styled.h2`
+const InvisibleSubheader = styled.h2`
   ${invisibleCss}
 `
-
+const VisibleSubheader = styled.h2`
+  display: block;
+  font-size: 18px;
+  font-weight: 700;
+  height: auto;
+  margin: 1em 0;
+  position: static;
+  width: auto;
+`
 const ReturnToTripPlanButton = styled.button`
   align-items: center;
   background-color: var(--main-base-color, ${blue[900]});
@@ -111,13 +131,27 @@ const DtSelectorContainer = styled.div`
   }
 `
 
+const MobilityProfileContainer = styled.div`
+  margin: 60px 0 60px 5px;
+`
+
+const MobilityProfileDropdown = styled(DropdownSelector)`
+  margin: 20px 0px;
+  label {
+    padding-left: 0;
+  }
+`
+
 const AdvancedSettingsPanel = ({
   autoPlan,
   closeAdvancedSettings,
   currentQuery,
   enabledModeButtons,
+  getDependentUserInfo,
   handlePlanTrip,
   innerRef,
+  loggedInUser,
+  mobilityProfile,
   modeButtonOptions,
   modeSettingDefinitions,
   modeSettingValues,
@@ -129,8 +163,11 @@ const AdvancedSettingsPanel = ({
   closeAdvancedSettings: () => void
   currentQuery: any
   enabledModeButtons: string[]
+  getDependentUserInfo: (userIds: string[], intl: IntlShape) => void
   handlePlanTrip: () => void
   innerRef: RefObject<HTMLDivElement>
+  loggedInUser?: User
+  mobilityProfile: boolean
   modeButtonOptions: ModeButtonDefinition[]
   modeSettingDefinitions: ModeSetting[]
   modeSettingValues: ModeSettingValues
@@ -138,11 +175,28 @@ const AdvancedSettingsPanel = ({
   setCloseAdvancedSettingsWithDelay: () => void
   setQueryParam: (evt: any) => void
 }): JSX.Element => {
+  const intl = useIntl()
   const [closingBySave, setClosingBySave] = useState(false)
+  const [selectedMobilityProfile, setSelectedMobilityProfile] =
+    useState<string>(
+      currentQuery.mobilityProfile ||
+        loggedInUser?.mobilityProfile?.mobilityMode ||
+        ''
+    )
+  const dependents = useMemo(
+    () => loggedInUser?.dependents || [],
+    [loggedInUser]
+  )
+
+  useEffect(() => {
+    if (mobilityProfile && dependents.length > 0) {
+      getDependentUserInfo(dependents, intl)
+    }
+  }, [dependents, getDependentUserInfo, intl, mobilityProfile])
+
   const baseColor = getBaseColor()
   const accentColor = baseColor || blue[900]
 
-  const intl = useIntl()
   const closeButtonText = intl.formatMessage({
     id: 'components.BatchSearchScreen.saveAndReturn'
   })
@@ -184,7 +238,6 @@ const AdvancedSettingsPanel = ({
     )
   )
 
-
   const tripFormErrors = tripPlannerValidationErrors(currentQuery, intl)
 
   const closePanel = useCallback(() => {
@@ -208,6 +261,16 @@ const AdvancedSettingsPanel = ({
     closePanel()
   }, [closePanel, setCloseAdvancedSettingsWithDelay])
 
+  const onMobilityProfileChange = useCallback(
+    (evt: QueryParamChangeEvent) => {
+      const value = evt.mobilityProfile
+      setSelectedMobilityProfile(value as string)
+      setQueryParam({
+        mobilityProfile: value
+      })
+    },
+    [setSelectedMobilityProfile, setQueryParam]
+  )
   return (
     <PanelOverlay className="advanced-settings" ref={innerRef}>
       <HeaderContainer>
@@ -228,17 +291,43 @@ const AdvancedSettingsPanel = ({
       </DtSelectorContainer>
       {processedGlobalSettings.length > 0 && (
         <>
-          <Subheader>
+          <InvisibleSubheader>
             <FormattedMessage id="components.BatchSearchScreen.tripOptions" />
-          </Subheader>
+          </InvisibleSubheader>
           <GlobalSettingsContainer className="global-settings-container">
             {globalSettingsComponents}
           </GlobalSettingsContainer>
         </>
       )}
-      <Subheader>
-        <FormattedMessage id="components.BatchSearchScreen.modeOptions" />
-      </Subheader>
+      {loggedInUser?.dependentsInfo?.length && (
+        <MobilityProfileContainer>
+          <VisibleSubheader>
+            <FormattedMessage id="components.MobilityProfile.MobilityPane.header" />
+          </VisibleSubheader>
+          <FormattedMessage id="components.MobilityProfile.MobilityPane.planTripDescription" />
+          <MobilityProfileDropdown
+            label={intl.formatMessage({
+              id: 'components.MobilityProfile.dropdownLabel'
+            })}
+            name="mobilityProfile"
+            onChange={onMobilityProfileChange}
+            options={[
+              {
+                text: intl.formatMessage({
+                  id: 'components.MobilityProfile.myself'
+                }),
+                value: loggedInUser.mobilityProfile?.mobilityMode || ''
+              },
+              ...(loggedInUser.dependentsInfo?.map((user) => ({
+                text: user.name || user.email,
+                value: user.mobilityMode || ''
+              })) || [])
+            ]}
+            value={selectedMobilityProfile}
+          />
+        </MobilityProfileContainer>
+      )}
+
       <AdvancedModeSubsettingsContainer
         accentColor={accentColor}
         fillModeIcons
@@ -268,7 +357,6 @@ const AdvancedSettingsPanel = ({
     </PanelOverlay>
   )
 }
-
 const queryParamConfig = { modeButtons: DelimitedArrayParam }
 
 const mapStateToProps = (state: AppReduxState) => {
@@ -293,6 +381,8 @@ const mapStateToProps = (state: AppReduxState) => {
       })?.modeButtons?.filter((mb): mb is string => mb !== null) ||
       modes?.initialState?.enabledModeButtons ||
       [],
+    loggedInUser: state.user.loggedInUser,
+    mobilityProfile: state.otp.config?.mobilityProfile || false,
     modeButtonOptions: modes?.modeButtons || [],
     modeSettingDefinitions: state.otp?.modeSettingDefinitions || [],
     modeSettingValues,
@@ -301,6 +391,7 @@ const mapStateToProps = (state: AppReduxState) => {
 }
 
 const mapDispatchToProps = {
+  getDependentUserInfo: userActions.getDependentUserInfo,
   setQueryParam: formActions.setQueryParam,
   updateQueryTimeIfLeavingNow: formActions.updateQueryTimeIfLeavingNow
 }
