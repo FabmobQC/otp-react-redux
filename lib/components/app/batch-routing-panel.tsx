@@ -245,7 +245,7 @@ const mapStateToProps = (state: any) => {
   const { mainPanelContent } = state.otp.ui
   const currentQuery = state.otp.currentQuery
 
-  const { geocoderResultsOrder } = state.otp.config.geocoder
+  const geocoderResultsOrder = state.otp.config?.geocoder?.geocoderResultsOrder
   return {
     activeSearch: getActiveSearch(state),
     currentQuery,
