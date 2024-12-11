@@ -24,7 +24,7 @@ function makeOption(companion?: CompanionInfo) {
   }
 }
 
-function isConfirmed({ status = '' }: CompanionInfo) {
+function isConfirmed({ status }: CompanionInfo) {
   return status === 'CONFIRMED'
 }
 
