@@ -358,8 +358,7 @@ components:
       mobilityLimitations: "Handicaps moteurs : "
       planTripDescription: >-
         Vous pouvez rechercher des trajets adaptés au profil mobilité des
-        personnes que vous accompagnez. Pour ajouter des personnes
-        accompagnatrices, allez dans <manageLink>Préférences</manageLink>.
+        personnes que vous accompagnez.
       visionLimitations: "Handicaps visuels : "
     dropdownLabel: "Profil à utiliser :"
     intro: >-

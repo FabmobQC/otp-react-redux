@@ -35,7 +35,6 @@ import { ComponentContext } from '../../util/contexts'
 import { generateModeSettingValues } from '../../util/api'
 import { getDependentName } from '../../util/user'
 import { User } from '../user/types'
-import Link from '../util/link'
 
 import {
   addCustomSettingLabels,
@@ -301,16 +300,7 @@ const AdvancedSettingsPanel = ({
           <VisibleSubheader>
             <FormattedMessage id="components.MobilityProfile.MobilityPane.header" />
           </VisibleSubheader>
-          <FormattedMessage
-            id="components.MobilityProfile.MobilityPane.planTripDescription"
-            values={{
-              manageLink: (linkText: string) => (
-                <UnderlinedLink to="/account/settings">
-                  {linkText}
-                </UnderlinedLink>
-              )
-            }}
-          />
+          <FormattedMessage id="components.MobilityProfile.MobilityPane.planTripDescription" />
           <MobilityProfileDropdown
             label={intl.formatMessage({
               id: 'components.MobilityProfile.dropdownLabel'
