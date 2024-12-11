@@ -3,6 +3,7 @@ import React, { lazy, Suspense, useCallback } from 'react'
 
 import { AppReduxState } from '../../../util/state-types'
 import { CompanionInfo, User } from '../types'
+import StatusBadge from '../../util/status-badge'
 
 export interface Option {
   label: string
@@ -23,6 +24,22 @@ function makeOption(companion?: CompanionInfo) {
   }
 }
 
+function isConfirmed({ status = '' }: CompanionInfo) {
+  return status === 'CONFIRMED'
+}
+
+function formatOptionLabel(option: Option) {
+  if (!isConfirmed(option.value)) {
+    return (
+      <>
+        {option.label} <StatusBadge status={option.value.status} />
+      </>
+    )
+  } else {
+    return option.label
+  }
+}
+
 const CompanionSelector = ({
   disabled,
   excludedUsers = [],
@@ -40,7 +57,7 @@ const CompanionSelector = ({
 }): JSX.Element => {
   const companionOptions = (loggedInUser?.relatedUsers || [])
     .filter(notNull)
-    .filter(({ status = '' }) => status === 'CONFIRMED')
+    .filter(isConfirmed)
     .map(makeOption)
   const companionValues = multi
     ? selectedCompanions?.filter(notNull).map(makeOption)
@@ -56,6 +73,7 @@ const CompanionSelector = ({
   return (
     <Suspense fallback={<span>...</span>}>
       <Select
+        formatOptionLabel={formatOptionLabel}
         isClearable
         isDisabled={disabled}
         isMulti={multi}
