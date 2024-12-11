@@ -195,6 +195,8 @@ components:
     closeMenu: Fermer le menu
     fieldTrip: Groupes scolaires
     mailables: Prêt-à-poster
+    networkConnectionLost: Erreur de connexion réseau
+    networkConnectionRestored: Connexion réseau restaurée
     openMenu: Ouvrir le menu
     skipNavigation: Sauter la navigation
   BackToTripPlanner:

@@ -40,12 +40,14 @@ const MobileSearchSettings = styled.div<{
   top: 50px;
   transition: ${(props) => `all ${props.transitionDuration}ms ease`};
   transition-delay: ${(props) => props.transitionDelay}ms;
-  /* Must appear under the 'hamburger' dropdown which has z-index of 1000. */
-  z-index: 999;
+  /* Must appear under the 'hamburger' dropdown which has z-index of 1000, and the "network lost"
+    banner which has a z-index of 10 */
+  z-index: 9;
 `
 
 interface Props {
   currentQuery: any
+  geocoderResultsOrder: Array<string>
   intl: IntlShape
   map: React.ReactElement
   routingQuery: any
@@ -91,7 +93,7 @@ class BatchSearchScreen extends Component<Props> {
   }
 
   render() {
-    const { intl } = this.props
+    const { geocoderResultsOrder, intl } = this.props
     const { planTripClicked, showAdvancedModeSettings } = this.state
 
     const transitionDelay = this.state.closeAdvancedSettingsWithDelay ? 300 : 0
@@ -126,6 +128,7 @@ class BatchSearchScreen extends Component<Props> {
                       style={{ display: 'content' }}
                     >
                       <LocationField
+                        geocoderResultsOrder={geocoderResultsOrder}
                         inputPlaceholder={intl.formatMessage({
                           id: 'components.LocationSearch.setOrigin'
                         })}
@@ -136,6 +139,7 @@ class BatchSearchScreen extends Component<Props> {
                         showClearButton={false}
                       />
                       <LocationField
+                        geocoderResultsOrder={geocoderResultsOrder}
                         inputPlaceholder={intl.formatMessage({
                           id: 'components.LocationSearch.setDestination'
                         })}
@@ -190,8 +194,10 @@ class BatchSearchScreen extends Component<Props> {
 
 const mapStateToProps = (state: any) => {
   const currentQuery = state.otp.currentQuery
+  const { geocoderResultsOrder } = state.otp.config.geocoder
   return {
-    currentQuery
+    currentQuery,
+    geocoderResultsOrder
   }
 }
 

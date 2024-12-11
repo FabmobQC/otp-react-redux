@@ -133,15 +133,14 @@ const DtSelectorContainer = styled.div`
 `
 
 const MobilityProfileContainer = styled.div`
-  margin-bottom: 12px;
-`
-
-const UnderlinedLink = styled(Link)`
-  text-decoration: underline;
+  margin: 60px 0 60px 5px;
 `
 
 const MobilityProfileDropdown = styled(DropdownSelector)`
   margin: 20px 0px;
+  label {
+    padding-left: 0;
+  }
 `
 
 const AdvancedSettingsPanel = ({
