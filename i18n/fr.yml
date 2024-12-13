@@ -57,6 +57,7 @@ actions:
       Le message de vérification de votre adresse e-mail a été envoyé de
       nouveau.
     genericError: "Une erreur s'est produite : {err}"
+    getDependentUserInfoFailed: Erreur lors de l'obtention des profils de mobilité.
     itineraryExistenceCheckFailed: Erreur lors de la vérification de la validité du trajet choisi.
     mustAcceptTermsToSavePlace: >-
       Veuillez accepter les conditions d'utilisation (dans Mon compte) pour
@@ -208,7 +209,6 @@ components:
   BatchSearchScreen:
     advancedHeader: Préférences avancées
     header: Votre trajet
-    modeOptions: Choix du mode
     modeSelectorLabel: Sélectionnez un mode de déplacement
     moreOptions: Plus d'options
     saveAndReturn: Enregistrer et fermer
@@ -356,10 +356,16 @@ components:
       header: Profil mobilité
       mobilityDevices: "Appareils d'aide : "
       mobilityLimitations: "Handicaps moteurs : "
+      planTripDescription: >-
+        Vous pouvez rechercher des trajets adaptés au profil mobilité des
+        personnes que vous accompagnez. Pour ajouter des personnes
+        accompagnatrices, allez dans <manageLink>Préférences</manageLink>.
       visionLimitations: "Handicaps visuels : "
+    dropdownLabel: "Profil à utiliser :"
     intro: >-
       Veuillez répondre a quelques questions pour personaliser vos recherches de
       trajets selon vos besoins et préférences.
+    myself: Moi-même
     title: Spécifiez votre profil de mobilité
   NarrativeItinerariesHeader:
     changeSortDir: Changer l'ordre de tri

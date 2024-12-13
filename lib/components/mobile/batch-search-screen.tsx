@@ -47,6 +47,7 @@ const MobileSearchSettings = styled.div<{
 
 interface Props {
   currentQuery: any
+  geocoderResultsOrder: Array<string>
   intl: IntlShape
   map: React.ReactElement
   routingQuery: any
@@ -92,7 +93,7 @@ class BatchSearchScreen extends Component<Props> {
   }
 
   render() {
-    const { intl } = this.props
+    const { geocoderResultsOrder, intl } = this.props
     const { planTripClicked, showAdvancedModeSettings } = this.state
 
     const transitionDelay = this.state.closeAdvancedSettingsWithDelay ? 300 : 0
@@ -127,6 +128,7 @@ class BatchSearchScreen extends Component<Props> {
                       style={{ display: 'content' }}
                     >
                       <LocationField
+                        geocoderResultsOrder={geocoderResultsOrder}
                         inputPlaceholder={intl.formatMessage({
                           id: 'components.LocationSearch.setOrigin'
                         })}
@@ -137,6 +139,7 @@ class BatchSearchScreen extends Component<Props> {
                         showClearButton={false}
                       />
                       <LocationField
+                        geocoderResultsOrder={geocoderResultsOrder}
                         inputPlaceholder={intl.formatMessage({
                           id: 'components.LocationSearch.setDestination'
                         })}
@@ -191,8 +194,10 @@ class BatchSearchScreen extends Component<Props> {
 
 const mapStateToProps = (state: any) => {
   const currentQuery = state.otp.currentQuery
+  const { geocoderResultsOrder } = state.otp.config.geocoder
   return {
-    currentQuery
+    currentQuery,
+    geocoderResultsOrder
   }
 }
 

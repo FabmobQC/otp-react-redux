@@ -25,6 +25,7 @@ import ViewerContainer from '../viewers/viewer-container'
 interface Props {
   activeSearch: any
   currentQuery: any
+  geocoderResultsOrder?: Array<string>
   intl: IntlShape
   mainPanelContent: number
   mobile?: boolean
@@ -89,7 +90,13 @@ class BatchRoutingPanel extends Component<Props> {
   }
 
   render() {
-    const { activeSearch, intl, mobile, showUserSettings } = this.props
+    const {
+      activeSearch,
+      geocoderResultsOrder,
+      intl,
+      mobile,
+      showUserSettings
+    } = this.props
     const { planTripClicked } = this.state
     const mapAction = mobile
       ? intl.formatMessage({
@@ -157,6 +164,7 @@ class BatchRoutingPanel extends Component<Props> {
                   <div ref={this._mainPanelContentRef}>
                     <span className="batch-routing-panel-location-fields">
                       <LocationField
+                        geocoderResultsOrder={geocoderResultsOrder}
                         inputPlaceholder={intl.formatMessage(
                           { id: 'common.searchForms.enterStartLocation' },
                           { mapAction }
@@ -167,6 +175,7 @@ class BatchRoutingPanel extends Component<Props> {
                         showClearButton={!mobile}
                       />
                       <LocationField
+                        geocoderResultsOrder={geocoderResultsOrder}
                         inputPlaceholder={intl.formatMessage(
                           { id: 'common.searchForms.enterDestination' },
                           { mapAction }
@@ -236,9 +245,11 @@ const mapStateToProps = (state: any) => {
   const { mainPanelContent } = state.otp.ui
   const currentQuery = state.otp.currentQuery
 
+  const geocoderResultsOrder = state.otp.config?.geocoder?.geocoderResultsOrder
   return {
     activeSearch: getActiveSearch(state),
     currentQuery,
+    geocoderResultsOrder,
     mainPanelContent,
     showUserSettings
   }

@@ -51,6 +51,7 @@ actions:
     confirmDeletePlace: Would you like to remove this place?
     emailVerificationResent: The email verification message has been resent.
     genericError: "An error was encountered: {err}"
+    getDependentUserInfoFailed: Error getting mobility profile information.
     itineraryExistenceCheckFailed: Error checking whether your selected trip is possible.
     mustAcceptTermsToSavePlace: Please accept the Terms of Use (under My Account) to save locations.
     mustBeLoggedInToSavePlace: Please log in to save locations.
@@ -197,7 +198,6 @@ components:
   BatchSearchScreen:
     advancedHeader: Advanced Preferences
     header: Plan Your Trip
-    modeOptions: Mode Options
     modeSelectorLabel: Select a travel mode
     moreOptions: More options
     saveAndReturn: Save and return
@@ -339,10 +339,15 @@ components:
       header: Mobility Profile
       mobilityDevices: "Mobility devices: "
       mobilityLimitations: "Mobility limitations: "
+      planTripDescription: >-
+        If you have a travel companion, you can choose to plan this trip
+        according to their mobility profile.
       visionLimitations: "Vision limitations: "
+    dropdownLabel: "User mobility profile:"
     intro: >-
       Please answer a few questions to customize the trip planning experience to
       your needs and preferences.
+    myself: Myself
     title: Define Your Mobility Profile
   NarrativeItinerariesHeader:
     changeSortDir: Change sort direction
