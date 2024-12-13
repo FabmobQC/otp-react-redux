@@ -184,6 +184,9 @@ map:
 # geocoder test account can be obtained from the Pelias maintainers at geocode.earth.
 geocoder:
   apiKey: PELIAS_API_KEY
+  # Pass an array of geocoder result types to control the order in which they are displayed.
+  # The default order is ['STATIONS', 'STOPS', 'OTHER'].
+  geocoderResultsOrder: ['STATIONS', 'STOPS', 'OTHER']
   boundary:
     rect:
       minLon: -123.2034
@@ -353,6 +356,8 @@ itinerary:
   showPlanFirstLastButtons: false
   # adds the 'about' and '~' prefixes to the duration of non transit legs and trip details panel
   showApproximatePrefixAccessLegs: false
+  # Whether to show the effective date and time of alerts
+  showAlertEffectiveDateTimeText: true
   # Show all walking legs regardless of distance
   showAllWalkLegs: false
   # Filters out trips returned by OTP by default, unless specifically requested.
