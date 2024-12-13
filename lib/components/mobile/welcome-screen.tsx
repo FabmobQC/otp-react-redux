@@ -12,10 +12,14 @@ import MobileContainer from './container'
 import MobileNavigationBar from './navigation-bar'
 
 interface Props {
+  geocoderResultsOrder: Array<string>
   setMobileScreen: (screen: number) => void
 }
 
-const MobileWelcomeScreen = ({ setMobileScreen }: Props) => {
+const MobileWelcomeScreen = ({
+  geocoderResultsOrder,
+  setMobileScreen
+}: Props) => {
   const intl = useIntl()
 
   const toFieldClicked = useCallback(
@@ -33,6 +37,7 @@ const MobileWelcomeScreen = ({ setMobileScreen }: Props) => {
       <main tabIndex={-1}>
         <div className="welcome-location mobile-padding">
           <LocationField
+            geocoderResultsOrder={geocoderResultsOrder}
             inputPlaceholder={intl.formatMessage({
               id: 'components.WelcomeScreen.prompt'
             })}
@@ -56,4 +61,12 @@ const mapDispatchToProps = {
   setMobileScreen: uiActions.setMobileScreen
 }
 
-export default connect(null, mapDispatchToProps)(MobileWelcomeScreen)
+const mapStateToProps = (state: any) => {
+  const { geocoderResultsOrder } = state.otp.config.geocoder
+
+  return {
+    geocoderResultsOrder
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MobileWelcomeScreen)
