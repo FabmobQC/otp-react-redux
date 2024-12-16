@@ -247,8 +247,6 @@ function NearbyView({
       </li>
     ))
 
-  console.log(nearbyItemList)
-
   useEffect(() => {
     if (!staleData) {
       setLoading(false)
