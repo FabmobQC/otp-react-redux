@@ -204,7 +204,6 @@ components:
     submodeSelectorLabel: Выбор режимов и подрежимов путешествия
     tripOptions: Варианты поездок
     advancedHeader: Дополнительные настройки
-    modeOptions: Варианты режимов
     moreOptions: Другие варианты
     saveAndReturn: Сохранить и вернуться
     saved: Сохранено

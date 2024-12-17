@@ -185,7 +185,6 @@ components:
     header: 트립 계획
     modeSelectorLabel: 이동 수단을 선택합니다
     advancedHeader: 고급 환경 설정
-    modeOptions: 모드 옵션
     moreOptions: 자세한 옵션
     saved: 저장됨
     submodeSelectorLabel: 여행 모드 및 하위 모드 선택

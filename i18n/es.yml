@@ -209,7 +209,6 @@ components:
     tripOptions: Opciones de ruta
     submodeSelectorLabel: Seleccionar modos y submodos de desplazamiento
     advancedHeader: Ajustes avanzados
-    modeOptions: Más opciones
   BatchSettings:
     destination: destino
     invalidModeSelection: >-

@@ -205,7 +205,6 @@ components:
     header: Kế hoạch chuyến đi
     modeSelectorLabel: Chọn phương thức di chuyển
     advancedHeader: Tùy Chọn Nâng Cao
-    modeOptions: Tùy Chọn Chế Độ
     moreOptions: Tùy chọn khác
     saveAndReturn: Lưu và quay lại
     saved: Đã lưu
