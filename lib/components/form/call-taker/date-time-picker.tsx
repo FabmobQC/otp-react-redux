@@ -169,12 +169,16 @@ const DateTimeOptions = ({
     if (initialTime !== time) {
       handleTimeChange(initialTime || '')
     }
+    // This effect is design to flow from state to component only
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialTime, initialDate])
 
   useEffect(() => {
     if (initialDepartArrive && departArrive !== initialDepartArrive) {
       setDepartArrive(initialDepartArrive)
     }
+    // This effect is design to flow from state to component only
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialDepartArrive])
 
   // Handler for setting the query parameters
@@ -272,11 +276,14 @@ const DateTimeOptions = ({
       >
         <input
           className="datetime-slim"
-          onChange={(e) => {
-            handleTimeChange(e.target.value)
-            setTypedTime(e.target.value)
-            unsetNow()
-          }}
+          onChange={useCallback(
+            (e) => {
+              handleTimeChange(e.target.value)
+              setTypedTime(e.target.value)
+              unsetNow()
+            },
+            [handleTimeChange, setTypedTime, unsetNow]
+          )}
           onFocus={(e) => e.target.select()}
           onKeyDown={onKeyDown}
           ref={timeRef}
@@ -293,15 +300,18 @@ const DateTimeOptions = ({
       <input
         className="datetime-slim"
         disabled={!dateTime}
-        onChange={(e) => {
-          if (!e.target.value) {
-            e.preventDefault()
-            // TODO: prevent selection from advancing to next field
-            return
-          }
-          setDate(e.target.value)
-          unsetNow()
-        }}
+        onChange={useCallback(
+          (e) => {
+            if (!e.target.value) {
+              e.preventDefault()
+              // TODO: prevent selection from advancing to next field
+              return
+            }
+            setDate(e.target.value)
+            unsetNow()
+          },
+          [unsetNow, setDate]
+        )}
         onKeyDown={onKeyDown}
         style={{
           fontSize: '14px',
