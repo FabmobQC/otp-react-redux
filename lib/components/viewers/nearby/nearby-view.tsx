@@ -22,6 +22,7 @@ import {
   Scrollable
 } from './styled'
 import FromToPicker from './from-to-picker'
+import InvisibleA11yLabel from '../../util/invisible-a11y-label'
 import RentalStation from './rental-station'
 import Stop from './stop'
 import Vehicle from './vehicle-rent'
@@ -273,16 +274,16 @@ function NearbyView({
         />
       )}
       {nearby && (
-        <h3 style={{ opacity: 0, position: 'absolute' }}>
+        <InvisibleA11yLabel as="h3" style={{ position: 'absolute' }}>
           <FormattedMessage
             id="components.NearbyView.nearbyListIntro"
             values={{ count: nearby.length }}
           />
-        </h3>
+        </InvisibleA11yLabel>
       )}
       <NearbySidebarContainer
         className="base-color-bg"
-        style={{ marginTop: mobile ? '50px' : 0 }}
+        style={{ marginBottom: 0 }}
       >
         {/* This is used to scroll to top */}
         <div aria-hidden ref={firstItemRef} />
