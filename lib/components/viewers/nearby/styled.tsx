@@ -20,7 +20,11 @@ export const NearbySidebarContainer = styled.ol`
   list-style: none;
 
   & > li:last-of-type {
-    margin-bottom: 2em;
+    margin-bottom: 1em;
+  }
+
+  & > li:first-of-type {
+    margin-top: 1em;
   }
 
   @media (max-width: 768px) {
