@@ -18,6 +18,10 @@ export const NearbySidebarContainer = styled.ol`
   gap: 1em;
   padding: 0 1em;
   list-style: none;
+
+  @media (max-width: 768px) {
+    min-height: calc(100vh - 50px);
+  }
 `
 
 export const Card = styled.div`
