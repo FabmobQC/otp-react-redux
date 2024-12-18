@@ -2,7 +2,7 @@ import { connect } from 'react-redux'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Location } from '@opentripplanner/types'
 import { MapRef, useMap } from 'react-map-gl'
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import * as apiActions from '../../../actions/api'
 import * as mapActions from '../../../actions/map'
@@ -128,7 +128,6 @@ function NearbyView({
   const map = useMap().default
   const intl = useIntl()
   const [loading, setLoading] = useState(true)
-  const firstItemRef = useRef<HTMLDivElement>(null)
   const finalNearbyCoords = useMemo(
     () =>
       getNearbyCoordsFromUrlOrLocationOrMapCenter(
@@ -180,9 +179,11 @@ function NearbyView({
   }, [map, setViewedNearbyCoords, setHighlightedLocation])
 
   useEffect(() => {
-    if (typeof firstItemRef.current?.scrollIntoView === 'function') {
-      firstItemRef.current?.scrollIntoView({ behavior: 'smooth' })
-    }
+    window.scrollTo({
+      behavior: 'smooth',
+      left: 0,
+      top: 0
+    })
     if (finalNearbyCoords) {
       fetchNearby(finalNearbyCoords, radius, currentServiceWeek)
       setLoading(true)
@@ -250,6 +251,11 @@ function NearbyView({
   useEffect(() => {
     if (!staleData) {
       setLoading(false)
+    } else if (staleData) {
+      // If there's stale data, fetch again
+      setLoading(true)
+      finalNearbyCoords &&
+        fetchNearby(finalNearbyCoords, radius, currentServiceWeek)
     }
   }, [nearby, staleData])
 
@@ -285,8 +291,6 @@ function NearbyView({
         className="base-color-bg"
         style={{ marginBottom: 0 }}
       >
-        {/* This is used to scroll to top */}
-        <div aria-hidden ref={firstItemRef} />
         {loading && (
           <FloatingLoadingIndicator>
             <Loading extraSmall />
