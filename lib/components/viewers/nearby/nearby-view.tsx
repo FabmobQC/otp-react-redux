@@ -9,11 +9,27 @@ import * as mapActions from '../../../actions/map'
 import * as uiActions from '../../../actions/ui'
 import { AppReduxState } from '../../../util/state-types'
 import { getCurrentServiceWeek } from '../../../util/current-service-week'
-import { SetLocationHandler, ZoomToPlaceHandler } from '../../util/types'
+import {
+  PatternStopTime,
+  SetLocationHandler,
+  ZoomToPlaceHandler
+} from '../../util/types'
+import coreUtils from '@opentripplanner/core-utils'
+
+import { NearbyViewConfig } from '../../../util/config-types'
+
+import FromToPicker from './from-to-picker'
+import InvisibleA11yLabel from '../../util/invisible-a11y-label'
 import Loading from '../../narrative/loading'
 import MobileContainer from '../../mobile/container'
 import MobileNavigationBar from '../../mobile/navigation-bar'
 import PageTitle from '../../util/page-title'
+
+import RentalStation from './rental-station'
+import Stop, { fullTimestamp, patternArrayforStops } from './stop'
+import Vehicle from './vehicle-rent'
+import VehicleParking from './vehicle-parking'
+
 import VehiclePositionRetriever from '../vehicle-position-retriever'
 
 import {
@@ -21,14 +37,8 @@ import {
   NearbySidebarContainer,
   Scrollable
 } from './styled'
-import FromToPicker from './from-to-picker'
-import InvisibleA11yLabel from '../../util/invisible-a11y-label'
-import RentalStation from './rental-station'
-import Stop from './stop'
-import Vehicle from './vehicle-rent'
-import VehicleParking from './vehicle-parking'
 
-const AUTO_REFRESH_INTERVAL = 15000
+const AUTO_REFRESH_INTERVAL = 15000000
 
 // TODO: use lonlat package
 type LatLonObj = { lat: number; lon: number }
@@ -50,8 +60,10 @@ type Props = {
   location: string
   mobile?: boolean
   nearby: any
+  nearbyViewConfig?: NearbyViewConfig
   nearbyViewCoords?: LatLonObj
   radius?: number
+  routeSortComparator: (a: PatternStopTime, b: PatternStopTime) => number
   setHighlightedLocation: (location: Location | null) => void
   setLocation: SetLocationHandler
   setMainPanelContent: (content: number) => void
@@ -118,8 +130,10 @@ function NearbyView({
   location,
   mobile,
   nearby,
+  nearbyViewConfig,
   nearbyViewCoords,
   radius,
+  routeSortComparator,
   setHighlightedLocation,
   setMainPanelContent,
   setViewedNearbyCoords,
@@ -224,9 +238,19 @@ function NearbyView({
         .flat(Infinity)
     )
   )
+
+  // If configured, filter out stops that don't have any patterns
+  const filteredNearby = nearby?.filter((n: any) => {
+    if (n.place.__typename === 'Stop' && nearbyViewConfig?.hideEmptyStops) {
+      const patternArray = patternArrayforStops(n.place, routeSortComparator)
+      if (patternArray?.length === 0) return false
+    }
+    return true
+  })
+
   const nearbyItemList =
-    nearby?.map &&
-    nearby?.map((n: any) => (
+    filteredNearby?.map &&
+    filteredNearby?.map((n: any) => (
       <li
         className={
           (n.place.gtfsId ?? n.place.id) === entityId ? 'highlighted' : ''
@@ -300,7 +324,7 @@ function NearbyView({
           !staleData &&
           (nearby.error ? (
             intl.formatMessage({ id: 'components.NearbyView.error' })
-          ) : nearby.length > 0 ? (
+          ) : filteredNearby?.length > 0 ? (
             nearbyItemList
           ) : (
             <FormattedMessage id="components.NearbyView.nothingNearby" />
@@ -313,7 +337,8 @@ function NearbyView({
 
 const mapStateToProps = (state: AppReduxState) => {
   const { config, location, transitIndex, ui } = state.otp
-  const { map, routeViewer } = config
+  const { map, nearbyView: nearbyViewConfig, routeViewer } = config
+  const transitOperators = config?.transitOperators || []
   const { nearbyViewCoords } = ui
   const { nearby } = transitIndex
   const { entityId } = state.router.location.query
@@ -326,6 +351,20 @@ const mapStateToProps = (state: AppReduxState) => {
       ? getCurrentServiceWeek()
       : undefined
 
+  // TODO: Refine so we don't have this same thing in stops.tsx
+  // Default sort: departure time
+  let routeSortComparator = (a: PatternStopTime, b: PatternStopTime) =>
+    fullTimestamp(a.stoptimes?.[0]) - fullTimestamp(b.stoptimes?.[0])
+
+  if (nearbyViewConfig?.useRouteViewSort) {
+    routeSortComparator = (a: PatternStopTime, b: PatternStopTime) =>
+      coreUtils.route.makeRouteComparator(transitOperators)(
+        // @ts-expect-error core-utils types are wrong!
+        a.pattern.route,
+        b.pattern.route
+      )
+  }
+
   return {
     currentPosition,
     currentServiceWeek,
@@ -335,8 +374,10 @@ const mapStateToProps = (state: AppReduxState) => {
     homeTimezone: config.homeTimezone,
     location: state.router.location.hash,
     nearby: nearby?.data,
+    nearbyViewConfig,
     nearbyViewCoords,
-    radius: config.nearbyView?.radius
+    radius: config.nearbyView?.radius,
+    routeSortComparator
   }
 }
 
