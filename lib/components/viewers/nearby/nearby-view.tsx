@@ -55,6 +55,7 @@ type Props = {
   hideBackButton?: boolean
   location: string
   mobile?: boolean
+  // Todo: type nearby results
   nearby: any
   nearbyViewConfig?: NearbyViewConfig
   nearbyViewCoords?: LatLonObj
