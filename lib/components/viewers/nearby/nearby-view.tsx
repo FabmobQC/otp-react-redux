@@ -240,7 +240,7 @@ function NearbyView({
   const filteredNearby = nearby?.filter((n: any) => {
     if (n.place.__typename === 'Stop' && nearbyViewConfig?.hideEmptyStops) {
       const patternArray = patternArrayforStops(n.place, routeSortComparator)
-      if (patternArray?.length === 0) return false
+      return !(patternArray?.length === 0)
     }
     return true
   })
