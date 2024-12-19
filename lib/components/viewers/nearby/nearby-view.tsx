@@ -2,6 +2,7 @@ import { connect } from 'react-redux'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Location } from '@opentripplanner/types'
 import { MapRef, useMap } from 'react-map-gl'
+import coreUtils from '@opentripplanner/core-utils'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import * as apiActions from '../../../actions/api'
@@ -9,27 +10,17 @@ import * as mapActions from '../../../actions/map'
 import * as uiActions from '../../../actions/ui'
 import { AppReduxState } from '../../../util/state-types'
 import { getCurrentServiceWeek } from '../../../util/current-service-week'
+import { NearbyViewConfig } from '../../../util/config-types'
 import {
   PatternStopTime,
   SetLocationHandler,
   ZoomToPlaceHandler
 } from '../../util/types'
-import coreUtils from '@opentripplanner/core-utils'
-
-import { NearbyViewConfig } from '../../../util/config-types'
-
-import FromToPicker from './from-to-picker'
 import InvisibleA11yLabel from '../../util/invisible-a11y-label'
 import Loading from '../../narrative/loading'
 import MobileContainer from '../../mobile/container'
 import MobileNavigationBar from '../../mobile/navigation-bar'
 import PageTitle from '../../util/page-title'
-
-import RentalStation from './rental-station'
-import Stop, { fullTimestamp, patternArrayforStops } from './stop'
-import Vehicle from './vehicle-rent'
-import VehicleParking from './vehicle-parking'
-
 import VehiclePositionRetriever from '../vehicle-position-retriever'
 
 import {
@@ -37,6 +28,11 @@ import {
   NearbySidebarContainer,
   Scrollable
 } from './styled'
+import FromToPicker from './from-to-picker'
+import RentalStation from './rental-station'
+import Stop, { fullTimestamp, patternArrayforStops } from './stop'
+import Vehicle from './vehicle-rent'
+import VehicleParking from './vehicle-parking'
 
 const AUTO_REFRESH_INTERVAL = 15000000
 
