@@ -2,14 +2,21 @@ import { connect } from 'react-redux'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Location } from '@opentripplanner/types'
 import { MapRef, useMap } from 'react-map-gl'
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import coreUtils from '@opentripplanner/core-utils'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import * as apiActions from '../../../actions/api'
 import * as mapActions from '../../../actions/map'
 import * as uiActions from '../../../actions/ui'
 import { AppReduxState } from '../../../util/state-types'
 import { getCurrentServiceWeek } from '../../../util/current-service-week'
-import { SetLocationHandler, ZoomToPlaceHandler } from '../../util/types'
+import { NearbyViewConfig } from '../../../util/config-types'
+import {
+  PatternStopTime,
+  SetLocationHandler,
+  ZoomToPlaceHandler
+} from '../../util/types'
+import InvisibleA11yLabel from '../../util/invisible-a11y-label'
 import Loading from '../../narrative/loading'
 import MobileContainer from '../../mobile/container'
 import MobileNavigationBar from '../../mobile/navigation-bar'
@@ -22,13 +29,12 @@ import {
   Scrollable
 } from './styled'
 import FromToPicker from './from-to-picker'
-import InvisibleA11yLabel from '../../util/invisible-a11y-label'
 import RentalStation from './rental-station'
-import Stop from './stop'
+import Stop, { fullTimestamp, patternArrayforStops } from './stop'
 import Vehicle from './vehicle-rent'
 import VehicleParking from './vehicle-parking'
 
-const AUTO_REFRESH_INTERVAL = 15000
+const AUTO_REFRESH_INTERVAL = 15000000
 
 // TODO: use lonlat package
 type LatLonObj = { lat: number; lon: number }
@@ -49,9 +55,12 @@ type Props = {
   hideBackButton?: boolean
   location: string
   mobile?: boolean
+  // Todo: type nearby results
   nearby: any
+  nearbyViewConfig?: NearbyViewConfig
   nearbyViewCoords?: LatLonObj
   radius?: number
+  routeSortComparator: (a: PatternStopTime, b: PatternStopTime) => number
   setHighlightedLocation: (location: Location | null) => void
   setLocation: SetLocationHandler
   setMainPanelContent: (content: number) => void
@@ -118,8 +127,10 @@ function NearbyView({
   location,
   mobile,
   nearby,
+  nearbyViewConfig,
   nearbyViewCoords,
   radius,
+  routeSortComparator,
   setHighlightedLocation,
   setMainPanelContent,
   setViewedNearbyCoords,
@@ -128,7 +139,6 @@ function NearbyView({
   const map = useMap().default
   const intl = useIntl()
   const [loading, setLoading] = useState(true)
-  const firstItemRef = useRef<HTMLDivElement>(null)
   const finalNearbyCoords = useMemo(
     () =>
       getNearbyCoordsFromUrlOrLocationOrMapCenter(
@@ -180,9 +190,11 @@ function NearbyView({
   }, [map, setViewedNearbyCoords, setHighlightedLocation])
 
   useEffect(() => {
-    if (typeof firstItemRef.current?.scrollIntoView === 'function') {
-      firstItemRef.current?.scrollIntoView({ behavior: 'smooth' })
-    }
+    window.scrollTo({
+      behavior: 'smooth',
+      left: 0,
+      top: 0
+    })
     if (finalNearbyCoords) {
       fetchNearby(finalNearbyCoords, radius, currentServiceWeek)
       setLoading(true)
@@ -223,9 +235,19 @@ function NearbyView({
         .flat(Infinity)
     )
   )
+
+  // If configured, filter out stops that don't have any patterns
+  const filteredNearby = nearby?.filter((n: any) => {
+    if (n.place.__typename === 'Stop' && nearbyViewConfig?.hideEmptyStops) {
+      const patternArray = patternArrayforStops(n.place, routeSortComparator)
+      return !(patternArray?.length === 0)
+    }
+    return true
+  })
+
   const nearbyItemList =
-    nearby?.map &&
-    nearby?.map((n: any) => (
+    filteredNearby?.map &&
+    filteredNearby?.map((n: any) => (
       <li
         className={
           (n.place.gtfsId ?? n.place.id) === entityId ? 'highlighted' : ''
@@ -250,6 +272,11 @@ function NearbyView({
   useEffect(() => {
     if (!staleData) {
       setLoading(false)
+    } else if (staleData) {
+      // If there's stale data, fetch again
+      setLoading(true)
+      finalNearbyCoords &&
+        fetchNearby(finalNearbyCoords, radius, currentServiceWeek)
     }
   }, [nearby, staleData])
 
@@ -285,8 +312,6 @@ function NearbyView({
         className="base-color-bg"
         style={{ marginBottom: 0 }}
       >
-        {/* This is used to scroll to top */}
-        <div aria-hidden ref={firstItemRef} />
         {loading && (
           <FloatingLoadingIndicator>
             <Loading extraSmall />
@@ -296,7 +321,7 @@ function NearbyView({
           !staleData &&
           (nearby.error ? (
             intl.formatMessage({ id: 'components.NearbyView.error' })
-          ) : nearby.length > 0 ? (
+          ) : filteredNearby?.length > 0 ? (
             nearbyItemList
           ) : (
             <FormattedMessage id="components.NearbyView.nothingNearby" />
@@ -309,7 +334,8 @@ function NearbyView({
 
 const mapStateToProps = (state: AppReduxState) => {
   const { config, location, transitIndex, ui } = state.otp
-  const { map, routeViewer } = config
+  const { map, nearbyView: nearbyViewConfig, routeViewer } = config
+  const transitOperators = config?.transitOperators || []
   const { nearbyViewCoords } = ui
   const { nearby } = transitIndex
   const { entityId } = state.router.location.query
@@ -322,6 +348,20 @@ const mapStateToProps = (state: AppReduxState) => {
       ? getCurrentServiceWeek()
       : undefined
 
+  // TODO: Refine so we don't have this same thing in stops.tsx
+  // Default sort: departure time
+  let routeSortComparator = (a: PatternStopTime, b: PatternStopTime) =>
+    fullTimestamp(a.stoptimes?.[0]) - fullTimestamp(b.stoptimes?.[0])
+
+  if (nearbyViewConfig?.useRouteViewSort) {
+    routeSortComparator = (a: PatternStopTime, b: PatternStopTime) =>
+      coreUtils.route.makeRouteComparator(transitOperators)(
+        // @ts-expect-error core-utils types are wrong!
+        a.pattern.route,
+        b.pattern.route
+      )
+  }
+
   return {
     currentPosition,
     currentServiceWeek,
@@ -331,8 +371,10 @@ const mapStateToProps = (state: AppReduxState) => {
     homeTimezone: config.homeTimezone,
     location: state.router.location.hash,
     nearby: nearby?.data,
+    nearbyViewConfig,
     nearbyViewCoords,
-    radius: config.nearbyView?.radius
+    radius: config.nearbyView?.radius,
+    routeSortComparator
   }
 }
 

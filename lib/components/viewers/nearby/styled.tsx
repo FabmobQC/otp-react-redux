@@ -19,6 +19,14 @@ export const NearbySidebarContainer = styled.ol`
   padding: 0 1em;
   list-style: none;
 
+  & > li:last-of-type {
+    margin-bottom: 1em;
+  }
+
+  & > li:first-of-type {
+    margin-top: 1em;
+  }
+
   @media (max-width: 768px) {
     min-height: calc(100vh - 50px);
   }
