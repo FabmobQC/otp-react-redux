@@ -308,6 +308,7 @@ function NearbyView({
         <div aria-hidden ref={firstItemRef} />
         <LocationField
           className="nearby-view-location-field"
+          currentPosition={currentPosition}
           geocoderConfig={geocoderConfig}
           getCurrentPosition={getCurrentPosition}
           inputPlaceholder={intl.formatMessage({
@@ -328,15 +329,15 @@ function NearbyView({
             const { location } = selection
             setViewedNearbyCoords(location)
             map && zoomToPlace(map, location)
+
             setReversedPoint(location.name || '')
+            if (!location.name) {
+              reverseCoords([location.lon, location.lat])
+            }
           }}
           sortByDistance
         />
-        {loading && (
-          <FloatingLoadingIndicator>
-            <Loading extraSmall />
-          </FloatingLoadingIndicator>
-        )}
+        {loading && <Loading extraSmall />}
         {nearby &&
           !staleData &&
           (nearby.error ? (
