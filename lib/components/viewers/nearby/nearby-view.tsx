@@ -1,6 +1,7 @@
 import { connect } from 'react-redux'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Location } from '@opentripplanner/types'
+import { LonLatInput } from '@conveyal/lonlat'
 import { MapRef, useMap } from 'react-map-gl'
 import { Search } from '@styled-icons/fa-solid/Search'
 import coreUtils from '@opentripplanner/core-utils'
@@ -156,10 +157,10 @@ function NearbyView({
     [nearbyViewCoords, currentPosition, map]
   )
 
-  const reverseCoords = (coords) => {
+  const reverseCoords = (coords: LonLatInput) => {
     getGeocoder(geocoderConfig)
       .reverse({ point: coords })
-      .then((result) => setReversedPoint(result.name))
+      .then((result: Location) => setReversedPoint(result?.name || ''))
   }
 
   // Make sure the highlighted location is cleaned up when leaving nearby
