@@ -35,6 +35,10 @@ const SavedTripEditor = (props: Props): JSX.Element => {
   if (monitoredTrip) {
     const paneSequence: PaneAttributes[] = [
       {
+        pane: panes.readOnlyAlert,
+        props
+      },
+      {
         pane: panes.basics,
         props,
         title: (
@@ -61,7 +65,9 @@ const SavedTripEditor = (props: Props): JSX.Element => {
       })
     }
 
-    const title = isCreating
+    const title = props.isReadOnly
+      ? intl.formatMessage({ id: 'otpUi.TripDetails.title' })
+      : isCreating
       ? intl.formatMessage({ id: 'components.SavedTripEditor.saveNewTrip' })
       : intl.formatMessage({ id: 'components.SavedTripEditor.editSavedTrip' })
 

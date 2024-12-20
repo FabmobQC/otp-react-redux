@@ -554,6 +554,9 @@ components:
   SavedTripEditor:
     deleteSavedTrip: Supprimer ce trajet
     editSavedTrip: Modifier un trajet enregistré
+    readOnlyBanner: >-
+      {creator} a créé et vous a ajouté sur ce trajet. Vous ne pouvez donc pas
+      faire de modifications.
     saveNewTrip: Enregistrer un nouveau trajet
     travelCompanions: Accompagnateurs
     tripInformation: Informations sur le trajet

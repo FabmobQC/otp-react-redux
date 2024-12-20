@@ -533,6 +533,9 @@ components:
   SavedTripEditor:
     deleteSavedTrip: Delete saved trip
     editSavedTrip: Edit saved trip
+    readOnlyBanner: >-
+      {creator} created and added you to this trip. Therefore, you cannot make
+      changes.
     saveNewTrip: Save new trip
     travelCompanions: Travel companions
     tripInformation: Trip information

@@ -73,7 +73,7 @@ const TripCompanions = ({
   const primaryTraveler = iAmThePrimaryTraveler
     ? intl.formatMessage({ id: 'components.MobilityProfile.myself' })
     : primary
-    ? primary.email
+    ? primary.name || primary.email
     : getDependentName(
         loggedInUser?.dependentsInfo?.find((d) => d.userId === trip.userId)
       )
