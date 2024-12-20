@@ -763,6 +763,7 @@ components:
     errorUpdatingProfile: Error updating profile.
     fieldUpdated: This setting has been updated.
     fields:
+      add-companion-form: Companions
       storeTripHistory: Store trip history
     updating: Updating
   UserSettings:
