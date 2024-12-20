@@ -13,7 +13,7 @@ import * as locationActions from '../../../actions/location'
 import * as mapActions from '../../../actions/map'
 import * as uiActions from '../../../actions/ui'
 import { AppReduxState } from '../../../util/state-types'
-import { GeocoderConfig, NearbyViewConfig } from '../../../util/config-types'
+import { GeocoderConfig } from '../../../util/config-types'
 import { getCurrentServiceWeek } from '../../../util/current-service-week'
 import {
   PatternStopTime,
@@ -53,13 +53,13 @@ type Props = {
     currentServiceWeek?: ServiceWeek
   ) => void
   geocoderConfig: GeocoderConfig
-  getCurrentPosition: TODO
+  getCurrentPosition: any // TODO
   hideBackButton?: boolean
+  hideEmptyStops?: boolean
   location: string
   mobile?: boolean
   // Todo: type nearby results
   nearby: any
-  nearbyViewConfig?: NearbyViewConfig
   nearbyViewCoords?: LatLonObj
   radius?: number
   routeSortComparator: (a: PatternStopTime, b: PatternStopTime) => number
@@ -128,10 +128,10 @@ function NearbyView({
   fetchNearby,
   geocoderConfig,
   getCurrentPosition,
+  hideEmptyStops,
   location,
   mobile,
   nearby,
-  nearbyViewConfig,
   nearbyViewCoords,
   radius,
   routeSortComparator,
@@ -254,7 +254,7 @@ function NearbyView({
 
   // If configured, filter out stops that don't have any patterns
   const filteredNearby = nearby?.filter((n: any) => {
-    if (n.place.__typename === 'Stop' && nearbyViewConfig?.hideEmptyStops) {
+    if (n.place.__typename === 'Stop' && hideEmptyStops) {
       const patternArray = patternArrayforStops(n.place, routeSortComparator)
       return !(patternArray?.length === 0)
     }
@@ -332,6 +332,7 @@ function NearbyView({
         <div aria-hidden ref={firstItemRef} />
         <LocationField
           className="nearby-view-location-field"
+          // TODO: why does this cause the jump to the trip planner when selecting location
           currentPosition={currentPosition}
           geocoderConfig={geocoderConfig}
           getCurrentPosition={getCurrentPosition}
@@ -414,10 +415,10 @@ const mapStateToProps = (state: AppReduxState) => {
     displayedCoords: nearby?.coords,
     entityId: entityId && decodeURIComponent(entityId),
     geocoderConfig: config.geocoder,
+    hideEmptyStops: config.nearbyView?.hideEmptyStops,
     homeTimezone: config.homeTimezone,
     location: state.router.location.hash,
     nearby: nearby?.data,
-    nearbyViewConfig,
     nearbyViewCoords,
     radius: config.nearbyView?.radius,
     routeSortComparator
