@@ -7,7 +7,6 @@ interface SelectProps {
   Control?: ComponentType
   children: ReactNode
   defaultValue?: string | number | boolean
-  disabled?: boolean
   label?: ReactNode
   name: string
   onChange?: ChangeEventHandler
@@ -20,7 +19,6 @@ export const Select = ({
   Control = FormControl,
   children,
   defaultValue,
-  disabled,
   label,
   name,
   onChange
@@ -29,7 +27,6 @@ export const Select = ({
     as: Control,
     componentClass: 'select',
     defaultValue,
-    disabled,
     id: name,
     name,
     onChange
