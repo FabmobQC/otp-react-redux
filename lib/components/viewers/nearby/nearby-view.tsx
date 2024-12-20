@@ -2,7 +2,7 @@ import { connect } from 'react-redux'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Location } from '@opentripplanner/types'
 import { MapRef, useMap } from 'react-map-gl'
-import { Search } from '@styled-icons/fa-solid'
+import { Search } from '@styled-icons/fa-solid/Search'
 import getGeocoder from '@opentripplanner/geocoder'
 import LocationField from '@opentripplanner/location-field'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -21,11 +21,7 @@ import MobileNavigationBar from '../../mobile/navigation-bar'
 import PageTitle from '../../util/page-title'
 import VehiclePositionRetriever from '../vehicle-position-retriever'
 
-import {
-  FloatingLoadingIndicator,
-  NearbySidebarContainer,
-  Scrollable
-} from './styled'
+import { NearbySidebarContainer, Scrollable } from './styled'
 import FromToPicker from './from-to-picker'
 import RentalStation from './rental-station'
 import Stop from './stop'
