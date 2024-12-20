@@ -1,10 +1,5 @@
 import { connect } from 'react-redux'
-import {
-  FormattedMessage,
-  IntlShape,
-  useIntl,
-  WrappedComponentProps
-} from 'react-intl'
+import { FormattedMessage, IntlShape, useIntl } from 'react-intl'
 import { FormikProps } from 'formik'
 import React, { useCallback, useEffect } from 'react'
 
@@ -15,12 +10,11 @@ import { MonitoredTrip, User } from '../types'
 
 import CompanionSelector, { Option } from './companion-selector'
 
-type Props = WrappedComponentProps &
-  FormikProps<MonitoredTrip> & {
-    getDependentUserInfo: (userIds: string[], intl: IntlShape) => void
-    isReadOnly: boolean
-    loggedInUser: User
-  }
+type Props = FormikProps<MonitoredTrip> & {
+  getDependentUserInfo: (userIds: string[], intl: IntlShape) => void
+  isReadOnly: boolean
+  loggedInUser: User
+}
 
 function optionValue(option: Option | null) {
   if (!option) return null
