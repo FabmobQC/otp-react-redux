@@ -104,7 +104,7 @@ class TripNotificationsPane extends Component<Props> {
           />
         ))
       notificationSettingsContent = (
-        <FieldSet>
+        <FieldSet disabled={isReadOnly}>
           {hasTransit ? (
             <>
               <legend>
@@ -123,7 +123,6 @@ class TripNotificationsPane extends Component<Props> {
               <SettingsList>
                 <li>
                   <Select
-                    disabled={isReadOnly}
                     label={
                       <FormattedMessage id="components.TripNotificationsPane.realtimeAlertFlagged" />
                     }
@@ -134,7 +133,6 @@ class TripNotificationsPane extends Component<Props> {
                 </li>
                 <li>
                   <Select
-                    disabled={isReadOnly}
                     label={
                       <FormattedMessage id="components.TripNotificationsPane.altRouteRecommended" />
                     }
@@ -149,7 +147,6 @@ class TripNotificationsPane extends Component<Props> {
                   </label>
                   <FormControl
                     componentClass="select"
-                    disabled={isReadOnly}
                     id="commonDelayThreshold"
                     // Special event handler, hence not using <Select> as above.
                     onChange={this._handleDelayThresholdChange}
@@ -172,7 +169,6 @@ class TripNotificationsPane extends Component<Props> {
             <SettingsList>
               <li>
                 <Select
-                  disabled={isReadOnly}
                   label={
                     <FormattedMessage id="components.TripNotificationsPane.monitorThisTrip" />
                   }
