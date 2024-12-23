@@ -38,7 +38,7 @@ const TripReadOnlyPane = ({
       )
 
   return (
-    <Alert bsStyle="warning" style={{ marginTop: '-30px' }}>
+    <Alert bsStyle="warning" style={{ margin: '-30px 0' }}>
       <FormattedMessage
         id="components.SavedTripEditor.readOnlyBanner"
         values={{ creator }}
