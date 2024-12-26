@@ -15,7 +15,7 @@ import React, {
 
 import { AppReduxState, FilterType, SortType } from '../../../util/state-types'
 import {
-  DepartArriveDirectionMap,
+  DepartArriveDefaultSortDirectionMap,
   DepartArriveTypeMap,
   DepartArriveValue
 } from '../date-time-modal'
@@ -224,7 +224,9 @@ const DateTimeOptions = ({
         importedUpdateItineraryFilter({
           sort: {
             ...sort,
-            direction: DepartArriveDirectionMap[departArrive] || sort.direction,
+            direction:
+              DepartArriveDefaultSortDirectionMap[departArrive] ||
+              sort.direction,
             type: DepartArriveTypeMap[newValue]
           }
         })

@@ -32,7 +32,7 @@ export const DepartArriveTypeMap: Record<
   NOW: 'DURATION'
 }
 
-export const DepartArriveDirectionMap: Record<
+export const DepartArriveDefaultSortDirectionMap: Record<
   DepartArriveValue,
   FilterType['sort']['direction']
 > = {
@@ -67,7 +67,7 @@ function DateTimeModal({
           sort: {
             ...sort,
             direction:
-              DepartArriveDirectionMap[
+              DepartArriveDefaultSortDirectionMap[
                 params.departArrive as DepartArriveValue
               ] || sort.direction,
             type: DepartArriveTypeMap[params.departArrive as DepartArriveValue]
