@@ -41,6 +41,7 @@ interface ItemOwnProps {
 
 interface ItemProps extends ItemOwnProps {
   intl: IntlShape
+  isReadOnly: boolean
   renderData: any
   togglePauseTrip: (trip: MonitoredTrip, intl: IntlShape) => void
 }
@@ -98,7 +99,7 @@ class TripListItem extends Component<ItemProps, ItemState> {
   }
 
   render() {
-    const { intl, renderData, trip } = this.props
+    const { intl, isReadOnly, renderData, trip } = this.props
     const { itinerary } = trip
     const { legs } = itinerary
     const { alerts, shouldRenderAlerts } = renderData
@@ -147,6 +148,7 @@ class TripListItem extends Component<ItemProps, ItemState> {
           <TripSummaryPane
             from={from}
             handleTogglePauseMonitoring={this._handleTogglePauseMonitoring}
+            isReadOnly={isReadOnly}
             monitoredTrip={trip}
             pendingRequest={this.state.pendingRequest}
             to={to}
@@ -174,6 +176,7 @@ class TripListItem extends Component<ItemProps, ItemState> {
 // connect to the redux store
 const itemMapStateToProps = (state: AppReduxState, { trip }: ItemOwnProps) => {
   return {
+    isReadOnly: trip.userId !== state.user.loggedInUser.id,
     renderData: getRenderData({
       monitoredTrip: trip
     })
