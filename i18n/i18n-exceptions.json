@@ -53,5 +53,6 @@
       "low-vision",
       "legally-blind"
     ]
-  }
+  },
+  "ignoredIds": ["otpUi.TripDetails.title"]
 }
