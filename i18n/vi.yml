@@ -112,12 +112,11 @@ common:
     submitting: Đang gửi…
     "yes": Đúng
   itineraryDescriptions:
-    calories: "{calories, number} calo"
     fareUnknown: Không có thông tin giá vé
     noItineraryToDisplay: Không có hành trình để hiển thị.
     relativeCo2: |
       {co2} CO₂ {isMore, select, true {nhiều} other {ít} } hơn so với xe hơi
-    transfers: "{transfers, plural, =0 {} other {# chuyển}}"
+    timeStartEnd: "{start} – {end}"
   linkOpensNewWindow: (Mở khoảng thời gian mới)
   modes:
     bicycle_rent: Chia sẻ xe đạp
@@ -156,7 +155,6 @@ common:
     enterStartLocation: Nhập vị trí bắt đầu hoặc {mapAction} vào bản đồ…
     tap: chạm
   time:
-    departureArrivalTimes: "{startTime, time, short}—{endTime, time, short}"
     duration:
       aFewSeconds: vài giây
       nDays: "{days} ngày"
@@ -198,8 +196,14 @@ components:
   BatchRoutingPanel:
     shortTitle: Lên kế hoạch cho chuyến đi
   BatchSearchScreen:
+    advancedHeader: Tùy Chọn Nâng Cao
     header: Kế hoạch chuyến đi
     modeSelectorLabel: Chọn phương thức di chuyển
+    moreOptions: Tùy chọn khác
+    saveAndReturn: Lưu và quay lại
+    saved: Đã lưu
+    submodeSelectorLabel: Chọn phương thức di chuyển và phương thức phụ
+    tripOptions: Tùy Chọn Chuyến Đi
   BatchSettings:
     destination: điểm đến
     invalidModeSelection: >-
@@ -219,6 +223,15 @@ components:
     advancedOptions: Tùy chọn nâng cao
     groupSize: "Quy mô nhóm:"
     intermediateDestination: Nhập điểm đến trung gian
+  CompanionsPane:
+    addNewCompanion: Thêm người đồng hành đi lại mới
+    companionAlreadyAdded: Quý vị đã có bạn đồng hành có email {email}
+    confirmDeleteCompanion: Quý vị có muốn xóa người đồng hành {email} không?
+    currentCompanionsLabel: "Người đồng hành đi lại hiện tại:"
+    deleteCompanion: Xóa {email}
+    noCompanions: Quý vị hiện không có người đồng hành đi lại nào.
+    submitNewCompanion: Gửi lời mời
+    title: Người đồng hành đi lại
   DateTimeOptions:
     arriveBy: Đến nơi trước
     departAt: Khởi hành lúc
@@ -266,7 +279,6 @@ components:
     ariaLabel: Điều hướng hình thức
   ItinerarySummary:
     itineraryDetails: Chi tiết hành trình
-    minMaxFare: "{minTotalFare} - {maxTotalFare}"
   LocationSearch:
     enterLocation: Nhập vị trí
     setDestination: Chọn điểm đến
@@ -278,6 +290,7 @@ components:
     park-and-ride: Địa điểm đậu xe và đi xe công cộng
     satellite: Vệ tinh
     shared-vehicles: Phương Tiện Đi Chung
+    stations: Trạm Trung Chuyển
     stops: Điểm dừng của phương tiện công cộng
     streets: Đường phố
   MapillaryFrame:
@@ -285,6 +298,7 @@ components:
   MetroUI:
     arriveAt: Đến nơi
     itineraryDescription: "{time} hành trình sử dụng {routes}"
+    itinerarySummary: từ {stopName} | {cost}
     leaveAt: Bạn rời khỏi
     multipleOptions: Nhiều lựa chọn
     orAlternatives: hoặc các tuyến đường khác cùng hướng
@@ -293,6 +307,42 @@ components:
     timeWalking: "{time} đi bộ"
   MobileOptions:
     header: Cài đặt tùy chọn tìm kiếm
+  MobilityProfile:
+    DevicesPane:
+      devices:
+        cane: Gậy chống
+        crutches: Nạng
+        electric wheelchair: Xe lăn điện
+        manual walker: Khung tập đi
+        manual wheelchair: Xe lăn thủ công/truyền thống
+        mobility scooter: Xe điện ba/bốn bánh
+        none: Không có thiết bị hỗ trợ
+        service animal: Động vật hỗ trợ
+        stroller: Xe đẩy trẻ em
+        wheeled walker: Khung tập đi có bánh xe
+        white cane: Gậy cho người khiếm thị
+      prompt: >-
+        Quý vị có thường xuyên sử dụng thiết bị hỗ trợ di chuyển không? (Chọn
+        tất cả câu trả lời phù hợp)
+    LimitationsPane:
+      mobilityPrompt: >-
+        Quý vị có gặp phải hạn chế nào về khả năng vận động khiến quý vị đi chậm
+        hơn hoặc cẩn thận hơn những người khác không?
+      visionLimitations:
+        legally-blind: Mù theo quy định pháp luật
+        low-vision: Thị lực kém
+        none: Không có
+      visionPrompt: Quý vị có gặp phải hạn chế nào về thị lực không?
+    MobilityPane:
+      button: Chỉnh sửa hồ sơ vận động của quý vị
+      header: Hồ Sơ Vận Động
+      mobilityDevices: "Thiết bị di chuyển: "
+      mobilityLimitations: "Hạn chế về khả năng vận động: "
+      visionLimitations: "Hạn chế về thị lực: "
+    intro: >-
+      Vui lòng trả lời một số câu hỏi để tùy chỉnh trải nghiệm lập kế hoạch
+      chuyến đi theo nhu cầu và tùy chọn của quý vị.
+    title: Xác Định Hồ Sơ Vận Động của Quý Vị
   NarrativeItinerariesHeader:
     changeSortDir: Thay đổi hướng sắp xếp
     howToFindResults: Để xem kết quả, xem phần các hành trình đã tìm thấy ở phía dưới.
@@ -320,8 +370,10 @@ components:
     bikesAvailable: "{bikesAvailable} xe đạp có sẵn"
     companyBicycle: Xe đạp {company}
     companyScooter: Xe tay ga điện {company}
+    distanceAway: cách {localizedDistanceString}
     error: Đã xảy ra lỗi trong khi tải các tiện ích lân cận.
     header: Xem Gần Đây
+    headsign: "{destination}"
     nearbyListIntro: Danh sách {count} thực thể lân cận.
     nothingNearby: Không có nơi nào gần đây.
     spacesAvailable: "{spacesAvailable} chỗ trống có sẵn"
@@ -391,7 +443,6 @@ components:
     changeNumber: Thay đổi số điện thoại
     invalidCode: Vui lòng nhập 6 chữ số cho mã xác thực.
     invalidPhone: Xin vui lòng nhập một số điện thoại hợp lệ.
-    pending: Chưa xác minh
     phoneNumberSubmitted: Gửi thành công số điện thoại {phoneNumber}.
     phoneNumberVerified: Số điện thoại {phoneNumber} đã được xác minh thành công.
     placeholder: Nhập số điện thoại của bạn
@@ -407,8 +458,8 @@ components:
       Vui lòng kiểm tra ứng dụng nhắn tin SMS trên điện thoại di động của bạn để
       thấy tin nhắn với mã xác minh và nhập mã bên dưới (mã hết hạn sau 10
       phút).
-    verified: Đã xác minh
     verify: Kiểm chứng
+    verifySms: Vui lòng hoàn tất quy trình xác minh để thiết lập thông báo qua SMS.
   Place:
     deleteThisPlace: Xóa nơi này
     enterAlert: >
@@ -480,13 +531,16 @@ components:
     signInText: Đăng nhập để lưu chuyến đi
     signInTooltip: Vui lòng đăng nhập để lưu chuyến đi.
   SavedTripEditor:
+    deleteSavedTrip: Xóa chuyến đi đã lưu
     editSavedTrip: Chỉnh sửa chuyến đi được lưu
     saveNewTrip: Lưu chuyến đi mới
+    travelCompanions: Người đồng hành đi lại
     tripInformation: Thông tin chuyến đi
     tripNotFound: Không tìm thấy chuyến đi
     tripNotFoundDescription: Xin lỗi, không tìm thấy chuyến đi được yêu cầu.
     tripNotifications: Thông báo chuyến đi
   SavedTripList:
+    alertTag: "{alert, plural, one {View one alert} other {View # alerts}}"
     fromTo: Từ {from} đến {to}
     myTrips: Chuyến đi của tôi
     noSavedTrips: Bạn không có những chuyến đi được lưu
@@ -496,6 +550,7 @@ components:
   SavedTripScreen:
     itineraryLoaded: Đã tải hành trình
     itineraryLoading: Đang tải hành trình
+    selectAtLeastOneDay: Vui lòng chọn ít nhất một ngày để theo dõi.
     tooManyTrips: >
       Bạn đã đạt được tối đa năm chuyến đi được lưu. Vui lòng loại bỏ các chuyến
       đi không sử dụng khỏi các chuyến đi được lưu của bạn và thử lại.
@@ -517,6 +572,10 @@ components:
       thực
   StackedPaneDisplay:
     savePreferences: Lưu lại những ưu tiên
+  StatusBadge:
+    invalid: Invalid
+    pending: Chưa xác minh
+    verified: Đã xác minh
   StopScheduleTable:
     block: Dãy nhà
     departure: Khởi hành
@@ -578,6 +637,8 @@ components:
     vehicleName: Phương tiện giao thông {vehicleNumber}
   TripBasicsPane:
     checkingItineraryExistence: Kiểm tra sự tồn tại của hành trình cho mỗi ngày trong tuần…
+    onlyOnDate: Chỉ vào {date, date, ::eeeee yyyyMMdd}
+    recurringEachWeek: Vào những ngày nhất định trong tuần
     tripDaysPrompt: Bạn thực hiện chuyến đi này vào những ngày nào?
     tripIsAvailableOnDaysIndicated: Chuyến đi của bạn có sẵn vào những ngày trong tuần như đã nêu ở trên.
     tripNamePrompt: "Vui lòng cung cấp tên cho chuyến đi này:"
@@ -597,6 +658,8 @@ components:
     oneHour: 1 tiếng
     realtimeAlertFlagged: Có một cảnh báo thời gian thực được gắn cờ trên hành trình của tôi
     timeBefore: "{time} trước"
+  TripPreviewLayout:
+    previewTrip: Xem Trước Chuyến Đi
   TripStatus:
     alerts: "{alerts, plural, one {# cảnh báo!} other {# cảnh báo!}}"
     deleteTrip: Xóa chuyến đi
@@ -637,6 +700,9 @@ components:
       awaiting: Đang chờ tính toán…
       description: Vui lòng đợi một chút để tính toán chuyến đi.
       heading: Chuyến đi chưa được tính toán
+    past:
+      description: Đây là chuyến đi một lần đã diễn ra trong quá khứ.
+      heading: Chuyến đi trong quá khứ
     snoozed:
       description: Bật lại tính năng giám sát chuyến đi để xem trạng thái cập nhật
       heading: Tạm dừng việc giám sát chuyến đi cho ngày hôm nay
@@ -647,9 +713,9 @@ components:
       tripBegins: >-
         Chuyến đi sẽ bắt đầu lúc {tripStart, time, short}. (Việc theo dõi thời
         gian thực sẽ bắt đầu lúc {monitoringStart, time, short}.)
-      tripStartIsDelayed: Thời gian bắt đầu chuyến đi bị trì hoãn ${duration}!
+      tripStartIsDelayed: Thời gian bắt đầu chuyến đi bị trì hoãn {duration}!
       tripStartIsEarly: >-
-        Thời gian bắt đầu chuyến đi đang diễn ra sớm hơn ${duration} so với dự
+        Thời gian bắt đầu chuyến đi đang diễn ra sớm hơn {duration} so với dự
         kiến!
       tripStartsSoonNoUpdates: Chuyến đi đang bắt đầu sớm (không có cập nhật về thời gian thực).
       tripStartsSoonOnTime: Chuyến đi đang bắt đầu sớm và sắp đúng giờ.
@@ -658,8 +724,10 @@ components:
     leaveAt: "Rời đi lúc "
   TripSummaryPane:
     happensOnDays: "Xảy ra vào: {days}"
+    monitoredTripDays: Số ngày theo dõi chuyến đi
     notifications: "{leadTimeInMinutes} phút trước khi khởi hành theo lịch trình"
     notificationsDisabled: Thông báo đã tắt
+    timeAndDuration: Thời gian và thời lượng chuyến đi
   TripTools:
     copyLink: Sao chép URL
     header: Công cụ

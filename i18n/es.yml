@@ -112,13 +112,12 @@ common:
     submitting: Enviando…
     "yes": Sí
   itineraryDescriptions:
-    calories: "{calories, number} kcal"
     fareUnknown: No hay información de las tarifas
     noItineraryToDisplay: No hay itinerario que mostrar.
     relativeCo2: >
       {co2} de CO₂ en {isMore, select, true {más} other {menos} } que conducir
       solo
-    transfers: "{transfers, plural, =0 {} one {# transferencia} other {# transferencias}}"
+    timeStartEnd: "{start} – {end}"
   linkOpensNewWindow: (Abre una nueva ventana)
   modes:
     bicycle_rent: Compartir bicicleta
@@ -157,7 +156,6 @@ common:
     enterStartLocation: Introduzca la ubicación de inicio o {mapAction} en el mapa…
     tap: toque
   time:
-    departureArrivalTimes: "{startTime, time, short}—{endTime, time, short}"
     duration:
       aFewSeconds: unos segundos
       nDays: "{days, plural, =1 {un día} other {# días}}"
@@ -199,8 +197,14 @@ components:
   BatchRoutingPanel:
     shortTitle: Planificar viaje
   BatchSearchScreen:
+    advancedHeader: Ajustes avanzados
     header: Planifique su viaje
     modeSelectorLabel: Seleccione un modo de desplazamiento
+    moreOptions: Más opciones
+    saveAndReturn: Guardar y volver
+    saved: Guardado
+    submodeSelectorLabel: Seleccionar modos y submodos de desplazamiento
+    tripOptions: Opciones de ruta
   BatchSettings:
     destination: destino
     invalidModeSelection: >-
@@ -218,6 +222,20 @@ components:
     advancedOptions: Opciones avanzadas
     groupSize: "Tamaño del grupo:"
     intermediateDestination: Introducir destino intermedio
+  CompanionsPane:
+    addNewCompanion: Añadir un nuevo compañero de viaje
+    companionAlreadyAdded: Ya tienes un compañero con correo electrónico {email}
+    companionExplanation: >
+      Invite a un usuario de G-MAP a ser compañero de viaje introduciendo su
+      correo electrónico. Cuando acepte, su estado cambiará a "verificado", y
+      podréis compartir vuestro estado de viaje y planificar viajes basándoos en
+      el perfil de movilidad del otro.
+    confirmDeleteCompanion: ¿Desea eliminar al compañero {email}?
+    currentCompanionsLabel: "Compañeros de viaje actuales:"
+    deleteCompanion: Borrar {email}
+    noCompanions: No tiene compañeros de viaje.
+    submitNewCompanion: Enviar invitación
+    title: Acompañantes de viaje
   DateTimeOptions:
     arriveBy: Llegada por
     departAt: Salida a las
@@ -267,7 +285,6 @@ components:
     ariaLabel: Navegar por los formularios
   ItinerarySummary:
     itineraryDetails: Detalles del itinerario
-    minMaxFare: "{minTotalFare} - {maxTotalFare}"
   LocationSearch:
     enterLocation: Introduzca la ubicación
     setDestination: Establecer el destino
@@ -279,6 +296,7 @@ components:
     park-and-ride: Ubicaciones de Park & Ride
     satellite: Satélite
     shared-vehicles: Vehículos compartidos
+    stations: Estaciones de transporte
     stops: Paradas de tránsito
     streets: Calles
   MapillaryFrame:
@@ -286,6 +304,7 @@ components:
   MetroUI:
     arriveAt: Llegaste
     itineraryDescription: "{time} itinerario en {routes}"
+    itinerarySummary: Desde {stopName} | {cost}
     leaveAt: Su salida
     multipleOptions: Múltiples Opciones
     orAlternatives: u otras rutas en la misma dirección
@@ -364,8 +383,10 @@ components:
       disponibles}}
     companyBicycle: Bicicleta {company}
     companyScooter: Scooter {company}
+    distanceAway: "{localizedDistanceString} de distancia"
     error: Se ha producido un error al cargar los servicios cercanos.
     header: Ver cerca
+    headsign: "{destination}"
     nearbyListIntro: Lista de {count} entidades cercanas.
     nothingNearby: No ubicaciónes cercanas.
     spacesAvailable: "{spacesAvailable} espacios libres disponibles"
@@ -428,7 +449,6 @@ components:
     changeNumber: Cambiar número de teléfono
     invalidCode: Introduzca 6 dígitos para el código de validación.
     invalidPhone: Por favor, introduzca un número de teléfono válido.
-    pending: Pendiente
     phoneNumberSubmitted: El número de teléfono {phoneNumber} se ha enviado correctamente.
     phoneNumberVerified: El número de teléfono {phoneNumber} se ha verificado correctamente.
     placeholder: Introduzca su número de teléfono
@@ -447,8 +467,10 @@ components:
       teléfono móvil si hay un mensaje de texto con un código de verificación, e
       introduzca el código que aparece a continuación. El código caduca a los 10
       minutos.
-    verified: Verificado
     verify: Verificar
+    verifySms: >-
+      Por favor, complete el proceso de verificación para configurar las
+      notificaciones por SMS.
   Place:
     deleteThisPlace: Borrar este lugar
     enterAlert: >
@@ -523,6 +545,7 @@ components:
     deleteSavedTrip: Borrar viaje guardado
     editSavedTrip: Editar el viaje guardado
     saveNewTrip: Guardar un nuevo viaje
+    travelCompanions: Acompañantes de viaje
     tripInformation: Información sobre el viaje
     tripNotFound: No se encontró el viaje
     tripNotFoundDescription: Lo sentimos, no se encontró el viaje solicitado.
@@ -538,6 +561,7 @@ components:
   SavedTripScreen:
     itineraryLoaded: Itinerario cargado
     itineraryLoading: Cargando el itinerario
+    selectAtLeastOneDay: Por favor, seleccione al menos un día para realizar el seguimiento.
     tooManyTrips: >
       Ya ha alcanzado el máximo de cinco viajes guardados. Por favor, elimine
       los viajes no utilizados de sus viajes guardados e inténtelo de nuevo.
@@ -557,6 +581,10 @@ components:
     usingRealtimeInfo: Este viaje utiliza información de tráfico y retrasos en tiempo real
   StackedPaneDisplay:
     savePreferences: Guardar preferencias
+  StatusBadge:
+    invalid: Inválido
+    pending: Pendiente
+    verified: Verificado
   StopScheduleTable:
     block: Bloquear
     departure: Salida
@@ -617,6 +645,8 @@ components:
     vehicleName: Vehículo {vehicleNumber}
   TripBasicsPane:
     checkingItineraryExistence: Comprobación de la existencia de itinerarios para cada día de la semana…
+    onlyOnDate: Solo el {date, date, ::eeeee yyyyMMdd}
+    recurringEachWeek: Algunos días de la semana
     tripDaysPrompt: ¿Qué días hace este viaje?
     tripIsAvailableOnDaysIndicated: Su viaje está disponible en los días de la semana indicados anteriormente.
     tripNamePrompt: "Por favor, indique un nombre para este viaje:"
@@ -638,6 +668,8 @@ components:
     oneHour: 1 hora
     realtimeAlertFlagged: Hay una alerta en tiempo real marcada en mi viaje
     timeBefore: "{time} antes"
+  TripPreviewLayout:
+    previewTrip: Vista previa del viaje
   TripStatus:
     alerts: "{alerts, plural, one {# alerta!} other {# alertas!}}"
     deleteTrip: Borrar el viaje
@@ -679,6 +711,9 @@ components:
       awaiting: Esperando el cálculo…
       description: Por favor, espere un poco para calcular el viaje.
       heading: Viaje aún no calculado
+    past:
+      description: Un viaje que ocurrió el pasado.
+      heading: Viaje realizado
     snoozed:
       description: Reactivar la supervisión del viaje para ver el estado actualizado.
       heading: El seguimiento del viaje se ha suspendido por hoy
@@ -689,10 +724,8 @@ components:
       tripBegins: >-
         El viaje debe comenzar a las {tripStart, time, short}. (El seguimiento
         en tiempo real comenzará a las {monitoringStart, time, short}.)
-      tripStartIsDelayed: ¡La hora de inicio del viaje se retrasa ${duration}!
-      tripStartIsEarly: >-
-        ¡La hora de inicio del viaje se produce ${duration} antes de lo
-        previsto!
+      tripStartIsDelayed: ¡La hora de inicio del viaje se retrasa {duration}!
+      tripStartIsEarly: ¡La hora de inicio del viaje se produce {duration} antes de lo previsto!
       tripStartsSoonNoUpdates: >-
         El viaje comienza pronto (no hay actualizaciones disponibles en tiempo
         real).
@@ -702,8 +735,10 @@ components:
     leaveAt: "Salida a las "
   TripSummaryPane:
     happensOnDays: "Ocurre en: {days}"
+    monitoredTripDays: Días de viaje monitoreados
     notifications: "{leadTimeInMinutes} minutos antes de la salida programada"
     notificationsDisabled: Notificaciones desactivadas
+    timeAndDuration: Tiempo y duración del viaje
   TripTools:
     copyLink: Copiar enlace
     header: Herramientas

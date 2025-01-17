@@ -1,5 +1,6 @@
 /* eslint-disable complexity */
 import { ArrowLeft } from '@styled-icons/fa-solid/ArrowLeft'
+import { Dropdown } from '@opentripplanner/building-blocks'
 import { ExclamationTriangle } from '@styled-icons/fa-solid/ExclamationTriangle'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Itinerary } from '@opentripplanner/types'
@@ -11,7 +12,6 @@ import styled from 'styled-components'
 import { IconWithText, StyledIconWrapper } from '../util/styledIcon'
 import { ItinerarySortOption } from '../../util/config-types'
 import { sortOptions } from '../util/sortOptions'
-import { SortResultsDropdown } from '../util/dropdown'
 import { UnstyledButton } from '../util/unstyled-button'
 import InvisibleA11yLabel from '../util/invisible-a11y-label'
 import PopupTriggerText from '../app/popup-trigger-text'
@@ -35,12 +35,17 @@ const ItinerariesHeaderContainer = styled.div<{ showHeaderText: boolean }>`
   margin-left: ${(props) => (props.showHeaderText ? 'inherit' : 'auto')};
 `
 
+const SortResultsDropdown = styled(Dropdown)`
+  button {
+    border: none;
+  }
+`
+
 export default function NarrativeItinerariesHeader({
   customBatchUiBackground,
   enabledSortModes,
   errors,
   itineraries,
-  itinerary,
   itineraryIsExpanded,
   onSortChange,
   onSortDirChange,
@@ -102,13 +107,6 @@ export default function NarrativeItinerariesHeader({
 
   const sortOptionsArr = sortOptions(intl, enabledSortModes)
   const sortText = sortOptionsArr.find((x) => x.value === sort.type)?.text
-
-  const handleSortClick = useCallback(
-    (value) => {
-      onSortChange(value)
-    },
-    [onSortChange]
-  )
 
   return (
     <div
@@ -209,14 +207,14 @@ export default function NarrativeItinerariesHeader({
             <SortResultsDropdown
               id="sort-results"
               label={sortResultsLabel}
-              name={sortText}
+              text={sortText}
               title={sortResultsLabel}
             >
               {sortOptionsArr.map((sortOption) => (
                 <li className="sort-option" key={sortOption.value}>
                   <UnstyledButton
                     aria-selected={sortText === sortOption.text || undefined}
-                    onClick={() => handleSortClick(sortOption.value)}
+                    onClick={() => onSortChange(sortOption.value)}
                     role="option"
                   >
                     {sortOption.text}

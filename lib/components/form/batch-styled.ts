@@ -4,8 +4,10 @@ import styled, { css } from 'styled-components'
 export const buttonPixels = 51
 
 export const activeCss = css`
-  /* Make elements slightly darker on hover. */
-  filter: brightness(90%);
+  /* Make elements internal content slightly transparent on hover. */
+  & > * {
+    opacity: 90%;
+  }
 `
 
 const buttonTransitionCss = css`
@@ -63,6 +65,8 @@ export const ModeSelectorContainer = styled.div<{ squashed?: boolean }>`
   align-items: flex-start;
   display: flex;
   float: right;
+  justify-content: space-between;
+  width: 100%;
 
   ${PlanTripButton} {
     border-bottom-left-radius: ${(props) => (props.squashed ? 0 : 'invalid')};

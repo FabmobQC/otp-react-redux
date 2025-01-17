@@ -5,7 +5,7 @@ import { Marker } from 'react-map-gl'
 import centroid from '@turf/centroid'
 import distance from '@turf/distance'
 import polyline from '@mapbox/polyline'
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import styled from 'styled-components'
 
 import * as narriativeActions from '../../actions/narrative'
@@ -19,6 +19,7 @@ import {
   getVisibleItineraryIndex
 } from '../../util/state'
 import { isDefined } from '../../util/ui'
+import FormattedDuration from '../util/formatted-duration'
 import MetroItineraryRoutes from '../narrative/metro/metro-itinerary-routes'
 
 type ItinWithGeometry = Itinerary & {
@@ -37,12 +38,24 @@ type Props = {
   visibleItinerary?: number
 }
 
+const TimeWrapper = styled.span`
+  align-items: center;
+  background: black;
+  border-radius: 5px;
+  color: white;
+  display: inline-flex;
+  font-weight: 600;
+  justify-content: center;
+  margin-left: 24px;
+  padding: 0px 8px;
+`
+
 const Card = styled.div`
   ${boxShadowCss}
 
   background: #fffffffa;
   border-radius: 5px;
-  padding: 6px;
+  padding: 8px;
   align-items: center;
   display: flex;
   flex-wrap: wrap;
@@ -57,7 +70,8 @@ const Card = styled.div`
     }
   }
   div {
-    margin-top: -0px!important;
+    margin-top: -0px !important;
+    transform: scale(0.9);
   }
   .route-block-wrapper span {
     padding: 0px;
@@ -112,7 +126,8 @@ function getUniquePoint(
 
     const selfDistance = distance(point, centerOfLine)
     // maximize distance from all other points while minimizing distance to center of our own line
-    const averageDistance = totalDistance / otherMidpoints.length - selfDistance
+    const averageDistance =
+      1.2 * (totalDistance / otherMidpoints.length) - selfDistance
 
     if (averageDistance > maxDistance) {
       maxDistance = averageDistance
@@ -132,19 +147,20 @@ const ItinerarySummaryOverlay = ({
   // @ts-expect-error React context is populated dynamically
   const { LegIcon } = useContext(ComponentContext)
 
-  const [sharedTimeout, setSharedTimeout] = useState<null | NodeJS.Timeout>(
-    null
-  )
-
   if (!itins || !visible) return <></>
-  const mergedItins: ItinWithGeometry[] = addTrueIndex(
-    doMergeItineraries(itins).mergedItineraries.map(addItinLineString)
+  const indexedItins: ItinWithGeometry[] = addTrueIndex(
+    itins.map(addItinLineString)
   )
+  const mergedItins: ItinWithGeometry[] =
+    doMergeItineraries(indexedItins).mergedItineraries
 
-  const midPoints = mergedItins.reduce<ItinUniquePoint[]>((prev, curItin) => {
-    prev.push(getUniquePoint(curItin, prev))
-    return prev
-  }, [])
+  const midPoints = mergedItins.reduce<ItinUniquePoint[]>(
+    (prev: ItinUniquePoint[], curItin: ItinWithGeometry) => {
+      prev.push(getUniquePoint(curItin, prev))
+      return prev
+    },
+    []
+  )
   // The first point is probably not well placed, so let's run the algorithm again
   if (midPoints.length > 1) {
     midPoints[0] = getUniquePoint(mergedItins[0], midPoints)
@@ -171,24 +187,17 @@ const ItinerarySummaryOverlay = ({
                   onClick={() => {
                     setActive({ index: mp.itin.index })
                   }}
-                  // TODO: useCallback here (getting weird errors?)
-                  onMouseEnter={() => {
-                    setSharedTimeout(
-                      setTimeout(() => {
-                        setVisible({ index: mp.itin.index })
-                      }, 150)
-                    )
-                  }}
-                  onMouseLeave={() => {
-                    sharedTimeout && clearTimeout(sharedTimeout)
-                    setVisible({ index: null })
-                  }}
+                  // TODO: restore setting visible itinerary on hover without
+                  // causing endless re-render?
                 >
                   <MetroItineraryRoutes
                     expanded={false}
                     itinerary={mp.itin}
                     LegIcon={LegIcon}
                   />
+                  <TimeWrapper>
+                    <FormattedDuration duration={mp.itin.duration} />
+                  </TimeWrapper>
                 </Card>
               </Marker>
             )

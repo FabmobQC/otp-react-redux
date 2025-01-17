@@ -1,7 +1,6 @@
-import { Calendar } from '@styled-icons/fa-solid'
+import { Calendar } from '@styled-icons/fa-solid/Calendar'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
-import { TransitOperator } from '@opentripplanner/types'
 import coreUtils from '@opentripplanner/core-utils'
 import React from 'react'
 
@@ -17,7 +16,7 @@ import StopCardHeader from './stop-card-header'
 
 const { getUserTimezone } = coreUtils.time
 
-const fullTimestamp = (stoptime: StopTime) =>
+export const fullTimestamp = (stoptime: StopTime) =>
   (stoptime.serviceDay || 0) + (stoptime.realtimeDeparture || 0)
 
 type Props = {
@@ -25,17 +24,14 @@ type Props = {
   homeTimezone: string
   nearbyViewConfig?: NearbyViewConfig
   routeSortComparator: (a: PatternStopTime, b: PatternStopTime) => number
-  stopData: StopData
+  stopData: StopData & { nearbyRoutes?: string[] }
 }
 
-const Stop = ({
-  fromToSlot,
-  homeTimezone,
-  nearbyViewConfig,
-  routeSortComparator,
-  stopData
-}: Props): JSX.Element => {
-  const patternRows = (stopData.stoptimesForPatterns || [])
+export const patternArrayforStops = (
+  stopData: StopData & { nearbyRoutes?: string[] },
+  routeSortComparator: (a: PatternStopTime, b: PatternStopTime) => number
+): Array<PatternStopTime> | undefined => {
+  return stopData?.stoptimesForPatterns
     ?.reduce<PatternStopTime[]>((acc, cur) => {
       const currentHeadsign = extractHeadsignFromPattern(cur.pattern)
       const dupe = acc.findIndex((p) => {
@@ -66,30 +62,46 @@ const Stop = ({
       return acc
     }, [])
     .sort(routeSortComparator)
-    .map((st: any, index: number) => {
-      const sortedStopTimes = st.stoptimes.sort(
-        (a: StopTime, b: StopTime) => fullTimestamp(a) - fullTimestamp(b)
-      )
-      return (
-        <PatternRow
-          alwaysShowLongName={nearbyViewConfig?.alwaysShowLongName}
-          homeTimezone={homeTimezone}
-          key={index}
-          pattern={st.pattern}
-          roundedTop={false}
-          route={st.pattern.route}
-          stopTimes={sortedStopTimes}
-        />
-      )
-    })
+}
+
+const Stop = ({
+  fromToSlot,
+  homeTimezone,
+  nearbyViewConfig,
+  routeSortComparator,
+  stopData
+}: Props): JSX.Element => {
+  const patternArray = patternArrayforStops(stopData, routeSortComparator)
+  const patternRows = patternArray?.map((st: any, index: number) => {
+    const sortedStopTimes = st.stoptimes.sort(
+      (a: StopTime, b: StopTime) => fullTimestamp(a) - fullTimestamp(b)
+    )
+    if (
+      // NearbyRoutes if present is populated with a list of routes that appear
+      // in the current service period.
+      stopData.nearbyRoutes &&
+      !stopData.nearbyRoutes.includes(st?.pattern?.route?.gtfsId)
+    ) {
+      return <></>
+    }
+    return (
+      <PatternRow
+        alwaysShowLongName={nearbyViewConfig?.alwaysShowLongName}
+        homeTimezone={homeTimezone}
+        key={index}
+        pattern={st.pattern}
+        roundedTop={false}
+        route={st.pattern.route}
+        stopTimes={sortedStopTimes}
+      />
+    )
+  })
   const inHomeTimezone = homeTimezone && homeTimezone === getUserTimezone()
   const timezoneWarning = !inHomeTimezone && (
     <StyledAlert>
       <TimezoneWarning homeTimezone={homeTimezone} />
     </StyledAlert>
   )
-
-  if (nearbyViewConfig?.hideEmptyStops && patternRows.length === 0) return <></>
 
   return (
     <Card>

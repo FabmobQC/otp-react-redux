@@ -13,16 +13,23 @@
   min-width: 0px;
 }
 
-.otp.mobile .navbar .container-fluid .locale-selector-and-login {
-  position: fixed;
-  right: 0;
-  top: 0;
-}
 .otp.mobile .navbar .container-fluid .locale-selector-and-login > li {
   display: inline-block;
 }
 .otp.mobile .navbar li.dropdown.open {
   background-color: #080808;
+}
+
+.navBarItem p {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+  padding: 5px 15px;
+}
+
+.navBarItem ul {
+  list-style: none;
+  padding-inline-start: 0;
 }
 
 #app-menu-locale-selector {
@@ -38,5 +45,8 @@
   }
   #user-selector-label {
     background-color: transparent;
+    border: 0;
+    color: white;
+    height: 50px;
   }
 }

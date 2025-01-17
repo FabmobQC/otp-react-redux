@@ -1,15 +1,15 @@
+import { Ban } from '@styled-icons/fa-solid/Ban'
 import { connect } from 'react-redux'
 import {
   ControlLabel,
   FormControl,
   FormGroup,
-  Glyphicon,
   HelpBlock,
   ProgressBar,
   Radio
 } from 'react-bootstrap'
 import { Field, FormikProps } from 'formik'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import { FormattedMessage, injectIntl, useIntl } from 'react-intl'
 import { Prompt } from 'react-router'
 // @ts-expect-error FormikErrorFocus does not support TypeScript yet.
 import FormikErrorFocus from 'formik-error-focus'
@@ -26,6 +26,7 @@ import {
 } from '../../../util/monitored-trip'
 import { AppReduxState } from '../../../util/state-types'
 import { FieldSet } from '../styled'
+import { getBaseColor, RED_ON_WHITE } from '../../util/colors'
 import { getErrorStates } from '../../../util/ui'
 import { ItineraryExistence, MonitoredTrip } from '../types'
 import FormattedDayOfWeek from '../../util/formatted-day-of-week'
@@ -33,7 +34,7 @@ import FormattedDayOfWeekCompact from '../../util/formatted-day-of-week-compact'
 import FormattedValidationError from '../../util/formatted-validation-error'
 import InvisibleA11yLabel from '../../util/invisible-a11y-label'
 
-import { BORDER_COLOR } from './trip-summary-pane'
+import MonitoredDays, { MonitoredDayCircle } from './trip-monitored-days'
 import TripStatus from './trip-status'
 import TripSummary from './trip-duration-summary'
 
@@ -45,7 +46,9 @@ type TripBasicsProps = WrappedComponentProps &
       intl: IntlShape
     ) => void
     clearItineraryExistence: () => void
+    disableSingleItineraryDays?: boolean
     isCreating: boolean
+    isReadOnly: boolean
     itineraryExistence?: ItineraryExistence
   }
 
@@ -55,6 +58,9 @@ interface State {
 
 // Styles.
 const AvailableDays = styled(FieldSet)`
+  display: flex;
+  gap: 4px;
+
   // Targets the formik checkboxes to provide better contrast on focus styles
   input {
     &:focus-visible,
@@ -67,59 +73,162 @@ const AvailableDays = styled(FieldSet)`
     }
   }
   & > span {
-    border: 1px solid ${BORDER_COLOR};
-    border-left: none;
+    align-items: center;
+    border-radius: 3rem;
     box-sizing: border-box;
-    display: inline-block;
-    height: 3em;
-    max-width: 150px;
-    min-width: 14.28%;
+    display: inline-flex;
+    flex-direction: row-reverse;
+    height: 3rem;
+    min-width: 4.5rem;
     position: relative;
     text-align: center;
+    width: 5rem;
   }
-  & > span:first-of-type {
-    border-left: 1px solid ${BORDER_COLOR};
-  }
-
-  .glyphicon {
+  svg {
+    color: ${RED_ON_WHITE};
     display: none;
     /* Remove top attribute set by Bootstrap. */
     top: inherit;
-  }
-
-  input {
-    display: block;
+    width: 1.3rem;
   }
 
   input,
-  .glyphicon {
-    bottom: 6px;
-    position: absolute;
-    width: 100%;
+  svg {
+    flex-shrink: 0;
+    /* Remove bootstrap's vertical margin */
+    margin: 0 7px 0 2px;
   }
 
   /* Check boxes for disabled days are replaced with the cross mark. */
   input[disabled] {
-    clip: rect(0, 0, 0, 0);
-    height: 0;
-    margin: 0;
-    width: 0;
-    z-index: -1;
+    display: none;
   }
-  input[disabled] ~ .glyphicon {
+  input[disabled] ~ svg {
     display: block;
   }
 
-  /* Make labels occupy the whole space, so the entire block is clickable. */
+  /* Add oblique strike for disabled days */
+  .disabled-day::after {
+    border-top: 2px solid ${RED_ON_WHITE};
+    content: '';
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 45%;
+    transform: rotate(-30deg);
+    transform-origin: center;
+  }
+
   label {
+    flex-grow: 1;
     font-weight: inherit;
     height: 100%;
-    width: 100%;
+    line-height: 3rem;
+    margin: 0;
+    position: relative;
+    text-align: center;
   }
 `
 
 function isDisabled(day: string, itineraryExistence?: ItineraryExistence) {
   return itineraryExistence && !itineraryExistence[day]?.valid
+}
+
+const RenderAvailableDays = ({
+  errorCheckingTrip,
+  errorSelectingDays,
+  finalItineraryExistence,
+  isCreating,
+  isReadOnly,
+  monitoredTrip
+}: {
+  errorCheckingTrip: boolean
+  errorSelectingDays?: 'error' | null
+  finalItineraryExistence?: ItineraryExistence
+  isCreating: boolean
+  isReadOnly: boolean
+  monitoredTrip: MonitoredTrip
+}) => {
+  const intl = useIntl()
+  const baseColor = getBaseColor()
+
+  if (isReadOnly) {
+    return <MonitoredDays days={dayFieldsToArray(monitoredTrip)} />
+  }
+
+  return (
+    <>
+      {errorCheckingTrip && (
+        <>
+          {/* FIXME: Temporary solution until itinerary existence check is fixed. */}
+          <br />
+          <FormattedMessage id="actions.user.itineraryExistenceCheckFailed" />
+        </>
+      )}
+      <AvailableDays>
+        {ALL_DAYS.map((day) => {
+          const isDayDisabled = isDisabled(day, finalItineraryExistence)
+          const labelClass = isDayDisabled ? 'disabled-day' : ''
+          const notAvailableText = isDayDisabled
+            ? intl.formatMessage(
+                {
+                  id: 'components.TripBasicsPane.tripNotAvailableOnDay'
+                },
+                {
+                  repeatedDay: getFormattedDayOfWeekPlural(day, intl)
+                }
+              )
+            : ''
+
+          return (
+            <MonitoredDayCircle
+              baseColor={baseColor}
+              key={day}
+              monitored={!isDayDisabled && monitoredTrip[day]}
+              title={notAvailableText}
+            >
+              <Field
+                // TODO: improve checking trip availability.
+                disabled={isDayDisabled}
+                id={day}
+                name={day}
+                type="checkbox"
+              />
+              <Ban aria-hidden />
+              <label htmlFor={day}>
+                <InvisibleA11yLabel>
+                  <FormattedDayOfWeek day={day} />
+                </InvisibleA11yLabel>
+                <span aria-hidden className={labelClass}>
+                  {/* The abbreviated text is visual only. Screen readers should read out the full day. */}
+                  <FormattedDayOfWeekCompact day={day} />
+                </span>
+              </label>
+              <InvisibleA11yLabel>{notAvailableText}</InvisibleA11yLabel>
+            </MonitoredDayCircle>
+          )
+        })}
+      </AvailableDays>
+      <HelpBlock role="status">
+        {finalItineraryExistence ? (
+          <FormattedMessage id="components.TripBasicsPane.tripIsAvailableOnDaysIndicated" />
+        ) : (
+          <ProgressBar
+            active
+            label={
+              <FormattedMessage id="components.TripBasicsPane.checkingItineraryExistence" />
+            }
+            now={100}
+          />
+        )}
+      </HelpBlock>
+      <HelpBlock role="alert">
+        {errorSelectingDays && (
+          <FormattedValidationError type="select-at-least-one-day" />
+        )}
+      </HelpBlock>
+    </>
+  )
 }
 
 /**
@@ -210,9 +319,11 @@ class TripBasicsPane extends Component<TripBasicsProps, State> {
     const {
       canceled,
       dirty,
+      disableSingleItineraryDays,
       errors,
       intl,
       isCreating,
+      isReadOnly,
       isSubmitting,
       itineraryExistence,
       values: monitoredTrip
@@ -247,6 +358,9 @@ class TripBasicsPane extends Component<TripBasicsProps, State> {
       const errorCheckingTrip = ALL_DAYS.every((day) =>
         isDisabled(day, finalItineraryExistence)
       )
+      /* Hack: because the selected days checkboxes are not grouped, we need to assign this error to one of the 
+      checkboxes so that the FormikErrorFocus works. */
+      const selectOneDayError = errorStates.monday
       return (
         <div>
           {/* TODO: This component does not block navigation on reload or using the back button.
@@ -255,7 +369,9 @@ class TripBasicsPane extends Component<TripBasicsProps, State> {
 
           {/* Do not show trip status when saving trip for the first time
               (it doesn't exist in backend yet). */}
-          {!isCreating && <TripStatus monitoredTrip={monitoredTrip} />}
+          {!isCreating && (
+            <TripStatus isReadOnly={isReadOnly} monitoredTrip={monitoredTrip} />
+          )}
           <TripSummary monitoredTrip={monitoredTrip} />
 
           <FormGroup validationState={errorStates.tripName}>
@@ -266,6 +382,7 @@ class TripBasicsPane extends Component<TripBasicsProps, State> {
             <Field
               aria-invalid={!!errorStates.tripName}
               as={FormControl}
+              disabled={isReadOnly}
               id="tripName"
               name="tripName"
             />
@@ -276,106 +393,59 @@ class TripBasicsPane extends Component<TripBasicsProps, State> {
               )}
             </HelpBlock>
           </FormGroup>
-
-          <FormGroup>
-            <ControlLabel>
-              <FormattedMessage id="components.TripBasicsPane.tripDaysPrompt" />
-            </ControlLabel>
-            <Radio
-              checked={!isOneTime}
-              // FIXME: Temporary solution until itinerary existence check is fixed.
-              disabled={errorCheckingTrip}
-              onChange={this._handleRecurringTrip}
-            >
-              <FormattedMessage id="components.TripBasicsPane.recurringEachWeek" />
-              {errorCheckingTrip && (
+          {disableSingleItineraryDays ? (
+            <FormGroup validationState={selectOneDayError}>
+              <ControlLabel>
+                <FormattedMessage id="components.TripBasicsPane.tripDaysPrompt" />
+              </ControlLabel>
+              <RenderAvailableDays
+                errorCheckingTrip={errorCheckingTrip}
+                errorSelectingDays={selectOneDayError}
+                finalItineraryExistence={finalItineraryExistence}
+                isCreating={isCreating}
+                isReadOnly={isReadOnly}
+                monitoredTrip={monitoredTrip}
+              />
+            </FormGroup>
+          ) : (
+            <FormGroup>
+              <ControlLabel>
+                <FormattedMessage id="components.TripBasicsPane.tripDaysPrompt" />
+              </ControlLabel>
+              <Radio
+                checked={!isOneTime}
+                // FIXME: Temporary solution until itinerary existence check is fixed.
+                disabled={errorCheckingTrip || isReadOnly}
+                onChange={this._handleRecurringTrip}
+              >
+                <FormattedMessage id="components.TripBasicsPane.recurringEachWeek" />
+              </Radio>
+              {!isOneTime && (
                 <>
-                  {/* FIXME: Temporary solution until itinerary existence check is fixed. */}
-                  <br />
-                  <FormattedMessage id="actions.user.itineraryExistenceCheckFailed" />
+                  <RenderAvailableDays
+                    errorCheckingTrip={errorCheckingTrip}
+                    finalItineraryExistence={finalItineraryExistence}
+                    isCreating={isCreating}
+                    isReadOnly={isReadOnly}
+                    monitoredTrip={monitoredTrip}
+                  />
                 </>
               )}
-            </Radio>
-            {!isOneTime && (
-              <>
-                <AvailableDays>
-                  {ALL_DAYS.map((day) => {
-                    const isDayDisabled = isDisabled(
-                      day,
-                      finalItineraryExistence
-                    )
-                    const boxClass = isDayDisabled
-                      ? 'alert-danger'
-                      : monitoredTrip[day]
-                      ? 'bg-primary'
-                      : ''
-                    const notAvailableText = isDayDisabled
-                      ? intl.formatMessage(
-                          {
-                            id: 'components.TripBasicsPane.tripNotAvailableOnDay'
-                          },
-                          {
-                            repeatedDay: getFormattedDayOfWeekPlural(day, intl)
-                          }
-                        )
-                      : ''
+              <Radio
+                checked={isOneTime}
+                disabled={isReadOnly}
+                onChange={this._handleOneTimeTrip}
+              >
+                <FormattedMessage
+                  id="components.TripBasicsPane.onlyOnDate"
+                  values={{ date: itinerary.startTime }}
+                />
+              </Radio>
+            </FormGroup>
+          )}
 
-                    return (
-                      <span
-                        className={boxClass}
-                        key={day}
-                        title={notAvailableText}
-                      >
-                        <Field
-                          // Let users save an existing trip, even though it may not be available on some days.
-                          // TODO: improve checking trip availability.
-                          disabled={isDayDisabled && isCreating}
-                          id={day}
-                          name={day}
-                          type="checkbox"
-                        />
-                        <label htmlFor={day}>
-                          <InvisibleA11yLabel>
-                            <FormattedDayOfWeek day={day} />
-                          </InvisibleA11yLabel>
-                          <span aria-hidden>
-                            {/* The abbreviated text is visual only. Screen readers should read out the full day. */}
-                            <FormattedDayOfWeekCompact day={day} />
-                          </span>
-                        </label>
-                        <Glyphicon aria-hidden glyph="ban-circle" />
-                        <InvisibleA11yLabel>
-                          {notAvailableText}
-                        </InvisibleA11yLabel>
-                      </span>
-                    )
-                  })}
-                </AvailableDays>
-                <HelpBlock role="status">
-                  {finalItineraryExistence ? (
-                    <FormattedMessage id="components.TripBasicsPane.tripIsAvailableOnDaysIndicated" />
-                  ) : (
-                    <ProgressBar
-                      active
-                      label={
-                        <FormattedMessage id="components.TripBasicsPane.checkingItineraryExistence" />
-                      }
-                      now={100}
-                    />
-                  )}
-                </HelpBlock>
-              </>
-            )}
-            <Radio checked={isOneTime} onChange={this._handleOneTimeTrip}>
-              <FormattedMessage
-                id="components.TripBasicsPane.onlyOnDate"
-                values={{ date: itinerary.startTime }}
-              />
-            </Radio>
-
-            {/* Scroll to the trip name/days fields if submitting and there is an error on these fields. */}
-            <FormikErrorFocus align="middle" duration={200} />
-          </FormGroup>
+          {/* Scroll to the trip name/days fields if submitting and there is an error on these fields. */}
+          <FormikErrorFocus align="middle" duration={200} />
         </div>
       )
     }
@@ -386,7 +456,9 @@ class TripBasicsPane extends Component<TripBasicsProps, State> {
 
 const mapStateToProps = (state: AppReduxState) => {
   const { itineraryExistence } = state.user
+  const { disableSingleItineraryDays } = state.otp.config
   return {
+    disableSingleItineraryDays,
     itineraryExistence
   }
 }

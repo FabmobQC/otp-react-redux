@@ -3,9 +3,11 @@ import { connect } from 'react-redux'
 import { Envelope } from '@styled-icons/fa-regular/Envelope'
 import { ExternalLinkSquareAlt } from '@styled-icons/fa-solid/ExternalLinkSquareAlt'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { GlobeAmericas, MapMarked, MapPin } from '@styled-icons/fa-solid'
+import { GlobeAmericas } from '@styled-icons/fa-solid/GlobeAmericas'
 import { GraduationCap } from '@styled-icons/fa-solid/GraduationCap'
 import { History } from '@styled-icons/fa-solid/History'
+import { MapMarked } from '@styled-icons/fa-solid/MapMarked'
+import { MapPin } from '@styled-icons/fa-solid/MapPin'
 import { Undo } from '@styled-icons/fa-solid/Undo'
 import React, { Component, Fragment, useContext } from 'react'
 import SlidingPane from 'react-sliding-pane'
@@ -233,7 +235,7 @@ class AppMenu extends Component<
             {/* This item is duplicated by the view-switcher, but only shown on mobile
             when the view switcher isn't shown (using css) */}
             <AppMenuItem
-              className="app-menu-route-viewer-link"
+              className="app-menu-nearby-viewer-link"
               icon={<MapPin />}
               onClick={this._togglePane}
               text={intl.formatMessage({

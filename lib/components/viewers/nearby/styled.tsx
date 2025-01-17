@@ -18,6 +18,18 @@ export const NearbySidebarContainer = styled.ol`
   gap: 1em;
   padding: 0 1em;
   list-style: none;
+
+  & > li:last-of-type {
+    margin-bottom: 1em;
+  }
+
+  & > li:first-of-type {
+    margin-top: 1em;
+  }
+
+  @media (max-width: 768px) {
+    min-height: calc(100vh - 50px);
+  }
 `
 
 export const Card = styled.div`
@@ -48,7 +60,6 @@ export const CardTitle = styled.p`
   display: flex;
   font-size: 22px;
   font-weight: 600;
-  gap: 0.5ch;
   grid-column: 1;
   margin: 0;
   /* Prevent svg and images to be taller than the text. */

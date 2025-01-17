@@ -1,4 +1,7 @@
-import { Bell, BellSlash, Calendar, Clock } from '@styled-icons/fa-regular'
+import { Bell } from '@styled-icons/fa-regular/Bell'
+import { BellSlash } from '@styled-icons/fa-regular/BellSlash'
+import { Calendar } from '@styled-icons/fa-regular/Calendar'
+import { Clock } from '@styled-icons/fa-regular/Clock'
 import { FormattedDate, FormattedMessage, useIntl } from 'react-intl'
 import LocationIcon from '@opentripplanner/location-icon'
 import React from 'react'
@@ -114,6 +117,7 @@ const ToggleNotificationButton = styled.button`
 const TripSummaryPane = ({
   from,
   handleTogglePauseMonitoring,
+  isReadOnly,
   monitoredTrip,
   pendingRequest,
   to
@@ -224,20 +228,24 @@ const TripSummaryPane = ({
                     values={{ leadTimeInMinutes }}
                   />
                 )}
-                <br />
-                <ToggleNotificationButton
-                  disabled={pendingRequest === 'pause'}
-                  onClick={testHandle}
-                >
-                  {pendingRequest === 'pause' ? (
-                    /* Make loader fit */
-                    <InlineLoading />
-                  ) : monitoredTrip.isActive ? (
-                    <FormattedMessage id="components.SavedTripList.pause" />
-                  ) : (
-                    <FormattedMessage id="components.SavedTripList.resume" />
-                  )}
-                </ToggleNotificationButton>
+                {!isReadOnly && (
+                  <>
+                    <br />
+                    <ToggleNotificationButton
+                      disabled={pendingRequest === 'pause'}
+                      onClick={testHandle}
+                    >
+                      {pendingRequest === 'pause' ? (
+                        /* Make loader fit */
+                        <InlineLoading />
+                      ) : monitoredTrip.isActive ? (
+                        <FormattedMessage id="components.SavedTripList.pause" />
+                      ) : (
+                        <FormattedMessage id="components.SavedTripList.resume" />
+                      )}
+                    </ToggleNotificationButton>
+                  </>
+                )}
               </span>
             </TripDetailWithIcon>
           </TripDetailsList>
