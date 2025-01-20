@@ -243,6 +243,10 @@ modes:
       modes:
         - mode: TRANSIT
         - mode: FLEX
+          qualifier:  ACCESS
+        - mode: FLEX
+          qualifier: EGRESS
+        - mode: FLEX
           qualifier: DIRECT
     - iconName: bicycle
       key: bicycle
