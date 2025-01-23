@@ -8,8 +8,8 @@ import React, { ReactElement, useState } from 'react'
 import * as mapActions from '../../../lib/actions/map'
 import { amenitiesColors } from '../../actions/ui-constants'
 import { Amenity } from '../../reducers/create-fabmob-reducer'
+import { AmenityIndicator } from '../../icons/amenity-indicator'
 import { fetchAmenities } from '../../actions/fabmob'
-import { TouristicPlaceIndicator } from '../../icons/touristic-places-indicator'
 import FromToLocationPicker from '../../@opentripplanner/from-to-location-picker'
 
 type AmenitiesOverlayProps = {
@@ -73,7 +73,7 @@ const AmenityMarker = ({
       popupProps={{ offset: 10 }}
       position={[amenity.latitude, amenity.longitude]}
     >
-      <TouristicPlaceIndicator color={getAmenityColor(amenity)} size={size} />
+      <AmenityIndicator color={getAmenityColor(amenity)} size={size} />
     </MarkerWithPopup>
   )
 }
