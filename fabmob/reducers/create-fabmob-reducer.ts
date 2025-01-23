@@ -1,5 +1,15 @@
 import update from 'immutability-helper'
 
+export type AmenityType = 'Education' | 'Grocery Store' | 'Health center'
+
+export interface Amenity {
+  id: string
+  latitude: number
+  longitude: number
+  name: string
+  type: AmenityType
+}
+
 export interface CommunautoStation {
   id: string
   latitude: number
@@ -37,12 +47,14 @@ export interface TouristicPlace {
 }
 
 interface FabmobState {
+  amenities: Amenity[]
   communautoStations: CommunautoStation[]
   touristicPlaces: TouristicPlace[]
 }
 
 export function getFabmobInitialState(config: unknown): FabmobState {
   return {
+    amenities: [],
     communautoStations: [],
     touristicPlaces: []
   }
@@ -53,6 +65,12 @@ function createFabmobReducer(config: unknown): unknown {
 
   return (state = initialState, action: any) => {
     switch (action.type) {
+      case 'SET_AMENITIES': {
+        return update(state, {
+          amenities: { $set: action.payload }
+        })
+      }
+
       case 'SET_COMMUNAUTO_STATIONS': {
         return update(state, {
           communautoStations: { $set: action.payload }

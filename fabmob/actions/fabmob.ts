@@ -2,6 +2,30 @@ import { createAction } from 'redux-actions'
 
 import { assembleBasePath } from '../../lib/actions/api'
 
+export const setAmenities = createAction('SET_AMENITIES')
+
+export const fetchAmenities = (): unknown => {
+  return async (dispatch: any, getState: any): Promise<void> => {
+    const state = getState()
+    const { config } = state.otp
+
+    const url = `${assembleBasePath(config)}/amenities`
+
+    try {
+      const response = await fetch(url, {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: 'GET'
+      })
+      const data = await response.json()
+      dispatch(setAmenities(data.amenities))
+    } catch (error) {
+      console.error('Error fetching Communauto stations', error)
+    }
+  }
+}
+
 export const setCommunautoStations = createAction('SET_COMMUNAUTO_STATIONS')
 
 export const fetchCommunautoStations = (): unknown => {
