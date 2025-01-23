@@ -1,8 +1,8 @@
 import { FormattedMessage, useIntl } from 'react-intl'
 import React from 'react'
 
-import Link from '../util/link'
 import { AppConfig } from '../../util/config-types'
+import Link from '../util/link'
 
 /**
  * This component is a switcher between
@@ -31,6 +31,11 @@ const ViewSwitcher = ({ config }: { config: AppConfig }): JSX.Element => {
       {config.fabmob.displayTouristicPlaces && (
         <Link to="/touristic-places" tracking>
           <FormattedMessage id="components.TouristicPlacesViewer.shortTitle" />
+        </Link>
+      )}
+      {config.fabmob.displayAmenities && (
+        <Link to="/amenities" tracking>
+          <FormattedMessage id="components.AmenitiesViewer.shortTitle" />
         </Link>
       )}
     </div>

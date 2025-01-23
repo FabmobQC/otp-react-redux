@@ -715,6 +715,12 @@ language:
           agencyName: "Agency Name"
           phoneNumber: "Phone Number"
           agencyUrl: "Website"
+      AmenitiesViewer:
+        shortTitle: Amenities
+        legendEducation: Education
+        legendGroceryStore: Grocery Store
+        legendHealthCenter: Health Center
+        legendDefault: Others
       TouristicPlacesViewer:
         shortTitle: Touristic Places
         legendAttraction: Attraction
@@ -783,6 +789,12 @@ language:
           agencyName: "Nom de l'agence"
           phoneNumber: "Numéro de téléphone"
           agencyUrl: "Site web"
+      AmenitiesViewer:
+        shortTitle: Opportunités
+        legendEducation: Éducation
+        legendGroceryStore: Épicerie
+        legendHealthCenter: Centre de santé
+        legendDefault: Others
       TouristicPlacesViewer:
         shortTitle: Lieux touristiques
         legendAttraction: Attraction
