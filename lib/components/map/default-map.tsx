@@ -368,9 +368,9 @@ class DefaultMap extends Component {
           />
           <TripViewerOverlay />
           <ElevationPointMarker />
-          <AmenitiesOverlay />
-          <CommunautoStationsOverlay />
-          <TouristicPlacesOverlay />
+          {config.fabmob.displayAmenities && <AmenitiesOverlay />}
+          {config.fabmob.displayCommunautoStations && <CommunautoStationsOverlay />}
+          {config.fabmob.displayTouristicPlaces && <TouristicPlacesOverlay />}
           <AdditionalPlacesOverlay />
 
           {/* The configurable overlays */}

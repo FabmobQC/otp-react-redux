@@ -2,12 +2,13 @@ import { FormattedMessage, useIntl } from 'react-intl'
 import React from 'react'
 
 import Link from '../util/link'
+import { AppConfig } from '../../util/config-types'
 
 /**
  * This component is a switcher between
  * the main views of the application.
  */
-const ViewSwitcher = (): JSX.Element => {
+const ViewSwitcher = ({ config }: { config: AppConfig }): JSX.Element => {
   const intl = useIntl()
   return (
     <div
@@ -27,9 +28,11 @@ const ViewSwitcher = (): JSX.Element => {
       <Link to="/nearby" tracking>
         <FormattedMessage id="components.ViewSwitcher.nearby" />
       </Link>
-      <Link to="/touristic-places" tracking>
-        <FormattedMessage id="components.TouristicPlacesViewer.shortTitle" />
-      </Link>
+      {config.fabmob.displayTouristicPlaces && (
+        <Link to="/touristic-places" tracking>
+          <FormattedMessage id="components.TouristicPlacesViewer.shortTitle" />
+        </Link>
+      )}
     </div>
   )
 }

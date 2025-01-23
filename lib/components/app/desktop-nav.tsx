@@ -137,7 +137,7 @@ const DesktopNav = ({
             )}
           </Navbar.Brand>
 
-          <ViewSwitcher />
+          <ViewSwitcher config={otpConfig} />
 
           <StyledNav pullRight>
             {popupTarget && (

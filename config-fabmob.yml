@@ -888,3 +888,7 @@ localization:
 ### In routes, this will always show the routeLongName before the headsign
 ### !!! WARNING: in some feeds, this may show the long name twice. In some feeds, this may cause layout issues !!!
 #     alwaysShowLongName: false
+fabmob:
+  displayAmenities: true
+  displayCommunautoStations: true
+  displayTouristicPlaces: true

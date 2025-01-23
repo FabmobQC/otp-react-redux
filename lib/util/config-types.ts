@@ -431,4 +431,10 @@ export interface AppConfig {
   transitOperators?: TransitOperatorConfig[]
 
   // Add other config items as needed.
+  // eslint-disable-next-line typescript-sort-keys/interface
+  fabmob: {
+    displayAmenities: boolean
+    displayCommunautoStations: boolean
+    displayTouristicPlaces: boolean
+  }
 }
