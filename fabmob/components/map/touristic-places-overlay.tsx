@@ -30,9 +30,9 @@ const TouristicPlacesOverlay = ({
   }
   return (
     <>
-      {touristicPlaces.map((place) => (
+      {touristicPlaces.map((place, index) => (
         <TouristicPlaceMarker
-          key={place['Nom activité']}
+          key={index}
           setLocation={setLocation}
           touristicPlace={place}
         />
