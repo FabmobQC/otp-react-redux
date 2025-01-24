@@ -25,6 +25,7 @@ import { setLocation, setMapPopupLocationAndGeocode } from '../../actions/map'
 import { setViewedStop } from '../../actions/ui'
 import { updateOverlayVisibility } from '../../actions/config'
 import AdditionalPlacesOverlay from '../../../fabmob/components/map/additional-places-overlay'
+import AdministrativeRegionsLayer from '../../../fabmob/components/map/administrative-regions-layer'
 import AmenitiesOverlay from '../../../fabmob/components/map/amenities-overlay'
 import CommunautoStationsOverlay from '../../../fabmob/components/map/communauto-stations-overlay'
 import TouristicPlacesOverlay from '../../../fabmob/components/map/touristic-places-overlay'
@@ -294,7 +295,6 @@ class DefaultMap extends Component {
       vehicleRentalStations,
       viewedRouteStops
     } = this.props
-    console.log("cossin config", config)
     const { getCustomMapOverlays, getTransitiveRouteLabel, ModeIcon } =
       this.context
     const { baseLayers, maxZoom, navigationControlPosition, overlays } =
@@ -369,9 +369,14 @@ class DefaultMap extends Component {
           <TripViewerOverlay />
           <ElevationPointMarker />
           {config.fabmob.displayAmenities && <AmenitiesOverlay />}
-          {config.fabmob.displayCommunautoStations && <CommunautoStationsOverlay />}
+          {config.fabmob.displayCommunautoStations && (
+            <CommunautoStationsOverlay />
+          )}
           {config.fabmob.displayTouristicPlaces && <TouristicPlacesOverlay />}
           <AdditionalPlacesOverlay />
+          {config.fabmob.displayAdministrativeRegions && (
+            <AdministrativeRegionsLayer />
+          )}
 
           {/* The configurable overlays */}
           {overlays?.map((overlayConfig, k) => {

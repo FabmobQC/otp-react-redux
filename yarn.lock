@@ -2517,7 +2517,7 @@
     "@opentripplanner/core-utils" "^12.0.0"
     "@opentripplanner/humanize-distance" "^1.2.0"
     "@opentripplanner/icons" "^3.0.0"
-    "@opentripplanner/location-icon" "file:../../Library/Caches/Yarn/v6/npm-@opentripplanner-itinerary-body-6.1.1-d3d6d6ce-3a30-437c-bb3e-dabec66f36a3-1737132284165/node_modules/@opentripplanner/location-icon"
+    "@opentripplanner/location-icon" "file:../../Library/Caches/Yarn/v6/npm-@opentripplanner-itinerary-body-6.1.1-b84299d9-a075-4dc7-8e02-bfe116b2d04b-1737708559342/node_modules/@opentripplanner/location-icon"
     "@styled-icons/fa-solid" "^10.34.0"
     "@styled-icons/foundation" "^10.34.0"
     date-fns "^2.28.0"
@@ -2552,7 +2552,7 @@
     "@opentripplanner/core-utils" "^12.0.0"
     "@opentripplanner/geocoder" "^3.0.2"
     "@opentripplanner/humanize-distance" "^1.2.0"
-    "@opentripplanner/location-icon" "file:../../Library/Caches/Yarn/v6/npm-@opentripplanner-location-field-3.1.2-d847ee31-326d-444a-b4a3-43cedf61fb3d-1737132284167/node_modules/@opentripplanner/location-icon"
+    "@opentripplanner/location-icon" "file:../../Library/Caches/Yarn/v6/npm-@opentripplanner-location-field-3.1.2-247146ad-bbb8-4d73-b40a-6966f89bcc60-1737708559345/node_modules/@opentripplanner/location-icon"
     "@styled-icons/fa-solid" "^10.34.0"
     throttle-debounce "^2.1.0"
 

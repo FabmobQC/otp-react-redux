@@ -901,6 +901,7 @@ localization:
 ### !!! WARNING: in some feeds, this may show the long name twice. In some feeds, this may cause layout issues !!!
 #     alwaysShowLongName: false
 fabmob:
+  displayAdministrativeRegions: true
   displayAmenities: true
   displayCommunautoStations: true
   displayTouristicPlaces: true

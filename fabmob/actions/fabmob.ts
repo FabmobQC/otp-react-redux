@@ -2,6 +2,32 @@ import { createAction } from 'redux-actions'
 
 import { assembleBasePath } from '../../lib/actions/api'
 
+export const setAdministrativeRegions = createAction(
+  'SET_ADMINISTRATIVE_REGIONS'
+)
+
+export const fetchAdministrativeRegions = (): unknown => {
+  return async (dispatch: any, getState: any): Promise<void> => {
+    const state = getState()
+    const { config } = state.otp
+
+    const url = `${assembleBasePath(config)}/administrative-regions`
+
+    try {
+      const response = await fetch(url, {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: 'GET'
+      })
+      const data = await response.json()
+      dispatch(setAdministrativeRegions(data))
+    } catch (error) {
+      console.error('Error fetching administrative regions', error)
+    }
+  }
+}
+
 export const setAmenities = createAction('SET_AMENITIES')
 
 export const fetchAmenities = (): unknown => {

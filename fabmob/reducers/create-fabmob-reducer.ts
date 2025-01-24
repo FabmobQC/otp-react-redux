@@ -47,6 +47,7 @@ export interface TouristicPlace {
 }
 
 interface FabmobState {
+  administrativeRegions: string | undefined
   amenities: Amenity[]
   communautoStations: CommunautoStation[]
   touristicPlaces: TouristicPlace[]
@@ -54,6 +55,7 @@ interface FabmobState {
 
 export function getFabmobInitialState(config: unknown): FabmobState {
   return {
+    administrativeRegions: undefined,
     amenities: [],
     communautoStations: [],
     touristicPlaces: []
@@ -65,6 +67,12 @@ function createFabmobReducer(config: unknown): unknown {
 
   return (state = initialState, action: any) => {
     switch (action.type) {
+      case 'SET_ADMINISTRATIVE_REGIONS': {
+        return update(state, {
+          administrativeRegions: { $set: action.payload }
+        })
+      }
+
       case 'SET_AMENITIES': {
         return update(state, {
           amenities: { $set: action.payload }
