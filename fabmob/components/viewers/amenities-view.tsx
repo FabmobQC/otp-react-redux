@@ -2,31 +2,42 @@ import { connect } from 'react-redux'
 import { FormattedMessage, useIntl } from 'react-intl'
 import React, { ReactElement } from 'react'
 
-import { amenitiesColors } from '../../actions/ui-constants'
 import { AmenityIndicator } from '../../icons/amenity-indicator'
+import { AmenityType } from '../../reducers/create-fabmob-reducer'
 import { AppReduxState } from '../../../lib/util/state-types'
 
-const legendItems = [
+interface LegendItem {
+  amenityType: AmenityType
+  label: string
+}
+
+const legendItems: LegendItem[] = [
   {
-    color: amenitiesColors.education,
+    amenityType: 'Education',
     label: 'components.AmenitiesViewer.legendEducation'
   },
   {
-    color: amenitiesColors.groceryStore,
+    amenityType: 'Grocery Store',
     label: 'components.AmenitiesViewer.legendGroceryStore'
   },
   {
-    color: amenitiesColors.healthCenter,
+    amenityType: 'Health center',
     label: 'components.AmenitiesViewer.legendHealthCenter'
   }
 ]
 
-const LegendItem = ({ color, label }: { color: string; label: string }) => {
+const LegendItem = ({
+  amenityType,
+  label
+}: {
+  amenityType: AmenityType
+  label: string
+}) => {
   const intl = useIntl()
   return (
     <div style={{ alignItems: 'center', display: 'flex', padding: '10px' }}>
-      <AmenityIndicator color={color} size="20px" />
-      <div style={{ width: '20px' }} />
+      <AmenityIndicator amenityType={amenityType} size="30px" />
+      <div style={{ width: '10px' }} />
       <div>{intl.formatMessage({ id: label })}</div>
     </div>
   )
@@ -47,7 +58,7 @@ const AmenitiesView = (): ReactElement => {
         <FormattedMessage id="components.AmenitiesViewer.shortTitle" />
       </h1>
       {legendItems.map((item) => (
-        <LegendItem key={item.label} {...item} />
+        <LegendItem key={item.amenityType} {...item} />
       ))}
     </div>
   )

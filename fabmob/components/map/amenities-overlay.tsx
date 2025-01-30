@@ -6,7 +6,6 @@ import { connect } from 'react-redux'
 import React, { ReactElement, useState } from 'react'
 
 import * as mapActions from '../../../lib/actions/map'
-import { amenitiesColors } from '../../actions/ui-constants'
 import { Amenity } from '../../reducers/create-fabmob-reducer'
 import { AmenityIndicator } from '../../icons/amenity-indicator'
 import { fetchAmenities } from '../../actions/fabmob'
@@ -50,7 +49,7 @@ const AmenityMarker = ({
   amenity,
   setLocation
 }: AmenityMarkerProps): ReactElement => {
-  const size = '10px'
+  const size = '20px'
   return (
     <MarkerWithPopup
       popupContents={
@@ -73,22 +72,9 @@ const AmenityMarker = ({
       popupProps={{ offset: 10 }}
       position={[amenity.latitude, amenity.longitude]}
     >
-      <AmenityIndicator color={getAmenityColor(amenity)} size={size} />
+      <AmenityIndicator amenityType={amenity.type} size={size} />
     </MarkerWithPopup>
   )
-}
-
-const getAmenityColor = (amenity: Amenity): string => {
-  switch (amenity.type) {
-    case 'Education':
-      return amenitiesColors.education
-    case 'Grocery Store':
-      return amenitiesColors.groceryStore
-    case 'Health center':
-      return amenitiesColors.healthCenter
-    default:
-      return amenitiesColors.default
-  }
 }
 
 const mapStateToProps = (state: any) => {

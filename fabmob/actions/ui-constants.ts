@@ -13,10 +13,3 @@ export const touristicPlacesColors = {
   shopping: '#FBCFC9',
   showFestival: '#5A3186'
 } as const
-
-export const amenitiesColors = {
-  default: '#FFD700',
-  education: '#FF6700',
-  groceryStore: '#2C003E',
-  healthCenter: '#00A676'
-} as const
