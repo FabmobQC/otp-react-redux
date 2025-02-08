@@ -25,9 +25,11 @@ const ViewSwitcher = ({ config }: { config: AppConfig }): JSX.Element => {
       <Link to="/route" tracking>
         <FormattedMessage id="components.RouteViewer.shortTitle" />
       </Link>
+      {config.fabmob.displayNearby && (
       <Link to="/nearby" tracking>
         <FormattedMessage id="components.ViewSwitcher.nearby" />
       </Link>
+      )}
       {config.fabmob.displayTouristicPlaces && (
         <Link to="/touristic-places" tracking>
           <FormattedMessage id="components.TouristicPlacesViewer.shortTitle" />

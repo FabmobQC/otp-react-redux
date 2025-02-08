@@ -904,4 +904,5 @@ fabmob:
   displayAdministrativeRegions: true
   displayAmenities: true
   displayCommunautoStations: true
+  displayNearby: true
   displayTouristicPlaces: true

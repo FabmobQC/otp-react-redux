@@ -436,6 +436,7 @@ export interface AppConfig {
     displayAdministrativeRegions: boolean
     displayAmenities: boolean
     displayCommunautoStations: boolean
+    displayNearby: boolean
     displayTouristicPlaces: boolean
   }
 }
