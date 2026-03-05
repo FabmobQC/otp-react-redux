@@ -1,7 +1,12 @@
 import { differenceInMinutes } from 'date-fns'
+import {
+  FareProductSelector,
+  Itinerary,
+  Leg,
+  Place
+} from '@opentripplanner/types'
 import { isTransitLeg } from '@opentripplanner/core-utils/lib/itinerary'
-import { Itinerary, Leg, Place } from '@opentripplanner/types'
-import { toDate, utcToZonedTime } from 'date-fns-tz'
+import { utcToZonedTime } from 'date-fns-tz'
 import coreUtils from '@opentripplanner/core-utils'
 import hash from 'object-hash'
 import memoize from 'lodash.memoize'
@@ -14,15 +19,6 @@ export interface ItineraryStartTime {
   itinerary: ItineraryWithIndex
   legs: Leg[]
   realtime: boolean
-}
-
-// FIXME: replace with OTP2 logic.
-interface LegWithOtp1HailedCar extends Leg {
-  hailedCar?: boolean
-}
-
-export interface ItineraryWithOtp1HailedCar extends Itinerary {
-  legs: LegWithOtp1HailedCar[]
 }
 
 interface OtpResponse {
@@ -43,6 +39,7 @@ export interface ItineraryWithCO2Info extends Itinerary {
 export interface ItineraryWithSortingCosts extends Itinerary {
   rank: number
   totalFare: number
+  transitFare?: number
 }
 
 export interface ItineraryFareSummary {
@@ -52,25 +49,16 @@ export interface ItineraryFareSummary {
   transitFare?: number
 }
 
-// Similar to OTP-UI's FareProductSelector, but the fields are nullable.
-interface RelaxedFareProductSelector {
-  mediumId: string | null
-  riderCategoryId: string | null
-}
-
 /**
  * Determines whether the specified Itinerary can be monitored.
  * @returns true if an itinerary has no rental or ride hail leg (e.g. CAR_RENT, CAR_HAIL, BICYCLE_RENT, etc.).
  *   (We use the corresponding fields returned by OTP to get transit legs and rental/ride hail legs.)
  */
-export function itineraryCanBeMonitored(
-  itinerary?: ItineraryWithOtp1HailedCar
-): boolean {
+export function itineraryCanBeMonitored(itinerary?: Itinerary): boolean {
   return (
     !!itinerary?.legs &&
     !itinerary.legs.some(
-      (leg: LegWithOtp1HailedCar) =>
-        leg.rentedBike || leg.rentedCar || leg.rentedVehicle || leg.hailedCar
+      (leg: Leg) => leg.rentedBike || !!leg.rideHailingEstimate
     )
   )
 }
@@ -80,42 +68,18 @@ export function getMinutesUntilItineraryStart(itinerary: Itinerary): number {
 }
 
 /**
- * Gets the first transit leg of the given itinerary, or null if none found.
- */
-function getFirstTransitLeg(itinerary: Itinerary) {
-  return itinerary?.legs?.find(isTransitLeg)
-}
-
-/**
- * Get the first stop ID from the itinerary in the underscore format required by
- * the startTransitStopId query param (e.g., TRIMET_12345 instead of TRIMET:12345).
- */
-export function getFirstStopId(itinerary: Itinerary): string | undefined {
-  return getFirstTransitLeg(itinerary)?.from.stopId?.replace(':', '_')
-}
-
-/**
  * Returns the set of monitored days that will be initially shown to the user
  * for the given itinerary.
  * @param itinerary The itinerary from which the default monitored days are extracted.
- * @returns ['monday' thru 'friday'] if itinerary happens on a weekday(*),
- *          ['saturday', 'sunday'] if itinerary happens on a saturday/sunday(*).
- * (*) For transit itineraries, the first transit leg is used to make
- * the determination. Otherwise, the itinerary startTime is used.
+ * @returns ['monday' thru 'friday'] if itinerary happens on a weekday,
+ *          ['saturday', 'sunday'] if itinerary happens on a saturday/sunday,
+ *          based on the itinerary startTime.
  */
 export function getItineraryDefaultMonitoredDays(
   itinerary: Itinerary,
   timeZone = coreUtils.time.getUserTimezone()
 ): string[] {
-  const firstTransitLeg = getFirstTransitLeg(itinerary)
-  // firstTransitLeg should be non-null because only transit trips can be monitored at this time.
-  // - using serviceDate covers legs that start past midnight.
-  // - The format of serviceDate can either be 'yyyyMMdd' (OTP v1) or 'yyyy-MM-dd' (OTP v2)
-  //   and both formats are correctly handled by toDate from date-fns-tz.
-  const startDate = firstTransitLeg
-    ? toDate(firstTransitLeg.serviceDate || '', { timeZone })
-    : utcToZonedTime(new Date(itinerary.startTime), timeZone)
-
+  const startDate = utcToZonedTime(new Date(itinerary.startTime), timeZone)
   const dayOfWeek = startDate.getDay()
   return dayOfWeek === 0 || dayOfWeek === 6 ? WEEKEND_DAYS : WEEKDAYS
 }
@@ -131,9 +95,12 @@ function legLocationsAreEqual(legLocation: Place, other: Place) {
 
 export function itinerariesAreEqual(
   itinerary: Itinerary,
-  other: Itinerary
+  other: Itinerary,
+  defaultFareType: FareProductSelector
 ): boolean {
   return (
+    getFare(itinerary, defaultFareType).transitFare ===
+      getFare(other, defaultFareType).transitFare &&
     itinerary.legs.length === other.legs.length &&
     itinerary.legs.every((leg, index) => {
       const otherLeg = other?.legs?.[index]
@@ -154,6 +121,14 @@ export function getLastLegEndTime(legs: Leg[]): number {
   return +legs[legs.length - 1].endTime
 }
 
+// TODO: is there a type for OTP Modes?
+export function getTotalTimeForMode(legs: Leg[], mode: string): number {
+  return legs
+    .filter((l) => l.mode === mode)
+    .map((l) => l.duration)
+    .reduce((acc, cur) => acc + cur, 0)
+}
+
 export function sortStartTimes(
   startTimes: ItineraryStartTime[]
 ): ItineraryStartTime[] {
@@ -163,14 +138,10 @@ export function sortStartTimes(
 }
 
 // Ignore certain keys that could add significant calculation time to hashing.
-// The alerts are irrelevant, but the intermediateStops, interStopGeometry and
+// The alerts are irrelevant, but the intermediateStops, legGeometry and
 // steps could have the legGeometry substitute as an equivalent hash value
-const blackListedKeys = [
-  'alerts',
-  'intermediateStops',
-  'interStopGeometry',
-  'steps'
-]
+const blackListedKeys = ['alerts', 'intermediateStops', 'legGeometry', 'steps']
+
 // make blackListedKeys into an object due to superior lookup performance
 const blackListedKeyLookup: Record<string, boolean> = {}
 blackListedKeys.forEach((key) => {
@@ -211,6 +182,8 @@ export function collectItinerariesWithoutDuplicates(
       }
     })
   })
+
+  console.log(itineraries)
 
   return itineraries
 }
@@ -305,7 +278,7 @@ function getDriveTime(itinerary: Itinerary): number {
  */
 export function getFare(
   itinerary: Itinerary,
-  defaultFareType?: RelaxedFareProductSelector
+  defaultFareType?: FareProductSelector
 ): ItineraryFareSummary {
   const { maxTNCFare, minTNCFare } =
     coreUtils.itinerary.calculateTncFares(itinerary)
@@ -354,9 +327,9 @@ const DEFAULT_COSTS = {
 export function getTotalFare(
   itinerary: Itinerary,
   configCosts = {},
-  defaultFareType: RelaxedFareProductSelector = {
-    mediumId: null,
-    riderCategoryId: null
+  defaultFareType: FareProductSelector = {
+    mediumId: undefined,
+    riderCategoryId: undefined
   }
 ): number | null {
   // Get TNC fares.
@@ -454,10 +427,12 @@ export function addSortingCosts<T extends Itinerary>(
     totalFareResult === null ? Number.MAX_VALUE : totalFareResult
 
   const rank = calculateItineraryCost(itinerary, config)
+  const transitFare = getFare(itinerary).transitFare
   return {
     ...itinerary,
     rank,
-    totalFare
+    totalFare,
+    transitFare
   }
 }
 

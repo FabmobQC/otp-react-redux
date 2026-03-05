@@ -1,10 +1,7 @@
 // This file is intended to contain configuration types,
 // each suffixed with "Config", as in "MapConfig", "MenuItemConfig", etc.
 
-import {
-  CO2ConfigType,
-  FareTableLayout
-} from '@opentripplanner/trip-details/lib/types'
+import { CO2ConfigType } from '@opentripplanner/trip-details/lib/types'
 import {
   Company,
   FareProductSelector,
@@ -13,10 +10,13 @@ import {
   ModeSetting,
   ModeSettingValues,
   TransitOperator,
+  UnitSystem,
   VehicleRentalMapOverlaySymbol
 } from '@opentripplanner/types'
-import { ControlPosition } from 'react-map-gl'
+import { ControlPosition } from 'react-map-gl/maplibre'
 import { GeocoderConfig as GeocoderConfigOtpUI } from '@opentripplanner/geocoder'
+
+import { NearbyFilterKey } from './state-types'
 
 /** Accessibility threshold settings */
 export interface AccessibilityScoreThresholdConfig {
@@ -68,9 +68,15 @@ interface ApiKeyConfig {
 
 export type BugsnagConfig = ApiKeyConfig
 export type MapillaryConfig = ApiKeyConfig
+export type NearbyFilterConfig = {
+  cardType: NearbyFilterKey
+  default?: boolean
+  iconName: string
+}
 
 export type NearbyViewConfig = {
   alwaysShowLongName?: boolean
+  filters?: Array<NearbyFilterConfig>
   hideEmptyStops?: boolean
   radius?: number
   showShadowDotOnMapDrag?: boolean
@@ -235,6 +241,7 @@ export interface TransitiveConfig {
 export interface MapConfig {
   autoFlyOnTripFormUpdate?: boolean
   baseLayers?: BaseLayerConfig[]
+  forceDisplayEndpointsPopup?: boolean
   initLat?: number
   initLon?: number
   initZoom?: number
@@ -263,6 +270,7 @@ export type ItinerarySortOption =
   | 'WALKTIME'
   | 'COST'
   | 'DEPARTURETIME'
+  | 'FARE'
 
 export interface ItineraryCostWeights {
   driveReluctance: number
@@ -282,8 +290,6 @@ export interface ItineraryConfig {
   defaultSort?: ItinerarySortOption
   disableMetroSeperatorDot?: true
   exclusiveErrors?: string[]
-  fareDetailsLayout?: FareTableLayout[]
-  fareKeyNameMap?: Record<string, string>
   fillModeIcons?: boolean
   groupByMode?: boolean
   groupTransitModes?: boolean
@@ -301,6 +307,8 @@ export interface ItineraryConfig {
   showLegDurations?: boolean
   showPlanFirstLastButtons?: boolean
   showRouteFares?: boolean
+  /** Whether to show the x minutes late/early in the itinerary body */
+  showScheduleDeviation?: boolean
   sortModes?: ItinerarySortOption[]
   syncSortWithDepartArrive?: boolean
   weights?: ItineraryCostWeights
@@ -314,8 +322,10 @@ export interface CO2Config extends CO2ConfigType {
 }
 
 export interface GeocoderConfig extends GeocoderConfigOtpUI {
+  // TODO: This is a terrible key name. OTP-UI should just pull this from the geocoder config...
+  geocoderResultsOrder?: Array<'STATIONS' | 'STOPS' | 'OTHER'>
   maxNearbyStops?: number
-  resultColors?: Record<string, string>
+  resultsColors?: Record<string, string>
   resultsCount?: number
   type: string
 }
@@ -362,6 +372,17 @@ export interface RouteViewerConfig {
   maxRealtimeVehicleAge?: number
   /** Use OTP date limiting to only show current service week in list */
   onlyShowCurrentServiceWeek?: boolean
+  /** Setting to sort routes by the number of vehicles on each pattern */
+  sortRoutePatternsByVehicleCount?: boolean
+  /** Whether to use the route color as the background color in the pattern viewer */
+  useRouteColorAsBackground?: boolean
+  /** Configure the caret on the realtime vehicle bubble (settings from OTP-UI props) */
+  vehicleIconCaret?: {
+    height?: number
+    offset?: number
+    position?: 'inner' | 'outer'
+    width?: number
+  }
   /** Disable vehicle highlight if necessary (e.g. custom or inverted icons) */
   vehicleIconHighlight?: boolean
   /** Customize vehicle icon padding (the default iconPadding is 2px in otp-ui) */
@@ -421,14 +442,14 @@ export interface AppConfig {
   routeViewer?: RouteViewerConfig
   /** Approx delay in seconds to reset the UI to an initial URL if there is no user activity */
   sessionTimeoutSeconds?: number
-  /** Whether to show the x minutes late/early in the itinerary body */
-  showScheduleDeviation?: boolean
   stopViewer?: StopScheduleViewerConfig
   /** Externally hosted terms of service URL */
   termsOfServiceLink?: string
   /** App title shown in the browser title bar. */
   title?: string
   transitOperators?: TransitOperatorConfig[]
+  translateExternalLinks?: boolean
+  units?: UnitSystem
 
   // Add other config items as needed.
   // eslint-disable-next-line typescript-sort-keys/interface

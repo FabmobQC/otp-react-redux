@@ -4,6 +4,7 @@ import { FormattedMessage, injectIntl, IntlShape } from 'react-intl'
 import React, { Component, FormEvent } from 'react'
 
 import * as apiActions from '../../actions/api'
+import * as formActions from '../../actions/form'
 import {
   advancedPanelClassName,
   mainPanelClassName,
@@ -25,12 +26,13 @@ import ViewerContainer from '../viewers/viewer-container'
 interface Props {
   activeSearch: any
   currentQuery: any
-  geocoderResultsOrder?: Array<string>
   intl: IntlShape
   mainPanelContent: number
   mobile?: boolean
   routingQuery: () => void
   showUserSettings: boolean
+  updateDateTimeIfEmpty: () => void
+  updateQueryTimeIfLeavingNow: () => void
 }
 
 /**
@@ -80,7 +82,15 @@ class BatchRoutingPanel extends Component<Props> {
   handleSubmit = (e: FormEvent) => e.preventDefault()
 
   handlePlanTripClick = () => {
-    const { currentQuery, intl, routingQuery } = this.props
+    const {
+      currentQuery,
+      intl,
+      routingQuery,
+      updateDateTimeIfEmpty,
+      updateQueryTimeIfLeavingNow
+    } = this.props
+    updateQueryTimeIfLeavingNow()
+    updateDateTimeIfEmpty()
     alertUserTripPlan(
       intl,
       currentQuery,
@@ -90,13 +100,7 @@ class BatchRoutingPanel extends Component<Props> {
   }
 
   render() {
-    const {
-      activeSearch,
-      geocoderResultsOrder,
-      intl,
-      mobile,
-      showUserSettings
-    } = this.props
+    const { activeSearch, intl, mobile, showUserSettings } = this.props
     const { planTripClicked } = this.state
     const mapAction = mobile
       ? intl.formatMessage({
@@ -164,7 +168,6 @@ class BatchRoutingPanel extends Component<Props> {
                   <div ref={this._mainPanelContentRef}>
                     <span className="batch-routing-panel-location-fields">
                       <LocationField
-                        geocoderResultsOrder={geocoderResultsOrder}
                         inputPlaceholder={intl.formatMessage(
                           { id: 'common.searchForms.enterStartLocation' },
                           { mapAction }
@@ -175,7 +178,6 @@ class BatchRoutingPanel extends Component<Props> {
                         showClearButton={!mobile}
                       />
                       <LocationField
-                        geocoderResultsOrder={geocoderResultsOrder}
                         inputPlaceholder={intl.formatMessage(
                           { id: 'common.searchForms.enterDestination' },
                           { mapAction }
@@ -222,6 +224,15 @@ class BatchRoutingPanel extends Component<Props> {
                       overflowY: 'hidden'
                     }}
                   >
+                    <InvisibleA11yLabel
+                      aria-live="assertive"
+                      as="div"
+                      role="alert"
+                    >
+                      {activeSearch?.pending > 0 && (
+                        <FormattedMessage id="common.forms.loading" />
+                      )}
+                    </InvisibleA11yLabel>
                     <NarrativeItineraries />
                   </div>
                 </div>
@@ -245,18 +256,18 @@ const mapStateToProps = (state: any) => {
   const { mainPanelContent } = state.otp.ui
   const currentQuery = state.otp.currentQuery
 
-  const geocoderResultsOrder = state.otp.config?.geocoder?.geocoderResultsOrder
   return {
     activeSearch: getActiveSearch(state),
     currentQuery,
-    geocoderResultsOrder,
     mainPanelContent,
     showUserSettings
   }
 }
 
 const mapDispatchToProps = {
-  routingQuery: apiActions.routingQuery
+  routingQuery: apiActions.routingQuery,
+  updateDateTimeIfEmpty: formActions.updateDateTimeIfEmpty,
+  updateQueryTimeIfLeavingNow: formActions.updateQueryTimeIfLeavingNow
 }
 
 export default connect(

@@ -8,6 +8,7 @@ import { Times } from '@styled-icons/fa-solid/Times'
 // @ts-expect-error not typescripted yet
 import PrintableItinerary from '@opentripplanner/printable-itinerary'
 import React, { Component, ReactNode } from 'react'
+import styled from 'styled-components'
 
 import {
   addPrintViewClassToRootHtml,
@@ -16,6 +17,7 @@ import {
 import { AppConfig } from '../../util/config-types'
 import { AppReduxState } from '../../util/state-types'
 import { ComponentContext } from '../../util/contexts'
+import { grey } from '../util/colors'
 import { IconWithText } from '../util/styledIcon'
 import PageTitle from '../util/page-title'
 import SpanWithSpace from '../util/span-with-space'
@@ -32,8 +34,20 @@ type Props = {
 }
 
 type State = {
+  attributionHTML?: string
   mapVisible?: boolean
 }
+
+const CustomAttribution = styled.div`
+  margin-top: 5px;
+  a {
+    color: ${grey[700]};
+  }
+`
+
+const ItineraryContainer = styled.div`
+  margin-top: 30px;
+`
 
 class TripPreviewLayoutBase extends Component<Props, State> {
   static contextType = ComponentContext
@@ -41,6 +55,7 @@ class TripPreviewLayoutBase extends Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
+      attributionHTML: ' ',
       mapVisible: true
     }
   }
@@ -53,10 +68,30 @@ class TripPreviewLayoutBase extends Component<Props, State> {
     window.print()
   }
 
+  _updateAttributionContent = () => {
+    const innerAttributionContent = document.querySelector(
+      '.maplibregl-ctrl-attrib-inner'
+    )?.innerHTML
+
+    if (
+      innerAttributionContent &&
+      innerAttributionContent !== this.state.attributionHTML
+    ) {
+      this.setState({ attributionHTML: innerAttributionContent })
+    }
+  }
+
+  componentDidMount() {
+    // Allow the attribution to fully render before we grab and set the state.
+    setTimeout(() => this._updateAttributionContent(), 200)
+  }
+
   componentDidUpdate() {
     // Add print-view class to html tag to ensure that iOS scroll fix only applies
     // to non-print views.
     addPrintViewClassToRootHtml()
+    // Sometimes moving the map can change the attribution.
+    this._updateAttributionContent()
   }
 
   componentWillUnmount() {
@@ -113,16 +148,24 @@ class TripPreviewLayoutBase extends Component<Props, State> {
         {/* The map, if visible */}
         {this.state.mapVisible && mapElement}
 
+        {this.state.attributionHTML && this.state.mapVisible && (
+          <CustomAttribution
+            dangerouslySetInnerHTML={{
+              __html: this.state.attributionHTML
+            }}
+          />
+        )}
+
         {/* The main itinerary body */}
         {itinerary && (
-          <>
+          <ItineraryContainer>
             <PrintableItinerary
               config={config}
               itinerary={itinerary}
               LegIcon={LegIcon}
             />
             <TripDetails className="percy-hide" itinerary={itinerary} />
-          </>
+          </ItineraryContainer>
         )}
       </div>
     )

@@ -1,5 +1,5 @@
 import { FormattedTime } from 'react-intl'
-import { isTransitLeg } from '@opentripplanner/core-utils/lib/itinerary'
+import { isFlex, isTransitLeg } from '@opentripplanner/core-utils/lib/itinerary'
 import { Leg } from '@opentripplanner/types'
 import React, { ReactElement } from 'react'
 import styled from 'styled-components'
@@ -33,7 +33,8 @@ function RealtimeTimeColumn({ isDestination, leg }: Props): ReactElement {
   }
 
   const timeMillis = isDestination ? leg.endTime : leg.startTime
-  const isRealtimeTransitLeg = isTransitLeg(leg) && leg.realTime
+  const isRealtimeTransitLeg =
+    !isDestination && isTransitLeg(leg) && leg.realTime
 
   // For non-transit legs show only the scheduled time.
   if (!isTransitLeg(leg)) {
@@ -50,6 +51,7 @@ function RealtimeTimeColumn({ isDestination, leg }: Props): ReactElement {
   return (
     <StyledStatusLabel
       delay={delaySeconds}
+      isFlex={isFlex(leg)}
       isRealtime={isRealtimeTransitLeg}
       originalTime={originalTimeMillis}
       time={timeMillis}

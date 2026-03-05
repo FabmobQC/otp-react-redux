@@ -116,7 +116,14 @@
   left: 0;
   position: fixed;
   right: 0;
-  top: 282px;
+  top: 270px;
+  transition: all 225ms ease;
+  transition-delay: 50ms;
+}
+
+.otp.mobile .batch-search-map.dt-open {
+  top: 325px;
+  transition: all 200ms ease;
 }
 
 /* Detailed options screen */
@@ -246,12 +253,17 @@
 }
 
 .otp.mobile .route-viewer-header {
+  padding: 12px;
   margin: 0;
 }
 
 @media (max-width: 768px){
-  .panel-default {
+  .saved-trip-panel .panel-default {
     width: 90%;
   }
 }
 
+.otp.mobile .nearby-view-location-field ul {
+  overflow-x: scroll;
+  max-width: 100%;
+}

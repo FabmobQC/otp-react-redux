@@ -9,7 +9,6 @@ import styled from 'styled-components'
 import * as uiActions from '../../actions/ui'
 import { AppReduxState } from '../../util/state-types'
 import { GREY_ON_WHITE } from '../util/colors'
-import { toastSuccess } from '../util/toasts'
 import PageTitle from '../util/page-title'
 
 import { EditedUser } from './types'
@@ -93,12 +92,6 @@ class Wizard extends Component<Props> {
         this._routeTo(nextId)
       }
     } else {
-      // Display a toast to acknowledge saved changes
-      // (although in reality, changes quietly took effect in previous screens).
-      toastSuccess(
-        title,
-        intl.formatMessage({ id: 'actions.user.preferencesSaved' })
-      )
       routeTo(returnTo)
     }
   }

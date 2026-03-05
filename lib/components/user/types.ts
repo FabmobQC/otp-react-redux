@@ -63,6 +63,7 @@ export interface User {
   relatedUsers?: CompanionInfo[]
   savedLocations?: UserSavedLocation[]
   storeTripHistory?: boolean
+  userSavedTripDefaults?: string
 }
 
 export type EditedUser = Omit<User, 'notificationChannel'> & {
@@ -93,7 +94,6 @@ export type MonitoredTrip = Record<DaysOfWeek, boolean> & {
   observers?: CompanionInfo[]
   otp2QueryParams: Record<string, unknown>
   primary?: DependentInfo
-  queryParams: Record<string, unknown>
   secondary?: CompanionInfo
   tripName: string
   userId: string
@@ -102,6 +102,7 @@ export type MonitoredTrip = Record<DaysOfWeek, boolean> & {
 export interface MonitoredTripProps {
   from?: Place
   handleTogglePauseMonitoring?: () => void
+  handleToggleSnoozeMonitoring?: () => void
   isReadOnly?: boolean
   monitoredTrip: MonitoredTrip
   pendingRequest?: boolean | string

@@ -16,7 +16,7 @@ import {
   BatchResultsScreen,
   BatchSearchScreen,
   MetroItinerary
-} from './index'
+} from '../lib/index'
 
 import BatchRoutingPanel from '../fabmob/components/app/batch-routing-panel'
 

@@ -7,19 +7,17 @@ import React, { ComponentType } from 'react'
 import { AppReduxState } from '../../../util/state-types'
 import { Icon, IconWithText } from '../../util/styledIcon'
 import { StopData } from '../../util/types'
-import InvisibleA11yLabel from '../../util/invisible-a11y-label'
-import Link from '../../util/link'
 import Strong from '../../util/strong-text'
 import TransitOperatorLogos from '../../util/transit-operator-icons'
 
-import { CardBody, CardHeader, CardTitle } from './styled'
+import { ActionLink, CardBody, CardHeader, CardTitle } from './styled'
 import DistanceDisplay from './distance-display'
 
 type Props = {
   actionIcon: ComponentType
   actionParams?: Record<string, unknown>
-  actionPath: string
-  actionText: JSX.Element
+  actionPath?: string
+  actionText?: JSX.Element
   fromToSlot: JSX.Element
   onZoomClick?: () => void
   stopData: StopData & { distance?: number }
@@ -56,37 +54,54 @@ const StopCardHeader = ({
             transitOperators={transitOperators}
           />
           <span>{stopData.name}</span>
-        </CardTitle>
-        <DistanceDisplay distance={stopData.distance} />
-      </CardHeader>
-      <CardBody>
-        <div>
-          <FormattedMessage
-            id="components.StopViewer.displayStopId"
-            values={{
-              stopId: stopData.code || stopData.gtfsId,
-              strong: Strong
-            }}
-          />
           {onZoomClick ? (
             <button
+              aria-label={zoomButtonText}
               className="link-button"
               onClick={onZoomClick}
               title={zoomButtonText}
             >
-              <Icon Icon={Search} style={{ marginLeft: '0.2em' }} />
-              <InvisibleA11yLabel>{zoomButtonText}</InvisibleA11yLabel>
+              <Icon
+                Icon={Search}
+                style={{
+                  bottom: 3,
+                  fontSize: 16,
+                  marginLeft: '1ch',
+                  position: 'relative'
+                }}
+              />
             </button>
           ) : null}
-          <Link
-            className="pull-right"
-            style={{ color: 'inherit', fontSize: 'small' }}
-            to={actionPath}
-            toParams={actionParams}
-          >
-            <IconWithText Icon={actionIcon}>{actionText}</IconWithText>
-          </Link>
-        </div>
+        </CardTitle>
+        <DistanceDisplay distance={stopData.distance} />
+      </CardHeader>
+      <CardBody>
+        {(stopData.code || actionPath) && (
+          // TODO: Clean up these conditionals -- perhaps grid one level higher?
+          <div style={{ display: 'grid', height: 20 }}>
+            {stopData.code && (
+              <span style={{ gridRow: 1 }}>
+                <FormattedMessage
+                  id="components.StopViewer.displayStopId"
+                  values={{
+                    stopId: stopData.code,
+                    strong: Strong
+                  }}
+                />
+              </span>
+            )}
+            {actionPath && actionText ? (
+              <ActionLink
+                className="stop-header-action"
+                style={{ gridRow: 1, justifySelf: 'end' }}
+                to={actionPath}
+                toParams={actionParams}
+              >
+                <IconWithText Icon={actionIcon}>{actionText}</IconWithText>
+              </ActionLink>
+            ) : null}
+          </div>
+        )}
         {fromToSlot}
       </CardBody>
     </>

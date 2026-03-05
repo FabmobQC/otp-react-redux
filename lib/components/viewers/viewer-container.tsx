@@ -27,13 +27,13 @@ const ViewerContainer = ({
   // check for main panel content
   switch (mainPanelContent) {
     case MainPanelContent.ROUTE_VIEWER:
-      return <RouteViewer hideBackButton />
+      return <RouteViewer />
     case MainPanelContent.PATTERN_VIEWER:
-      return <PatternViewer hideBackButton />
+      return <PatternViewer />
     case MainPanelContent.TRIP_VIEWER:
-      return <TripViewer hideBackButton />
+      return <TripViewer />
     case MainPanelContent.NEARBY_VIEW:
-      return <NearbyView hideBackButton />
+      return <NearbyView />
     case MainPanelContent.TOURISTIC_PLACES:
       return <TouristicPlacesView />
     case MainPanelContent.AMENITIES_VIEW:
@@ -41,7 +41,7 @@ const ViewerContainer = ({
     default:
       // check for stop viewer
       if (isViewingStop) {
-        return <StopScheduleViewer hideBackButton />
+        return <StopScheduleViewer />
       }
 
       // otherwise, return default content

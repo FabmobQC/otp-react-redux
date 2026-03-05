@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { Layer, Source } from 'react-map-gl'
+import { Layer, Source } from 'react-map-gl/maplibre'
 import React, { useState } from 'react'
 
 import { fetchAdministrativeRegions } from '../../actions/fabmob'

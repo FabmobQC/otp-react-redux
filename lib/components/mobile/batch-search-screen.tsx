@@ -5,6 +5,7 @@ import React, { Component } from 'react'
 import styled from 'styled-components'
 
 import * as apiActions from '../../actions/api'
+import * as formActions from '../../actions/form'
 import * as uiActions from '../../actions/ui'
 import {
   advancedPanelClassName,
@@ -33,7 +34,7 @@ const MobileSearchSettings = styled.div<{
   background: white;
   box-shadow: 3px 0px 12px #00000052;
   height: ${(props) =>
-    props.advancedPanelOpen ? 'calc(100% - 50px)' : '230px'};
+    props.advancedPanelOpen ? 'calc(100% - 50px)' : 'auto'};
   left: 0;
   position: fixed;
   right: 0;
@@ -47,11 +48,11 @@ const MobileSearchSettings = styled.div<{
 
 interface Props {
   currentQuery: any
-  geocoderResultsOrder: Array<string>
   intl: IntlShape
   map: React.ReactElement
   routingQuery: any
   setMobileScreen: (screen: number) => void
+  updateQueryTimeIfLeavingNow: () => void
 }
 
 class BatchSearchScreen extends Component<Props> {
@@ -69,7 +70,9 @@ class BatchSearchScreen extends Component<Props> {
   _advancedSettingRef = React.createRef<HTMLDivElement>()
 
   handlePlanTripClick = () => {
-    const { currentQuery, intl, routingQuery } = this.props
+    const { currentQuery, intl, routingQuery, updateQueryTimeIfLeavingNow } =
+      this.props
+    updateQueryTimeIfLeavingNow()
     alertUserTripPlan(intl, currentQuery, routingQuery, () =>
       this.setState({ planTripClicked: true })
     )
@@ -93,8 +96,10 @@ class BatchSearchScreen extends Component<Props> {
   }
 
   render() {
-    const { geocoderResultsOrder, intl } = this.props
+    const { intl } = this.props
     const { planTripClicked, showAdvancedModeSettings } = this.state
+    const { departArrive } = this.props.currentQuery
+    const dateTimeSelectorOpen = departArrive !== 'NOW'
 
     const transitionDelay = this.state.closeAdvancedSettingsWithDelay ? 300 : 0
     const transitionDurationWithDelay = transitionDuration + transitionDelay
@@ -128,7 +133,6 @@ class BatchSearchScreen extends Component<Props> {
                       style={{ display: 'content' }}
                     >
                       <LocationField
-                        geocoderResultsOrder={geocoderResultsOrder}
                         inputPlaceholder={intl.formatMessage({
                           id: 'components.LocationSearch.setOrigin'
                         })}
@@ -139,7 +143,6 @@ class BatchSearchScreen extends Component<Props> {
                         showClearButton={false}
                       />
                       <LocationField
-                        geocoderResultsOrder={geocoderResultsOrder}
                         inputPlaceholder={intl.formatMessage({
                           id: 'components.LocationSearch.setDestination'
                         })}
@@ -181,7 +184,11 @@ class BatchSearchScreen extends Component<Props> {
               </TransitionGroup>
             </TransitionStyles>
           </MobileSearchSettings>
-          <div className="batch-search-map">
+          <div
+            className={`batch-search-map ${
+              dateTimeSelectorOpen ? 'dt-open' : ''
+            }`}
+          >
             <DefaultMap />
           </div>
         </main>
@@ -194,16 +201,15 @@ class BatchSearchScreen extends Component<Props> {
 
 const mapStateToProps = (state: any) => {
   const currentQuery = state.otp.currentQuery
-  const { geocoderResultsOrder } = state.otp.config.geocoder
   return {
-    currentQuery,
-    geocoderResultsOrder
+    currentQuery
   }
 }
 
 const mapDispatchToProps = {
   routingQuery: apiActions.routingQuery,
-  setMobileScreen: uiActions.setMobileScreen
+  setMobileScreen: uiActions.setMobileScreen,
+  updateQueryTimeIfLeavingNow: formActions.updateQueryTimeIfLeavingNow
 }
 
 export default connect(

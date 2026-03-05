@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import { Bell } from '@styled-icons/fa-regular/Bell'
 import { BellSlash } from '@styled-icons/fa-regular/BellSlash'
 import { Calendar } from '@styled-icons/fa-regular/Calendar'
@@ -117,6 +118,7 @@ const ToggleNotificationButton = styled.button`
 const TripSummaryPane = ({
   from,
   handleTogglePauseMonitoring,
+  handleToggleSnoozeMonitoring,
   isReadOnly,
   monitoredTrip,
   pendingRequest,
@@ -141,9 +143,14 @@ const TripSummaryPane = ({
       <MonitoredDays days={monitoredDays} />
     )
 
-    const testHandle = () => {
-      if (handleTogglePauseMonitoring) {
+    const handleNotificationToggle = () => {
+      if (handleTogglePauseMonitoring && !monitoredTrip.snoozed) {
         handleTogglePauseMonitoring()
+        return
+      }
+      // trip can only be snoozed from the trip editor
+      if (handleToggleSnoozeMonitoring && monitoredTrip.snoozed) {
+        handleToggleSnoozeMonitoring()
       }
     }
 
@@ -152,6 +159,11 @@ const TripSummaryPane = ({
     })
 
     const ICON_SIZE = 14
+
+    const isActiveAndNotSnoozed =
+      monitoredTrip.isActive && !monitoredTrip.snoozed
+
+    const isActiveAndSnoozed = monitoredTrip.isActive && monitoredTrip.snoozed
 
     return (
       <SavedTripBody>
@@ -208,7 +220,7 @@ const TripSummaryPane = ({
             </TripDetailWithIcon>
             {/* Trip notification info */}
             <TripDetailWithIcon as="li">
-              {monitoredTrip.isActive ? (
+              {isActiveAndNotSnoozed ? (
                 <Bell
                   aria-label={notificationLabel}
                   title={notificationLabel}
@@ -217,14 +229,21 @@ const TripSummaryPane = ({
                 <BellSlash width={20} />
               )}
               <span>
-                {monitoredTrip.isActive ? (
+                {isActiveAndNotSnoozed && (
                   <FormattedMessage
                     id="components.TripSummaryPane.notifications"
                     values={{ leadTimeInMinutes }}
                   />
-                ) : (
+                )}
+                {isActiveAndSnoozed && (
                   <FormattedMessage
-                    id="components.TripSummaryPane.notificationsDisabled"
+                    id="components.TripSummaryPane.notificationsSnoozed"
+                    values={{ leadTimeInMinutes }}
+                  />
+                )}
+                {!monitoredTrip.isActive && (
+                  <FormattedMessage
+                    id="components.TripSummaryPane.notificationsPaused"
                     values={{ leadTimeInMinutes }}
                   />
                 )}
@@ -233,12 +252,14 @@ const TripSummaryPane = ({
                     <br />
                     <ToggleNotificationButton
                       disabled={pendingRequest === 'pause'}
-                      onClick={testHandle}
+                      onClick={handleNotificationToggle}
                     >
                       {pendingRequest === 'pause' ? (
                         /* Make loader fit */
                         <InlineLoading />
-                      ) : monitoredTrip.isActive ? (
+                      ) : isActiveAndSnoozed ? (
+                        <FormattedMessage id="components.SavedTripList.unsnooze" />
+                      ) : isActiveAndNotSnoozed ? (
                         <FormattedMessage id="components.SavedTripList.pause" />
                       ) : (
                         <FormattedMessage id="components.SavedTripList.resume" />
