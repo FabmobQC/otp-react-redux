@@ -16,15 +16,10 @@ import React, { ComponentProps, ReactElement, useCallback } from 'react'
 import styled from 'styled-components'
 
 import { clearLocation } from '../../../lib/actions/form'
-import { convertToPlace, getUserLocations } from '../../../lib/util/user'
-import {
-  forgetPlace,
-  rememberPlace,
-  UserActionResult
-} from '../../../lib/actions/user'
+import { forgetPlace, rememberPlace } from '../../../lib/actions/user'
 import { getShowUserSettings } from '../../../lib/util/state'
+import { getUserLocations } from '../../../lib/util/user'
 import { setLocation } from '../../../lib/actions/map'
-import { toastOnPlaceSaved } from '../../../lib/components/util/toasts'
 
 export const Indice = styled.div`
   background-color: black;
@@ -38,7 +33,7 @@ export const Indice = styled.div`
   position: absolute;
   top: 15px;
   left: 15px;
-  box-shadow: 0px 0px 6px rgba(0,0,0,0.3);
+  box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.3);
 `
 interface IconProps extends UserLocationAndType {
   index: number
@@ -85,10 +80,12 @@ const AdditionalPlacesOverlay = ({
 
   const _rememberPlace = useCallback(
     async (placeTypeLocation) => {
-      const result = await rememberPlace(placeTypeLocation, intl)
+      rememberPlace(placeTypeLocation, intl)
+      // fabmob todo: Make sure this is not needed
+      /* const result = await rememberPlace(placeTypeLocation, intl)
       if (result === UserActionResult.SUCCESS) {
         toastOnPlaceSaved(convertToPlace(placeTypeLocation.location), intl)
-      }
+      } */
     },
     [rememberPlace, intl]
   )
