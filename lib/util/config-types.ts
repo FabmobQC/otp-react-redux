@@ -255,6 +255,7 @@ export interface MapConfig {
 /** Settings for reporting issues */
 export interface ReportIssueConfig {
   mailto: string
+  subject?: string
 }
 
 export interface ItineraryCostConfig {
@@ -271,6 +272,7 @@ export type ItinerarySortOption =
   | 'COST'
   | 'DEPARTURETIME'
   | 'FARE'
+  | 'EMISSIONS'
 
 export interface ItineraryCostWeights {
   driveReluctance: number
