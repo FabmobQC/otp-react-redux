@@ -739,6 +739,7 @@ language:
       AmenitiesViewer:
         shortTitle: Amenities
         showAmenities: Show
+        legendCommunauto: Communauto
         legendEducation: Education
         legendGroceryStore: Grocery Store
         legendHealthCenter: Health Center
@@ -815,6 +816,7 @@ language:
       AmenitiesViewer:
         shortTitle: Opportunités
         showAmenities: Afficher
+        legendCommunauto: Communauto
         legendEducation: Éducation
         legendGroceryStore: Épicerie
         legendHealthCenter: Centre de santé
@@ -932,6 +934,5 @@ localization:
 fabmob:
   displayAdministrativeRegions: true
   displayAmenities: true
-  displayCommunautoStations: true
   displayNearby: true
   displayTouristicPlaces: true

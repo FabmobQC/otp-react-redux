@@ -5,6 +5,7 @@ import React, { ReactElement } from 'react'
 import { AmenityIndicator } from '../../icons/amenity-indicator'
 import { AmenityType } from '../../reducers/create-fabmob-reducer'
 import { AppReduxState } from '../../../lib/util/state-types'
+import { CommunautoLogo } from '../../icons/communauto-logo'
 import { setIsAmenitiesVisible } from '../../actions/fabmob'
 
 interface LegendItem {
@@ -40,6 +41,21 @@ const LegendItem = ({
       <AmenityIndicator amenityType={amenityType} size="30px" />
       <div style={{ width: '10px' }} />
       <div>{intl.formatMessage({ id: label })}</div>
+    </div>
+  )
+}
+
+const CommunautoItem = () => {
+  const intl = useIntl()
+  return (
+    <div style={{ alignItems: 'center', display: 'flex', padding: '10px' }}>
+      <CommunautoLogo size={30} />
+      <div style={{ width: '10px' }} />
+      <div>
+        {intl.formatMessage({
+          id: 'components.AmenitiesViewer.legendCommunauto'
+        })}
+      </div>
     </div>
   )
 }
@@ -93,6 +109,7 @@ const AmenitiesView = ({
       {legendItems.map((item) => (
         <LegendItem key={item.amenityType} {...item} />
       ))}
+      <CommunautoItem />
     </div>
   )
 }
