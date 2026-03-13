@@ -10,8 +10,7 @@ import {
   StackedToIcon,
   ToIcon
 } from '@opentripplanner/endpoints-overlay/lib/styled'
-import Endpoint from '@opentripplanner/endpoints-overlay/lib/endpoint'
-import EndpointsOverlay from '@opentripplanner/endpoints-overlay'
+import EndpointsOverlay, { Endpoint } from '@opentripplanner/endpoints-overlay'
 import React, { ComponentProps, ReactElement, useCallback } from 'react'
 import styled from 'styled-components'
 

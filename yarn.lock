@@ -2733,6 +2733,15 @@
     maplibre-gl "^5.6.1"
     react-map-gl "^8.0.4"
 
+"@opentripplanner/base-map@6.1.0":
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/@opentripplanner/base-map/-/base-map-6.1.0.tgz#4758dd37c678b907d1eb0916facc1c710de10b68"
+  integrity sha512-2hsiWk8EeODUviyYXy52tmy4AWol9ZAgheCLYg3KpbTFTYmWjAcPPbN9WvJ+f5gGn06pufRx4s5x/14TxzTBTA==
+  dependencies:
+    "@opentripplanner/building-blocks" "3.1.0"
+    maplibre-gl "^5.6.1"
+    react-map-gl "^8.0.4"
+
 "@opentripplanner/base-map@6.1.1":
   version "6.1.1"
   resolved "https://registry.yarnpkg.com/@opentripplanner/base-map/-/base-map-6.1.1.tgz#93cca0613cf747890a098903ca31296445bdd4d0"
@@ -2861,14 +2870,13 @@
     lodash.clonedeep "^4.5.0"
     qs "^6.9.1"
 
-"@opentripplanner/endpoints-overlay@5.0.0":
+"@opentripplanner/endpoints-overlay@file:../otp-ui/packages/endpoints-overlay/opentripplanner-endpoints-overlay-5.0.0.tgz":
   version "5.0.0"
-  resolved "https://registry.yarnpkg.com/@opentripplanner/endpoints-overlay/-/endpoints-overlay-5.0.0.tgz#216ba195ef7cf9dd8f76b862480c018e7b96ffc6"
-  integrity sha512-fTEdQWR+ur/R6hMl6EbALXHVL8QiQva4MMBuZb/zDrPX0E+H1Ik3pplVw5t3uj+vWw2HXOEwHmzwh4Yaah7BsA==
+  resolved "file:../otp-ui/packages/endpoints-overlay/opentripplanner-endpoints-overlay-5.0.0.tgz#29bc1918a0c43c5cf1e54a3e56a52c0608d286cb"
   dependencies:
-    "@opentripplanner/base-map" "6.0.0"
-    "@opentripplanner/building-blocks" "3.0.1"
-    "@opentripplanner/core-utils" "13.0.1"
+    "@opentripplanner/base-map" "6.1.0"
+    "@opentripplanner/building-blocks" "3.1.0"
+    "@opentripplanner/core-utils" "15.0.0"
     "@opentripplanner/location-icon" "2.0.0"
     "@styled-icons/fa-solid" "^10.34.0"
     flat "^5.0.2"
