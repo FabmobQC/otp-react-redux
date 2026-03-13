@@ -47,10 +47,12 @@ export const fetchAmenities = (): unknown => {
       const data = await response.json()
       dispatch(setAmenities(data.amenities))
     } catch (error) {
-      console.error('Error fetching Communauto stations', error)
+      console.error('Error fetching amenities', error)
     }
   }
 }
+
+export const setIsAmenitiesVisible = createAction('SET_IS_AMENITIES_VISIBLE')
 
 export const setCommunautoStations = createAction('SET_COMMUNAUTO_STATIONS')
 

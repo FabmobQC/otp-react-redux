@@ -738,6 +738,7 @@ language:
           agencyUrl: "Website"
       AmenitiesViewer:
         shortTitle: Amenities
+        showAmenities: Show
         legendEducation: Education
         legendGroceryStore: Grocery Store
         legendHealthCenter: Health Center
@@ -813,6 +814,7 @@ language:
           agencyUrl: "Site web"
       AmenitiesViewer:
         shortTitle: Opportunités
+        showAmenities: Afficher
         legendEducation: Éducation
         legendGroceryStore: Épicerie
         legendHealthCenter: Centre de santé

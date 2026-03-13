@@ -5,6 +5,7 @@ import React, { ReactElement } from 'react'
 import { AmenityIndicator } from '../../icons/amenity-indicator'
 import { AmenityType } from '../../reducers/create-fabmob-reducer'
 import { AppReduxState } from '../../../lib/util/state-types'
+import { setIsAmenitiesVisible } from '../../actions/fabmob'
 
 interface LegendItem {
   amenityType: AmenityType
@@ -43,7 +44,15 @@ const LegendItem = ({
   )
 }
 
-const AmenitiesView = (): ReactElement => {
+interface AmenitiesViewProps {
+  isAmenitiesVisible: boolean
+  setIsAmenitiesVisible: (isVisible: boolean) => void
+}
+
+const AmenitiesView = ({
+  isAmenitiesVisible,
+  setIsAmenitiesVisible
+}: AmenitiesViewProps): ReactElement => {
   return (
     <div style={{ padding: '15px' }}>
       <h1
@@ -57,6 +66,30 @@ const AmenitiesView = (): ReactElement => {
       >
         <FormattedMessage id="components.AmenitiesViewer.shortTitle" />
       </h1>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'end',
+          padding: '5px 10px'
+        }}
+      >
+        <label
+          htmlFor="toggle-amenities"
+          style={{
+            cursor: 'pointer',
+            display: 'flex',
+            gap: '8px'
+          }}
+        >
+          <FormattedMessage id="components.AmenitiesViewer.showAmenities" />
+          <input
+            checked={isAmenitiesVisible}
+            id="toggle-amenities"
+            onChange={(e) => setIsAmenitiesVisible(e.target.checked)}
+            type="checkbox"
+          />
+        </label>
+      </div>
       {legendItems.map((item) => (
         <LegendItem key={item.amenityType} {...item} />
       ))}
@@ -65,9 +98,13 @@ const AmenitiesView = (): ReactElement => {
 }
 
 const mapStateToProps = (state: AppReduxState) => {
-  return {}
+  return {
+    isAmenitiesVisible: state.fabmob.isAmenitiesVisible
+  }
 }
 
-const mapDispatchToProps = {}
+const mapDispatchToProps = {
+  setIsAmenitiesVisible: setIsAmenitiesVisible
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(AmenitiesView)

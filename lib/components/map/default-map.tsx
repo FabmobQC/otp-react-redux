@@ -469,7 +469,7 @@ class DefaultMap extends Component<DefaultMapProps> {
           />
           <TripViewerOverlay />
           <ElevationPointMarker />
-          {config.fabmob.displayAmenities && <AmenitiesOverlay />}
+          {this.props.isAmenitiesVisible && <AmenitiesOverlay />}
           {config.fabmob.displayCommunautoStations && (
             <CommunautoStationsOverlay />
           )}
@@ -611,6 +611,7 @@ const mapStateToProps = (state) => {
     config: state.otp.config,
     currentPositionError,
     feeds: state.otp.transitIndex.feeds,
+    isAmenitiesVisible: state.fabmob.isAmenitiesVisible,
     isTouristicPlacesVisible: state.fabmob.isTouristicPlacesVisible,
     itinerary: getActiveItinerary(state),
     mapConfig: state.otp.config.map,

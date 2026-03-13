@@ -50,6 +50,7 @@ export interface FabmobState {
   administrativeRegions: string | undefined
   amenities: Amenity[]
   communautoStations: CommunautoStation[]
+  isAmenitiesVisible: boolean
   isTouristicPlacesVisible: boolean
   touristicPlaces: TouristicPlace[]
 }
@@ -59,6 +60,7 @@ export function getFabmobInitialState(config: unknown): FabmobState {
     administrativeRegions: undefined,
     amenities: [],
     communautoStations: [],
+    isAmenitiesVisible: false,
     isTouristicPlacesVisible: false,
     touristicPlaces: []
   }
@@ -78,6 +80,12 @@ function createFabmobReducer(config: unknown): unknown {
       case 'SET_AMENITIES': {
         return update(state, {
           amenities: { $set: action.payload }
+        })
+      }
+
+      case 'SET_IS_AMENITIES_VISIBLE': {
+        return update(state, {
+          isAmenitiesVisible: { $set: action.payload }
         })
       }
 
