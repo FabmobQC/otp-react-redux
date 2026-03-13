@@ -100,6 +100,10 @@ export const fetchTouristicPlaces = (): unknown => {
   }
 }
 
+export const setIsTouristicPlacesVisible = createAction(
+  'SET_IS_TOURISTIC_PLACES_VISIBLE'
+)
+
 export const settingAdditionalPlaceWaitingTime = createAction(
   'SET_ADDITIONAL_PLACE_WAITING_TIME'
 )

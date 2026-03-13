@@ -46,10 +46,11 @@ export interface TouristicPlace {
   adresse_for_Nominatim: string
 }
 
-interface FabmobState {
+export interface FabmobState {
   administrativeRegions: string | undefined
   amenities: Amenity[]
   communautoStations: CommunautoStation[]
+  isTouristicPlacesVisible: boolean
   touristicPlaces: TouristicPlace[]
 }
 
@@ -58,6 +59,7 @@ export function getFabmobInitialState(config: unknown): FabmobState {
     administrativeRegions: undefined,
     amenities: [],
     communautoStations: [],
+    isTouristicPlacesVisible: false,
     touristicPlaces: []
   }
 }
@@ -88,6 +90,12 @@ function createFabmobReducer(config: unknown): unknown {
       case 'SET_TOURISTIC_PLACES': {
         return update(state, {
           touristicPlaces: { $set: action.payload }
+        })
+      }
+
+      case 'SET_IS_TOURISTIC_PLACES_VISIBLE': {
+        return update(state, {
+          isTouristicPlacesVisible: { $set: action.payload }
         })
       }
 

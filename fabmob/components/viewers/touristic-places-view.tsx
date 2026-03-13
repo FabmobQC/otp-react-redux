@@ -3,6 +3,7 @@ import { FormattedMessage, useIntl } from 'react-intl'
 import React, { ReactElement } from 'react'
 
 import { AppReduxState } from '../../../lib/util/state-types'
+import { setIsTouristicPlacesVisible } from '../../actions/fabmob'
 import { TouristicPlaceIndicator } from '../../icons/touristic-places-indicator'
 import { touristicPlacesColors } from '../../actions/ui-constants'
 
@@ -72,7 +73,15 @@ const LegendItem = ({ color, label }: { color: string; label: string }) => {
   )
 }
 
-const TouristicPlacesView = (): ReactElement => {
+interface TouristicPlacesViewProps {
+  isTouristicPlacesVisible: boolean
+  setIsTouristicPlacesVisible: (isVisible: boolean) => void
+}
+
+const TouristicPlacesView = ({
+  isTouristicPlacesVisible,
+  setIsTouristicPlacesVisible
+}: TouristicPlacesViewProps): ReactElement => {
   return (
     <div style={{ padding: '15px' }}>
       <h1
@@ -86,6 +95,30 @@ const TouristicPlacesView = (): ReactElement => {
       >
         <FormattedMessage id="components.TouristicPlacesViewer.shortTitle" />
       </h1>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'end',
+          padding: '5px 10px'
+        }}
+      >
+        <label
+          htmlFor="toggle-touristic-places"
+          style={{
+            cursor: 'pointer',
+            display: 'flex',
+            gap: '8px'
+          }}
+        >
+          <FormattedMessage id="components.TouristicPlacesViewer.showTouristicPlaces" />
+          <input
+            checked={isTouristicPlacesVisible}
+            id="toggle-touristic-places"
+            onChange={(e) => setIsTouristicPlacesVisible(e.target.checked)}
+            type="checkbox"
+          />
+        </label>
+      </div>
       {legendItems.map((item) => (
         <LegendItem key={item.label} {...item} />
       ))}
@@ -94,9 +127,13 @@ const TouristicPlacesView = (): ReactElement => {
 }
 
 const mapStateToProps = (state: AppReduxState) => {
-  return {}
+  return {
+    isTouristicPlacesVisible: state.fabmob.isTouristicPlacesVisible
+  }
 }
 
-const mapDispatchToProps = {}
+const mapDispatchToProps = {
+  setIsTouristicPlacesVisible: setIsTouristicPlacesVisible
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(TouristicPlacesView)

@@ -473,7 +473,7 @@ class DefaultMap extends Component<DefaultMapProps> {
           {config.fabmob.displayCommunautoStations && (
             <CommunautoStationsOverlay />
           )}
-          {config.fabmob.displayTouristicPlaces && <TouristicPlacesOverlay />}
+          {this.props.isTouristicPlacesVisible && <TouristicPlacesOverlay />}
           <AdditionalPlacesOverlay />
           {config.fabmob.displayAdministrativeRegions && (
             <AdministrativeRegionsLayer />
@@ -611,6 +611,7 @@ const mapStateToProps = (state) => {
     config: state.otp.config,
     currentPositionError,
     feeds: state.otp.transitIndex.feeds,
+    isTouristicPlacesVisible: state.fabmob.isTouristicPlacesVisible,
     itinerary: getActiveItinerary(state),
     mapConfig: state.otp.config.map,
     nearbyFilters,

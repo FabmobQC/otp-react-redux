@@ -7,6 +7,8 @@ import {
 } from '../components/user/types'
 import { Leg, Location, ModeSetting } from '@opentripplanner/types'
 
+import { FabmobState } from '../../fabmob/reducers/create-fabmob-reducer'
+
 import { AppConfig, PopupTargetConfig } from './config-types'
 
 export type NearbyFilterKey =
@@ -76,6 +78,7 @@ export interface UserState {
 
 export interface AppReduxState {
   calltaker?: any // TODO
+  fabmob: FabmobState
   otp: OtpState
   router: RouterState
   user: UserState

@@ -744,6 +744,7 @@ language:
         legendDefault: Others
       TouristicPlacesViewer:
         shortTitle: Touristic Places
+        showTouristicPlaces: Show
         legendAttraction: Attraction
         legendCulture: Culture
         legendAccommodation: Accommodation
@@ -818,6 +819,7 @@ language:
         legendDefault: Others
       TouristicPlacesViewer:
         shortTitle: Lieux touristiques
+        showTouristicPlaces: Afficher
         legendAttraction: Attraction
         legendCulture: Culture
         legendAccommodation: Hébergement
