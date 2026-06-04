@@ -238,6 +238,7 @@ geocoder:
 
 # Use this mode config for the enhanced Transit+ config
 modes:
+  # allowFlexWithoutTransit: true # True by default
   ### Optional number of itineraries to return by default - Defaults to 3.
   # numItineraries: 3
   # Definition for the mode buttons to display in trip form
@@ -373,9 +374,6 @@ itinerary:
   showAlertEffectiveDateTimeText: true
   # Show all walking legs regardless of distance
   showAllWalkLegs: false
-  # Filters out trips returned by OTP by default, unless specifically requested.
-  # e.g. filters out walk-only itineraries if user has not explicitly asked for them.
-  strictItineraryFiltering: false
   # Whether to render route names and colors in the blocks inside
   # the batch ui rows
   renderRouteNamesInBlocks: true

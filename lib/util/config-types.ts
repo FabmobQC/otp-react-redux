@@ -141,6 +141,7 @@ export type PersistenceConfig = (
 /** Popup target settings */
 export interface PopupTargetConfig {
   appendLocale?: boolean
+  appendParams?: boolean
   modal?: boolean
   url?: string
 }
@@ -341,6 +342,7 @@ export interface TransitModeConfig {
 
 export interface ModesConfig {
   accessModes: TransitModeConfig[]
+  allowFlexWithoutTransit?: boolean
   initialState?: {
     enabledModeButtons?: string[]
     modeSettingValues?: ModeSettingValues
