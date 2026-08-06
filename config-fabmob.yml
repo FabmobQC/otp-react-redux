@@ -124,9 +124,9 @@ dateTime:
   dateFormat: MM/dd/yyyy
 
 map:
-  initLat: 46.4
-  initLon: -72.5
-  initZoom: 7
+  initLat: 45.27
+  initLon: -72.74
+  initZoom: 10
   # autoFlyOnTripFormUpdate: false
   # navigationControlPosition: "bottom-right"
 
@@ -437,7 +437,7 @@ itinerary:
   allowUserAlertCollapsing: true
   # The medium and rider category selected here will be used to render the total itinerary fare
   # when there is only room to display a single fare.
-  defaultFareType: { mediumId: null, riderCategoryId: null }
+  defaultFareType: { mediumId: ["fare_media_carnet", "fare_media_comptant"], riderCategoryId: ["rider_category_general", "rider_category_general"] }
 
   # List of OTP2 errors to not display. Can be a list
   # mutedErrors:
@@ -543,56 +543,10 @@ transitOperators:
   # Fabmob tip: The actual agencyIds are received with a sort of index. ex: "1:plumobile-boischatel", "2:CITSO"
   # It is actually the name that is used to map the agencies with their routes.
   # In other words, the names have to match "agency_name" in the GTFS, even when there are typos.
-  - agencyId: MRCLASSO
-    name: exo-L'Assomption
-    logo: https://www.droit-inc.com/img/trackers/731a8faccb56947b6ade4d85d7cebc6d
-  - agencyId: CITCRC
-    name: exo-Chambly-Richelieu-Carignan
-  - agencyId: CITHSL
-    name: exo-Haut-Saint-Laurent
-  - agencyId: CITLA
-    name: exo-Laurentides
-  - agencyId: CITPI
-    name: exo-La Presqu'île
-  - agencyId: OMITSJU
-    name: exo-Sainte-Julie
-  - agencyId: CITSV
-    name: exo-Sorel-Varennes
-  - agencyId: CITSO
-    name: exo-Sud-Ouest
-  - agencyId: MRCLM
-    name: exo-Terrebonne-Mascouche
-  - agencyId: TRAINS
-    name: exo-Réseau de transport métropolitain
-  - agencyId: CITVR
-    name: exo-Vallée du Richelieu
-  - agencyId: tacl-laurentides
-    name: L'Inter des Laurentides - Mont-Tremblant / Saint-Jérôme
-  - agencyId: mobilite-charlevoix
-    name: Mobilité Collective - Charlevoix
-  - agencyId: mrcjacques-cartier
-    name: MRC de La Jacques-Cartier
-  - agencyId: navette-nature
-    name: Navette Nature
-  - agencyId: RTC
-    name: Réseau de transport de la capitale (RTC)
-  - agencyId: RTL
-    name: Réseau de transport de Longueuil
-  - agencyId: STL
-    name: Societe de transport de Laval # Fabmob tip: Make sure the name matches "agency_name" in the GTFS before fixing the diacritics (Société)
-  - agencyId: 0
-    name: Société de transport de Lévis
-  - agencyId: STM
-    name: "Société de transport de Montréal"
-    logo: https://www.stm.info/sites/all/themes/stm/img/header-logo.png
-  - agencyId: 0
-    name: Société de Transport de Sherbrooke
-  - agencyId: 1
-    name: Service opéré par Taxis de Sherbrooke
-  - agencyId: plumobile-boischatel
-    name: Boischatel / PLUMobile - Transport en commun
-  - agencyId: plumobile-cote-de-beaupre
-    name: Côte-de-Beaupré / Ile d'Orléans - PLUmobile
+  - agencyId: mrc-brome-missisquoi
+    name: MRC Brome-Missisquoi
+  - agencyId: limocar
+    name: Limocar
 #   - feedId: TriMet
 #     agencyId: PSC
 #     logo: https://d2tyb7byn1fef9.cloudfront.net/psc.png
