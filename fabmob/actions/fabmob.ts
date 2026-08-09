@@ -128,3 +128,5 @@ export const clearAdditionalPlaceWaitingTime = (index: number): unknown => {
     dispatch(clearingAdditionalPlaceWaitingTime({ index }))
   }
 }
+
+export const toggleViewedRoute = createAction('TOGGLE_VIEWED_ROUTE')

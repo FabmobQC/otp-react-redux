@@ -53,6 +53,7 @@ export interface FabmobState {
   isAmenitiesVisible: boolean
   isTouristicPlacesVisible: boolean
   touristicPlaces: TouristicPlace[]
+  viewedRoutes: Set<string>
 }
 
 export function getFabmobInitialState(config: unknown): FabmobState {
@@ -62,7 +63,8 @@ export function getFabmobInitialState(config: unknown): FabmobState {
     communautoStations: [],
     isAmenitiesVisible: false,
     isTouristicPlacesVisible: false,
-    touristicPlaces: []
+    touristicPlaces: [],
+    viewedRoutes: new Set()
   }
 }
 
@@ -104,6 +106,18 @@ function createFabmobReducer(config: unknown): unknown {
       case 'SET_IS_TOURISTIC_PLACES_VISIBLE': {
         return update(state, {
           isTouristicPlacesVisible: { $set: action.payload }
+        })
+      }
+
+      case 'TOGGLE_VIEWED_ROUTE': {
+        const viewedRoutes = new Set(state.viewedRoutes)
+        if (viewedRoutes.has(action.payload)) {
+          viewedRoutes.delete(action.payload)
+        } else {
+          viewedRoutes.add(action.payload)
+        }
+        return update(state, {
+          viewedRoutes: { $set: viewedRoutes }
         })
       }
 

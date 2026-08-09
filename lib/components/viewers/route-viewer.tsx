@@ -7,6 +7,7 @@ import coreUtils from '@opentripplanner/core-utils'
 import React, { Component, FormEvent } from 'react'
 
 import * as apiActions from '../../actions/api'
+import * as fabmobActions from '../../../fabmob/actions/fabmob'
 import * as uiActions from '../../actions/ui'
 import { AppReduxState } from '../../util/state-types'
 import {
@@ -43,9 +44,11 @@ interface Props {
   routes: Route[]
   setMainPanelContent: (panelId: number | null) => void
   setRouteViewerFilter: (filter: FilterProps) => void
+  toggleViewedRoute: typeof fabmobActions.toggleViewedRoute
   transitOperators: TransitOperatorConfig[]
   viewedRoute?: ViewedRouteState
   viewedRouteObject?: ViewedRouteObject
+  viewedRoutes?: Set<string>
 }
 
 interface State {
@@ -119,11 +122,12 @@ class RouteViewer extends Component<Props, State> {
       intl,
       modes,
       routes: sortedRoutes,
+      toggleViewedRoute,
       transitOperators,
       viewedRoute,
-      viewedRouteObject
+      viewedRouteObject,
+      viewedRoutes
     } = this.props
-
     const { initialRender } = this.state
     const { agency, mode, search } = filter
     const operators =
@@ -250,9 +254,11 @@ class RouteViewer extends Component<Props, State> {
                 initialRender={initialRender}
                 intl={intl}
                 isActive={viewedRoute && viewedRoute.routeId === route.id}
+                isViewed={viewedRoutes?.has(route.id)}
                 key={route.id}
                 operator={operator}
                 route={route}
+                toggleIsActive={() => toggleViewedRoute(route.id)}
               />
             )
           })}
@@ -272,6 +278,8 @@ class RouteViewer extends Component<Props, State> {
 
 const mapStateToProps = (state: AppReduxState) => {
   const { viewedRoute } = state.otp.ui
+  const { viewedRoutes } = state.fabmob
+
   return {
     agencies: getAgenciesFromRoutes(state),
     filter: state.otp.ui.routeViewer.filter,
@@ -279,7 +287,8 @@ const mapStateToProps = (state: AppReduxState) => {
     routes: getSortedFilteredRoutes(state),
     transitOperators: state.otp.config.transitOperators || [],
     viewedRoute,
-    viewedRouteObject: state.otp.transitIndex.routes?.[viewedRoute?.routeId]
+    viewedRouteObject: state.otp.transitIndex.routes?.[viewedRoute?.routeId],
+    viewedRoutes
   }
 }
 
@@ -287,7 +296,8 @@ const mapDispatchToProps = {
   findRouteIfNeeded: apiActions.findRouteIfNeeded,
   findRoutesIfNeeded: apiActions.findRoutesIfNeeded,
   setMainPanelContent: uiActions.setMainPanelContent,
-  setRouteViewerFilter: uiActions.setRouteViewerFilter
+  setRouteViewerFilter: uiActions.setRouteViewerFilter,
+  toggleViewedRoute: fabmobActions.toggleViewedRoute
 }
 
 export default connect(

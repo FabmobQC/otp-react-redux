@@ -21,8 +21,12 @@ interface Props {
   initialRender?: boolean
   intl: IntlShape
   isActive?: boolean
+  // fabmob: isActive is set automatically by RouteRowLink from the url.
+  // We add isViewed for more control
+  isViewed?: boolean
   operator: TransitOperatorConfig
   route?: ViewedRouteObject
+  toggleIsActive: () => void
 }
 
 export const StyledRouteRow = styled.li`
@@ -54,7 +58,7 @@ export const RouteRowLink = styled(Link)`
     outline-offset: -2px;
   }
 
-  &.active {
+  &.viewed {
     background-color: ${blue[50]};
   }
 `
@@ -205,7 +209,7 @@ export class RouteRow extends PureComponent<Props> {
   }
 
   render(): JSX.Element | null {
-    const { intl, isActive, operator, route } = this.props
+    const { intl, isActive, isViewed, operator, route } = this.props
     const { ModeIcon, RouteRenderer } = this.context
 
     if (!route) return null
@@ -224,7 +228,8 @@ export class RouteRow extends PureComponent<Props> {
       <StyledRouteRow ref={this.activeRef}>
         <RouteRowLink
           aria-current={isActive}
-          className="clear-button-formatting"
+          className={`clear-button-formatting ${isViewed ? 'viewed' : ''}`}
+          onClick={this.props.toggleIsActive}
           onFocus={this._onFocusOrEnter}
           onMouseEnter={this._onFocusOrEnter}
           onTouchStart={this._onFocusOrEnter}

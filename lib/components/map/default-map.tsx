@@ -42,6 +42,7 @@ import { setViewedStop } from '../../actions/ui'
 import { updateOverlayVisibility } from '../../actions/config'
 import AdditionalPlacesOverlay from '../../../fabmob/components/map/additional-places-overlay'
 import AdministrativeRegionsLayer from '../../../fabmob/components/map/administrative-regions-layer'
+import AllRoutesViewerOverlay from '../../../fabmob/components/map/all-routes-viewer-overlay'
 import AmenitiesOverlay from '../../../fabmob/components/map/amenities-overlay'
 import CommunautoStationsOverlay from '../../../fabmob/components/map/communauto-stations-overlay'
 import TouristicPlacesOverlay from '../../../fabmob/components/map/touristic-places-overlay'
@@ -447,7 +448,8 @@ class DefaultMap extends Component<DefaultMapProps> {
           <RoutePreviewOverlay />
           {/* The default overlays */}
           <EndpointsOverlay />
-          <RouteViewerOverlay />
+          <AllRoutesViewerOverlay />
+          {/* <RouteViewerOverlay /> */}
           <TransitVehicleOverlay
             id={routeBasedTransitVehicleOverlayNameOverride?.name}
             key={routeBasedTransitVehicleOverlayNameOverride?.name}
