@@ -129,4 +129,8 @@ export const clearAdditionalPlaceWaitingTime = (index: number): unknown => {
   }
 }
 
+export const addViewedRoute = createAction('ADD_VIEWED_ROUTE')
+
 export const toggleViewedRoute = createAction('TOGGLE_VIEWED_ROUTE')
+
+export const clearViewedRoutes = createAction('CLEAR_VIEWED_ROUTES')

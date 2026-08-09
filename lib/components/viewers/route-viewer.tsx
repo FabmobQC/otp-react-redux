@@ -33,7 +33,9 @@ interface FilterProps {
 }
 
 interface Props {
+  addViewedRoute: typeof fabmobActions.addViewedRoute
   agencies: string[]
+  clearViewedRoutes: typeof fabmobActions.clearViewedRoutes
   filter: FilterProps
   // Not really worried about the args for findRoute(s)IfNeeded.
   findRouteIfNeeded: () => void
@@ -111,6 +113,14 @@ class RouteViewer extends Component<Props, State> {
     const { target } = event
     const { value } = target as HTMLInputElement
     this.props.setRouteViewerFilter({ search: value })
+  }
+
+  viewAllRoutes = () => {
+    const { addViewedRoute, findRouteIfNeeded, routes } = this.props
+    routes.forEach((route) => {
+      addViewedRoute(route.id)
+      findRouteIfNeeded({ routeId: route.id })
+    })
   }
 
   render() {
@@ -227,6 +237,16 @@ class RouteViewer extends Component<Props, State> {
                 value={search}
               />
             </span>
+            <button onClick={this.viewAllRoutes}>
+              {intl.formatMessage({
+                id: 'components.RouteViewer.viewAll'
+              })}
+            </button>
+            <button onClick={this.props.clearViewedRoutes}>
+              {intl.formatMessage({
+                id: 'components.RouteViewer.clearViewedRoutes'
+              })}
+            </button>
           </section>
         </div>
         <InvisibleA11yLabel as="div" role="status">
@@ -293,6 +313,8 @@ const mapStateToProps = (state: AppReduxState) => {
 }
 
 const mapDispatchToProps = {
+  addViewedRoute: fabmobActions.addViewedRoute,
+  clearViewedRoutes: fabmobActions.clearViewedRoutes,
   findRouteIfNeeded: apiActions.findRouteIfNeeded,
   findRoutesIfNeeded: apiActions.findRoutesIfNeeded,
   setMainPanelContent: uiActions.setMainPanelContent,

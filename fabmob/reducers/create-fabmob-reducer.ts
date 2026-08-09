@@ -109,6 +109,16 @@ function createFabmobReducer(config: unknown): unknown {
         })
       }
 
+      case 'ADD_VIEWED_ROUTE': {
+        const viewedRoutes = new Set(state.viewedRoutes)
+        viewedRoutes.add(action.payload)
+        return update(state, {
+          viewedRoutes: {
+            $set: viewedRoutes
+          }
+        })
+      }
+
       case 'TOGGLE_VIEWED_ROUTE': {
         const viewedRoutes = new Set(state.viewedRoutes)
         if (viewedRoutes.has(action.payload)) {
@@ -118,6 +128,12 @@ function createFabmobReducer(config: unknown): unknown {
         }
         return update(state, {
           viewedRoutes: { $set: viewedRoutes }
+        })
+      }
+
+      case 'CLEAR_VIEWED_ROUTES': {
+        return update(state, {
+          viewedRoutes: { $set: new Set<string>() }
         })
       }
 
