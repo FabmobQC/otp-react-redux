@@ -379,8 +379,13 @@ class DefaultMap extends Component<DefaultMapProps> {
     } = this.props
     const { getCustomMapOverlays, getTransitiveRouteLabel, ModeIcon } =
       this.context
-    const { baseLayers, maxZoom, navigationControlPosition, overlays } =
-      mapConfig || {}
+    const {
+      baseLayers,
+      maxZoom,
+      navigationControlPosition,
+      overlays,
+      showViewStopInPopup = true
+    } = mapConfig || {}
     const { lat, lon, zoom } = this.state
     const vectorTilesEndpoint = `${assembleBasePath(config)}${
       config.api?.path
@@ -549,7 +554,7 @@ class DefaultMap extends Component<DefaultMapProps> {
                   })),
                   vectorTilesEndpoint,
                   setLocation,
-                  setViewedStop,
+                  showViewStopInPopup && setViewedStop,
                   viewedRouteStops,
                   config.companies,
                   this.getEntityPrefix,
