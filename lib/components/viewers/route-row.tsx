@@ -115,7 +115,7 @@ const PatternViewerLink = styled(Link)`
     transition: all ease-out 0.1s;
   }
 
-  ${RouteRowLink}.active + & {
+  ${RouteRowLink}.viewed + & {
     z-index: 2;
 
     svg {
