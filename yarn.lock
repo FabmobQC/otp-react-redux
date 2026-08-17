@@ -3131,7 +3131,7 @@
 
 "@opentripplanner/endpoints-overlay@file:../otp-ui/packages/endpoints-overlay/opentripplanner-endpoints-overlay-5.0.1.tgz":
   version "5.0.1"
-  resolved "file:../otp-ui/packages/endpoints-overlay/opentripplanner-endpoints-overlay-5.0.1.tgz#2f760ad646798d205a55b1ceaeed6203a294b4b4"
+  resolved "file:../otp-ui/packages/endpoints-overlay/opentripplanner-endpoints-overlay-5.0.1.tgz#2f3b64d6e60fa38762f42d476a3ee9527a7d2ebe"
   dependencies:
     "@opentripplanner/base-map" "^7.1.0"
     "@opentripplanner/building-blocks" "^3.2.0"
@@ -3180,9 +3180,29 @@
     "@opentripplanner/core-utils" "^16.0.3"
     prop-types "^15.7.2"
 
-"@opentripplanner/itinerary-body@^9.3.1", "@opentripplanner/itinerary-body@file:../otp-ui/packages/itinerary-body/opentripplanner-itinerary-body-9.5.1.tgz":
+"@opentripplanner/itinerary-body@^9.3.1":
+  version "9.6.0"
+  resolved "https://registry.yarnpkg.com/@opentripplanner/itinerary-body/-/itinerary-body-9.6.0.tgz#4dddd7087d64acb305b5f805054516433f1f8df4"
+  integrity sha512-drW1f6aWOeh0ooTKIjalpGiLJ05vdVqEh4aAXQwVAf6F6S3Eh5qccMvg49OI1vLE7hL0Nt7Q2vWAp8BioWtzmA==
+  dependencies:
+    "@opentripplanner/building-blocks" "^3.2.0"
+    "@opentripplanner/core-utils" "^16.1.0"
+    "@opentripplanner/humanize-distance" "^2.1.1"
+    "@opentripplanner/icons" "^4.1.4"
+    "@opentripplanner/location-icon" "^2.0.0"
+    "@styled-icons/fa-solid" "^10.34.0"
+    "@styled-icons/foundation" "^10.34.0"
+    "@styled-icons/styled-icon" "^10.7.1"
+    date-fns "^3.6.0"
+    date-fns-tz "^3.2.0"
+    flat "^5.0.2"
+    react-animate-height "^3.0.4"
+    react-resize-detector "^4.2.1"
+    string-similarity "^4.0.4"
+
+"@opentripplanner/itinerary-body@file:../otp-ui/packages/itinerary-body/opentripplanner-itinerary-body-9.5.1.tgz":
   version "9.5.1"
-  resolved "file:../otp-ui/packages/itinerary-body/opentripplanner-itinerary-body-9.5.1.tgz#7cabdf651d7099b4ab5e1d4ce8f2876f9958f48b"
+  resolved "file:../otp-ui/packages/itinerary-body/opentripplanner-itinerary-body-9.5.1.tgz#b65c536b9daded6183b294bce70558d6c80162e0"
   dependencies:
     "@opentripplanner/building-blocks" "^3.2.0"
     "@opentripplanner/core-utils" "^16.1.0"
@@ -3201,7 +3221,7 @@
 
 "@opentripplanner/location-field@file:../otp-ui/packages/location-field/opentripplanner-location-field-4.2.1.tgz":
   version "4.2.1"
-  resolved "file:../otp-ui/packages/location-field/opentripplanner-location-field-4.2.1.tgz#4ee93fd1271fc8e19ee21367fcddd9a49305e90f"
+  resolved "file:../otp-ui/packages/location-field/opentripplanner-location-field-4.2.1.tgz#9dbb6981bf1069f82680a753084a221a59669419"
   dependencies:
     "@conveyal/geocoder-arcgis-geojson" "^0.0.3"
     "@opentripplanner/core-utils" "^16.1.0"
@@ -3279,7 +3299,7 @@
 
 "@opentripplanner/route-viewer-overlay@file:../otp-ui/packages/route-viewer-overlay/opentripplanner-route-viewer-overlay-6.0.1.tgz":
   version "6.0.1"
-  resolved "file:../otp-ui/packages/route-viewer-overlay/opentripplanner-route-viewer-overlay-6.0.1.tgz#774b5d5dc66642aecd64fe0d909cf31c0dd09017"
+  resolved "file:../otp-ui/packages/route-viewer-overlay/opentripplanner-route-viewer-overlay-6.0.1.tgz#42783b6b9bacc20838e12c6db1711590494da943"
   dependencies:
     "@mapbox/polyline" "^1.1.1"
     "@opentripplanner/base-map" "^7.1.0"

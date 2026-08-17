@@ -42,6 +42,7 @@ interface AllRoutesViewerOverlayProps {
 
 const AllRoutesViewerOverlay = (props: AllRoutesViewerOverlayProps) => {
   const { routesData } = props
+  const shouldNotCenterMap = routesData.length > 1
   return routesData.map((routeData, index) => {
     return (
       <RouteViewerOverlay
@@ -50,6 +51,7 @@ const AllRoutesViewerOverlay = (props: AllRoutesViewerOverlayProps) => {
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         mapCenterCallback={() => {}}
         routeData={routeData}
+        shouldNotCenterMap={shouldNotCenterMap}
       />
     )
   })
