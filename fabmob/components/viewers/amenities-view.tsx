@@ -6,6 +6,7 @@ import { AmenityIndicator } from '../../icons/amenity-indicator'
 import { AmenityType } from '../../reducers/create-fabmob-reducer'
 import { AppReduxState } from '../../../lib/util/state-types'
 import { CommunautoLogo } from '../../icons/communauto-logo'
+import { ParkAndRideIndicator } from '../../icons/park-and-ride-indicator'
 import { setIsAmenitiesVisible } from '../../actions/fabmob'
 
 interface LegendItem {
@@ -54,6 +55,21 @@ const CommunautoItem = () => {
       <div>
         {intl.formatMessage({
           id: 'components.AmenitiesViewer.legendCommunauto'
+        })}
+      </div>
+    </div>
+  )
+}
+
+const ParkAndRideItem = () => {
+  const intl = useIntl()
+  return (
+    <div style={{ alignItems: 'center', display: 'flex', padding: '10px' }}>
+      <ParkAndRideIndicator size="30px" />
+      <div style={{ width: '10px' }} />
+      <div>
+        {intl.formatMessage({
+          id: 'components.AmenitiesViewer.legendParkAndRide'
         })}
       </div>
     </div>
@@ -110,6 +126,7 @@ const AmenitiesView = ({
         <LegendItem key={item.amenityType} {...item} />
       ))}
       <CommunautoItem />
+      <ParkAndRideItem />
     </div>
   )
 }

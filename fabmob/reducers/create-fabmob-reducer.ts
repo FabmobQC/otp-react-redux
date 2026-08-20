@@ -20,6 +20,14 @@ export interface CommunautoStation {
   zone: string
 }
 
+export interface ParkAndRide {
+  address: string
+  description: string
+  id: string
+  latitude: number
+  longitude: number
+}
+
 export type TouristicPlaceCategorie =
   | 'Patrimoine religieux'
   | 'Hébergement'
@@ -52,6 +60,7 @@ export interface FabmobState {
   communautoStations: CommunautoStation[]
   isAmenitiesVisible: boolean
   isTouristicPlacesVisible: boolean
+  parkAndRides: ParkAndRide[]
   touristicPlaces: TouristicPlace[]
   viewedRoutes: Set<string>
 }
@@ -63,6 +72,7 @@ export function getFabmobInitialState(config: unknown): FabmobState {
     communautoStations: [],
     isAmenitiesVisible: false,
     isTouristicPlacesVisible: false,
+    parkAndRides: [],
     touristicPlaces: [],
     viewedRoutes: new Set()
   }
@@ -94,6 +104,12 @@ function createFabmobReducer(config: unknown): unknown {
       case 'SET_COMMUNAUTO_STATIONS': {
         return update(state, {
           communautoStations: { $set: action.payload }
+        })
+      }
+
+      case 'SET_PARK_AND_RIDES': {
+        return update(state, {
+          parkAndRides: { $set: action.payload }
         })
       }
 

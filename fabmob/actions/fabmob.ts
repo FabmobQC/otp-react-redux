@@ -78,6 +78,30 @@ export const fetchCommunautoStations = (): unknown => {
   }
 }
 
+export const setParkAndRides = createAction('SET_PARK_AND_RIDES')
+
+export const fetchParkAndRides = (): unknown => {
+  return async (dispatch: any, getState: any): Promise<void> => {
+    const state = getState()
+    const { config } = state.otp
+
+    const url = `${assembleBasePath(config)}/park-and-rides`
+
+    try {
+      const response = await fetch(url, {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: 'GET'
+      })
+      const data = await response.json()
+      dispatch(setParkAndRides(data.parkAndRides))
+    } catch (error) {
+      console.error('Error fetching park and rides', error)
+    }
+  }
+}
+
 export const setTouristicPlaces = createAction('SET_TOURISTIC_PLACES')
 
 export const fetchTouristicPlaces = (): unknown => {

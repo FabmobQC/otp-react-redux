@@ -45,6 +45,7 @@ import AdministrativeRegionsLayer from '../../../fabmob/components/map/administr
 import AllRoutesViewerOverlay from '../../../fabmob/components/map/all-routes-viewer-overlay'
 import AmenitiesOverlay from '../../../fabmob/components/map/amenities-overlay'
 import CommunautoStationsOverlay from '../../../fabmob/components/map/communauto-stations-overlay'
+import FabmobParkAndRideOverlay from '../../../fabmob/components/map/park-and-ride-overlay'
 import TouristicPlacesOverlay from '../../../fabmob/components/map/touristic-places-overlay'
 import TransitOperatorIcons from '../util/connected-transit-operator-icons'
 
@@ -478,6 +479,7 @@ class DefaultMap extends Component<DefaultMapProps> {
           <ElevationPointMarker />
           {this.props.isAmenitiesVisible && <AmenitiesOverlay />}
           {this.props.isAmenitiesVisible && <CommunautoStationsOverlay />}
+          {this.props.isAmenitiesVisible && <FabmobParkAndRideOverlay />}
           {this.props.isTouristicPlacesVisible && <TouristicPlacesOverlay />}
           <AdditionalPlacesOverlay />
           {config.fabmob.displayAdministrativeRegions && (

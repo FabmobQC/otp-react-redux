@@ -437,7 +437,7 @@ itinerary:
   allowUserAlertCollapsing: true
   # The medium and rider category selected here will be used to render the total itinerary fare
   # when there is only room to display a single fare.
-  defaultFareType: { mediumId: ["fare_media_carnet", "fare_media_comptant"], riderCategoryId: ["rider_category_general", "rider_category_general"] }
+  defaultFareType: {'mediumId': ['fare_media_comptant'], 'riderCategoryId': ['rider_category_general']}
 
   # List of OTP2 errors to not display. Can be a list
   # mutedErrors:
@@ -697,7 +697,11 @@ language:
         legendEducation: Education
         legendGroceryStore: Grocery Store
         legendHealthCenter: Health Center
+        legendParkAndRide: Park and Ride
         legendDefault: Others
+      RouteViewer:
+        clearViewedRoutes: Clear
+        viewAll: View All
       TouristicPlacesViewer:
         shortTitle: Touristic Places
         showTouristicPlaces: Show
@@ -774,7 +778,11 @@ language:
         legendEducation: Éducation
         legendGroceryStore: Épicerie
         legendHealthCenter: Centre de santé
+        legendParkAndRide: Stationnement incitatif
         legendDefault: Others
+      RouteViewer:
+        clearViewedRoutes: Tout masquer
+        viewAll: Tout afficher
       TouristicPlacesViewer:
         shortTitle: Lieux touristiques
         showTouristicPlaces: Afficher
