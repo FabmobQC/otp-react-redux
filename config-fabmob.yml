@@ -898,3 +898,4 @@ fabmob:
   displayAmenities: true
   displayNearby: true
   displayTouristicPlaces: true
+  communautoCityIds: 59,89

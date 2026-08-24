@@ -61,7 +61,9 @@ export const fetchCommunautoStations = (): unknown => {
     const state = getState()
     const { config } = state.otp
 
-    const url = `${assembleBasePath(config)}/communauto-stations`
+    const url = `${assembleBasePath(config)}/communauto-stations?cityId=${
+      config.fabmob.communautoCityIds ?? ''
+    }`
 
     try {
       const response = await fetch(url, {
