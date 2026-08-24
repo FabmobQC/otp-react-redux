@@ -468,8 +468,8 @@ export interface AppConfig {
   // eslint-disable-next-line typescript-sort-keys/interface
   fabmob: {
     displayAdministrativeRegions: boolean
-    displayAmenities: boolean
-    displayNearby: boolean
-    displayTouristicPlaces: boolean
+    displayAmenitiesTab: boolean
+    displayNearbyTab: boolean
+    displayTouristicPlacesTab: boolean
   }
 }

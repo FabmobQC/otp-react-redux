@@ -895,7 +895,7 @@ localization:
 #     alwaysShowLongName: false
 fabmob:
   displayAdministrativeRegions: true
-  displayAmenities: true
-  displayNearby: true
-  displayTouristicPlaces: true
+  displayAmenitiesTab: true
+  displayNearbyTab: true
+  displayTouristicPlacesTab: true
   communautoCityIds: 59,89
