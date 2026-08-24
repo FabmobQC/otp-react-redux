@@ -1,7 +1,6 @@
 import { connect } from 'react-redux'
 import { Filter } from '@styled-icons/fa-solid/Filter'
 import { FormattedMessage, injectIntl, IntlShape } from 'react-intl'
-import { Route } from '@opentripplanner/types'
 import { Search } from '@styled-icons/fa-solid/Search'
 import coreUtils from '@opentripplanner/core-utils'
 import React, { Component, FormEvent } from 'react'
@@ -17,6 +16,7 @@ import {
 } from '../../util/state'
 import { getFormattedMode } from '../../util/i18n'
 import { getRouteOrPatternViewerTitle } from '../../util/viewer'
+import { InlineLoading } from '../narrative/loading'
 import { StyledIconWrapper } from '../util/styledIcon'
 import { TransitOperatorConfig } from '../../util/config-types'
 import { ViewedRouteObject, ViewedRouteState } from '../util/types'
@@ -43,7 +43,7 @@ interface Props {
   hideHeader?: boolean
   intl: IntlShape
   modes: string[]
-  routes: Route[]
+  routes: ViewedRouteObject[]
   setMainPanelContent: (panelId: number | null) => void
   setRouteViewerFilter: (filter: FilterProps) => void
   toggleViewedRoute: typeof fabmobActions.toggleViewedRoute
@@ -55,12 +55,14 @@ interface Props {
 
 interface State {
   initialRender: boolean
+  isLoadingAllRoutes: boolean
 }
 
 class RouteViewer extends Component<Props, State> {
   state = {
     /** Used to track if all routes have been rendered */
-    initialRender: true
+    initialRender: true,
+    isLoadingAllRoutes: false
   }
 
   /**
@@ -75,7 +77,7 @@ class RouteViewer extends Component<Props, State> {
   /** Used to scroll to actively viewed route on load */
   componentDidUpdate() {
     const { routes } = this.props
-    const { initialRender } = this.state
+    const { initialRender, isLoadingAllRoutes } = this.state
 
     // Wait until more than the one route is present.
     // This ensures that there is something to scroll past!
@@ -87,6 +89,10 @@ class RouteViewer extends Component<Props, State> {
         // any more scrolling
         this.setState({ initialRender: false })
       })
+    }
+
+    if (isLoadingAllRoutes && routes.every((route) => !route.pending)) {
+      this.setState({ isLoadingAllRoutes: false })
     }
   }
 
@@ -117,6 +123,7 @@ class RouteViewer extends Component<Props, State> {
 
   viewAllRoutes = () => {
     const { addViewedRoute, findRouteIfNeeded, routes } = this.props
+    this.setState({ isLoadingAllRoutes: true })
     routes.forEach((route) => {
       addViewedRoute(route.id)
       findRouteIfNeeded({ routeId: route.id })
@@ -138,7 +145,7 @@ class RouteViewer extends Component<Props, State> {
       viewedRouteObject,
       viewedRoutes
     } = this.props
-    const { initialRender } = this.state
+    const { initialRender, isLoadingAllRoutes } = this.state
     const { agency, mode, search } = filter
     const operators =
       transitOperators.length > 0
@@ -237,10 +244,15 @@ class RouteViewer extends Component<Props, State> {
                 value={search}
               />
             </span>
-            <button onClick={this.viewAllRoutes}>
+            <button disabled={isLoadingAllRoutes} onClick={this.viewAllRoutes}>
               {intl.formatMessage({
                 id: 'components.RouteViewer.viewAll'
               })}
+              {isLoadingAllRoutes && (
+                <span style={{ marginLeft: '4px' }}>
+                  <InlineLoading />
+                </span>
+              )}
             </button>
             <button onClick={this.props.clearViewedRoutes}>
               {intl.formatMessage({
