@@ -208,6 +208,15 @@ export class RouteRow extends PureComponent<Props> {
     }
   }
 
+  _onClick = (event: React.MouseEvent): void => {
+    // fabmob: Prevent the anchor's href from updating the URL, but keep all other side effects.
+    // Normally, otp-react-redux updates the url so it is possible share the url of a route.
+    // ex: /route -> /route/2:bromont
+    // However, fabmob's implementation can display several routes on the /route view, and the url does not take it into account anymore.
+    event.preventDefault()
+    this.props.toggleIsActive()
+  }
+
   render(): JSX.Element | null {
     const { intl, isActive, isViewed, operator, route } = this.props
     const { ModeIcon, RouteRenderer } = this.context
@@ -229,7 +238,7 @@ export class RouteRow extends PureComponent<Props> {
         <RouteRowLink
           aria-current={isActive}
           className={`clear-button-formatting ${isViewed ? 'viewed' : ''}`}
-          onClick={this.props.toggleIsActive}
+          onClick={this._onClick}
           onFocus={this._onFocusOrEnter}
           onMouseEnter={this._onFocusOrEnter}
           onTouchStart={this._onFocusOrEnter}
