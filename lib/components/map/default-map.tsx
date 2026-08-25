@@ -477,9 +477,14 @@ class DefaultMap extends Component<DefaultMapProps> {
           />
           <TripViewerOverlay />
           <ElevationPointMarker />
-          {this.props.isAmenitiesVisible && <AmenitiesOverlay />}
-          {this.props.isAmenitiesVisible && <CommunautoStationsOverlay />}
-          {this.props.isAmenitiesVisible && <FabmobParkAndRideOverlay />}
+          {this.props.isAmenitiesVisible && config.fabmob.displayAmenities && (
+            <AmenitiesOverlay />
+          )}
+          {this.props.isAmenitiesVisible && config.fabmob.displayCommunauto && (
+            <CommunautoStationsOverlay />
+          )}
+          {this.props.isAmenitiesVisible &&
+            config.fabmob.displayParkAndRide && <FabmobParkAndRideOverlay />}
           {this.props.isTouristicPlacesVisible && <TouristicPlacesOverlay />}
           <AdditionalPlacesOverlay />
           {config.fabmob.displayAdministrativeRegions && (

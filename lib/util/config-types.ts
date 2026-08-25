@@ -467,9 +467,13 @@ export interface AppConfig {
   // Add other config items as needed.
   // eslint-disable-next-line typescript-sort-keys/interface
   fabmob: {
+    communautoCityIds: string
     displayAdministrativeRegions: boolean
+    displayAmenities: boolean
     displayAmenitiesTab: boolean
+    displayCommunauto: boolean
     displayNearbyTab: boolean
+    displayParkAndRide: boolean
     displayTouristicPlacesTab: boolean
   }
 }

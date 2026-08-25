@@ -77,11 +77,17 @@ const ParkAndRideItem = () => {
 }
 
 interface AmenitiesViewProps {
+  displayAmenities: boolean
+  displayCommunauto: boolean
+  displayParkAndRide: boolean
   isAmenitiesVisible: boolean
   setIsAmenitiesVisible: (isVisible: boolean) => void
 }
 
 const AmenitiesView = ({
+  displayAmenities,
+  displayCommunauto,
+  displayParkAndRide,
   isAmenitiesVisible,
   setIsAmenitiesVisible
 }: AmenitiesViewProps): ReactElement => {
@@ -122,17 +128,23 @@ const AmenitiesView = ({
           />
         </label>
       </div>
-      {legendItems.map((item) => (
-        <LegendItem key={item.amenityType} {...item} />
-      ))}
-      <CommunautoItem />
-      <ParkAndRideItem />
+      {displayAmenities &&
+        legendItems.map((item) => (
+          <LegendItem key={item.amenityType} {...item} />
+        ))}
+      {displayCommunauto && <CommunautoItem />}
+      {displayParkAndRide && <ParkAndRideItem />}
     </div>
   )
 }
 
 const mapStateToProps = (state: AppReduxState) => {
+  const { displayAmenities, displayCommunauto, displayParkAndRide } =
+    state.otp.config.fabmob
   return {
+    displayAmenities,
+    displayCommunauto,
+    displayParkAndRide,
     isAmenitiesVisible: state.fabmob.isAmenitiesVisible
   }
 }

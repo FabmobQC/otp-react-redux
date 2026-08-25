@@ -896,6 +896,9 @@ localization:
 fabmob:
   displayAdministrativeRegions: true
   displayAmenitiesTab: true
+  displayAmenities: true
+  displayCommunauto: true
+  displayParkAndRide: true
   displayNearbyTab: true
   displayTouristicPlacesTab: true
   communautoCityIds: 59,89
